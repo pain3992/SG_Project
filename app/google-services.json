@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "692279742836",
+    "firebase_url": "https://sg-project-chat.firebaseio.com",
+    "project_id": "sg-project-chat",
+    "storage_bucket": "sg-project-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692279742836:android:071d46c85fa2a19d",
+        "android_client_info": {
+          "package_name": "com.graduate.seoil.sg_projdct"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692279742836-u9l17c7t0mqffm2fnae3ehlfhm1cua1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEf0KIGGYwos4sVx7YFlnQD5UjwOEBWcI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
