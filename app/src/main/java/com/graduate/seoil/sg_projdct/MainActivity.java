@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity
     public int num1;
     public int num2;
     public int num3;
+    public int num4, num5, num6; // 장훈이가 1월 12일 작업했음.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
