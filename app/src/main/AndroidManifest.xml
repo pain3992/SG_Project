@@ -25,6 +25,7 @@
         <activity android:name=".WSYActivity" />
         <activity android:name=".JangHunActivity" />
         <activity android:name=".YouMinActivity"></activity>
+        <activity android:name=".BaeHoonActivity"></activity>
     </application>
 
 </manifest>
