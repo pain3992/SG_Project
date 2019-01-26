@@ -23,7 +23,8 @@
         >
         <activity android:name=".ChatActivity" />
         <activity android:name=".WSYActivity" />
-        <activity android:name=".JangHunActivity"></activity>
+        <activity android:name=".JangHunActivity" />
+        <activity android:name=".YouMinActivity"></activity>
     </application>
 
 </manifest>
