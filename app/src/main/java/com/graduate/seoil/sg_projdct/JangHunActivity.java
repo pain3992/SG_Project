@@ -25,7 +25,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-public class taJangHunActivity extends AppCompatActivity {
+public class JangHunActivity extends AppCompatActivity {
 
     TextView txt_craete_account;
     MaterialEditText edt_login_email, edt_login_password;
