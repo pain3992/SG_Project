@@ -19,7 +19,7 @@
         <activity android:name=".StartActivity">
 
         </activity>
-        >
+
         <activity android:name=".ChatActivity" />
         <activity android:name=".WSYActivity" />
         <activity android:name=".JangHunActivity">
