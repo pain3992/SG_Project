@@ -16,18 +16,23 @@ public class GStartActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Check if user is null
+        if (firebaseUser != null) {
+            Intent intent = new Intent(GStartActivity.this, IndexActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gstart);
-
-//        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        // Check if user is null
-//        if (firebaseUser != null) {
-//            Intent intent = new Intent(GStartActivity.this, IndexActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
 
         login = findViewById(R.id.login);
         register = findViewById(R.id.register);

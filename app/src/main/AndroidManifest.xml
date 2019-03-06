@@ -4,6 +4,8 @@
     package="com.graduate.seoil.sg_projdct">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,21 +16,24 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <!-- Firebase Login from "KOD Dev" -->
+        <activity android:name=".ResetPasswordActivity"
+            android:parentActivityName=".LoginActivity">
+        </activity>
+        <activity android:name=".MessageActivity" /> <!-- Firebase Login from "KOD Dev" -->
         <activity android:name=".GStartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".IndexActivity" />
-        <activity android:name=".RegisterActivity"
-            android:parentActivityName=".GStartActivity"/>
-        <activity android:name=".LoginActivity"
-            android:parentActivityName=".GStartActivity"/>
-
-
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".GStartActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".GStartActivity" />
         <activity
             android:name=".TemplateActivity"
             android:label="@string/title_activity_template" />
@@ -39,8 +44,7 @@
         <activity android:name=".StartActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".WSYActivity" />
-        <activity android:name=".JangHunActivity">
-        </activity>
+        <activity android:name=".JangHunActivity" />
         <activity android:name=".YouMinActivity" />
         <activity android:name=".BaeHoonActivity" />
     </application>
