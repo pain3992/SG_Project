@@ -28,7 +28,7 @@ public class TemplateActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "홈페이지", Toast.LENGTH_SHORT);
                     return true;
                 case R.id.navigation_notifications:
-                    Toast.makeText(getApplicationContext(), "알림페이지", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "알림", Toast.LENGTH_SHORT);
                     return true;
                 case R.id.navigation_setting:
                     Toast.makeText(getApplicationContext(), "세팅", Toast.LENGTH_SHORT);
