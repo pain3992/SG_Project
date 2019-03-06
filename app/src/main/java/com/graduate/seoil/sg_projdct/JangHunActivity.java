@@ -1,5 +1,6 @@
 package com.graduate.seoil.sg_projdct;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -141,7 +142,12 @@ public class JangHunActivity extends AppCompatActivity {
             .subscribe(new Consumer<String>() {
                 @Override
                 public void accept(String response) throws Exception {
-                    Toast.makeText(JangHunActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                    if (response.equals("\"Login success\"")) {
+                        Intent intent = new Intent(getApplicationContext(), TemplateActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(JangHunActivity.this, "" + response, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }));
     }
