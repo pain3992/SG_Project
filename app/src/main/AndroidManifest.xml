@@ -16,9 +16,10 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ResetPasswordActivity"
-            android:parentActivityName=".LoginActivity">
-        </activity>
+        <activity android:name=".SettingActivity"></activity>
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:parentActivityName=".LoginActivity"></activity>
         <activity android:name=".MessageActivity" /> <!-- Firebase Login from "KOD Dev" -->
         <activity android:name=".GStartActivity">
             <intent-filter>
