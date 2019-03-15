@@ -21,13 +21,7 @@
             android:name=".ResetPasswordActivity"
             android:parentActivityName=".LoginActivity"></activity>
         <activity android:name=".MessageActivity" /> <!-- Firebase Login from "KOD Dev" -->
-        <activity android:name=".GStartActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".GStartActivity"></activity>
         <activity android:name=".IndexActivity" />
         <activity
             android:name=".RegisterActivity"
@@ -47,7 +41,15 @@
         <activity android:name=".WSYActivity" />
         <activity android:name=".JangHunActivity" />
         <activity android:name=".YouMinActivity" />
-        <activity android:name=".BaeHoonActivity" />
+        <activity android:name=".BaeHoonActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".BaeHoonActivity2" />
+        <activity android:name=".BaeHoonActivity3"></activity>
     </application>
 
 </manifest>
