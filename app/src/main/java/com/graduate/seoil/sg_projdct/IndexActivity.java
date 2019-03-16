@@ -44,6 +44,7 @@ public class IndexActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
+    Intent intent;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -51,19 +52,21 @@ public class IndexActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_group:
-                    Toast.makeText(getApplicationContext(), "그룹페이지", Toast.LENGTH_SHORT);
+                    intent = new Intent(IndexActivity.this, GroupRegistActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_chart:
-                    Toast.makeText(getApplicationContext(), "통계페이지", Toast.LENGTH_SHORT);
+                    intent = new Intent(IndexActivity.this, BaeHoonActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_home:
-                    Toast.makeText(getApplicationContext(), "홈페이지", Toast.LENGTH_SHORT);
                     return true;
                 case R.id.navigation_notifications:
                     Toast.makeText(getApplicationContext(), "알림", Toast.LENGTH_SHORT);
                     return true;
                 case R.id.navigation_setting:
-                    Toast.makeText(getApplicationContext(), "세팅", Toast.LENGTH_SHORT);
+                    intent = new Intent(IndexActivity.this, SettingActivity.class);
+                    startActivity(intent);
                     return true;
             }
             return false;
@@ -119,6 +122,7 @@ public class IndexActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_home);
     }
 
     @Override
