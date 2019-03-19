@@ -1,94 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".GroupRegistActivity">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <RelativeLayout
+        android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"-->
-            <!--app:popupTheme="@style/MenuStyle">-->
-
-            <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:id="@+id/profile_image"/>-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/username"-->
-                <!--android:layout_marginStart="25dp"-->
-                <!--android:text="username"-->
-                <!--android:textColor="#fff"-->
-                <!--android:textStyle="bold"/>-->
-
-        <!--</android.support.v7.widget.Toolbar>-->
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:tabSelectedTextColor="#fff"
-            app:tabIndicatorColor="#fff"
-            app:tabTextColor="#fff"/>
-
-    </android.support.design.widget.AppBarLayout>
-
-
-    <LinearLayout
-        android:layout_below="@id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:hint="그룹 이름을 입력하세요!"
             android:textSize="25dp"
+            android:id="@+id/text1"
             android:textStyle="bold" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="그룹카테고리"
             android:textSize="25dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:id="@+id/text2"
+            android:layout_below="@+id/text1"/>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="10dp"
+            android:text="모집인원"
+            android:textSize="25dp"
+            android:id="@+id/text3"
+            android:layout_below="@+id/text2"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="모집인원"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-
+        <NumberPicker
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/text3"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/text3"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/num1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -96,142 +57,156 @@
             android:layout_margin="10dp"
             android:text="목표요일"
             android:textSize="25dp"
-            android:textStyle="bold" />
+            android:id="@+id/text4"
+            android:layout_below="@+id/text3"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="매일"
+            android:textSize="20dp"
+            android:id="@+id/text5"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/text4"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="매일"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="주중"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="주말"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignTop="@id/text5"
+            android:layout_centerHorizontal="true"
+            android:text="주중"
+            android:textSize="20dp"
+            android:id="@+id/text6"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="목표시간"
-                android:textSize="25dp"
-                android:textStyle="bold" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/text6"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:text="주말"
+            android:textSize="20dp"
+            android:id="@+id/text7"
+            android:textStyle="bold"/>
 
-            <NumberPicker
-                android:layout_width="44dp"
-                android:layout_height="56dp"></NumberPicker>
-
-            <NumberPicker
-                android:layout_width="44dp"
-                android:layout_height="57dp"></NumberPicker>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":"
+            android:layout_margin="10dp"
+            android:text="목표시간"
             android:textSize="25dp"
-            android:textStyle="bold" />
+            android:id="@+id/text8"
+            android:textStyle="bold"
+            android:layout_below="@+id/text7"/>
 
-            <NumberPicker
-                android:layout_width="40dp"
-                android:layout_height="58dp"></NumberPicker>
+        <NumberPicker
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/text8"
+            android:layout_alignTop="@+id/text8"
+            android:layout_toRightOf="@id/text8"
+            android:layout_marginRight="5dp"
+            android:textStyle="bold"
+            android:id="@+id/num2" />
 
-            <NumberPicker
-                android:layout_width="45dp"
-                android:layout_height="match_parent"></NumberPicker>
+        <NumberPicker
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/num2"
+            android:layout_alignTop="@+id/num2"
+            android:layout_toRightOf="@id/num2"
+            android:layout_marginRight="5dp"
+            android:textStyle="bold"
+            android:id="@+id/num3" />
 
-        </LinearLayout>
+        <NumberPicker
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/num3"
+            android:layout_alignTop="@+id/num3"
+            android:layout_toRightOf="@id/num3"
+            android:layout_marginRight="5dp"
+            android:textStyle="bold"
+            android:id="@+id/num4" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <NumberPicker
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/num4"
+            android:layout_alignTop="@+id/num4"
+            android:layout_toRightOf="@id/num4"
+            android:layout_marginRight="5dp"
+            android:textStyle="bold"
+            android:id="@+id/num5" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="10dp"
+            android:text="그룹공개여부"
+            android:textSize="25dp"
+            android:id="@+id/text9"
+            android:textStyle="bold"
+            android:layout_below="@+id/text8"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="그룹공개여부"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/text9"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/text9"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="15dp"
+            android:textStyle="bold"
+            android:id="@+id/swi" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="그룹소개"
+            android:id="@+id/text10"
             android:textSize="25dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_below="@id/text9"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
             android:hint="그룹의 간단한 소개와 공지를 남겨주세요"
+            android:id="@+id/text11"
             android:textSize="15dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_alignLeft="@id/text10"
+            android:layout_below="@id/text10"/>
 
-        <LinearLayout
-            android:id="@+id/linear1"
+        <View
+            android:id="@+id/title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/text11"
+            android:layout_marginTop="8dp"
+            android:background="#dededede" />
+
+        <Button
+            android:id="@+id/btn_loadImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="취소"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="만들기"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:layout_weight="1"
+            android:text="생성하기"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_below="@id/title_line"/>
 
 
-    </LinearLayout>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
 
-</RelativeLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
