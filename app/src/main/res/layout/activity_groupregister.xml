@@ -1,212 +1,349 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/layout1"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/groupRegister_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+            app:popupTheme="@style/MenuStyle">
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="그룹 만들기"/>
+
+            <TextView
+                android:id="@+id/groupRegister_create"
+                android:clickable="true"
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:textColor="#BD2E2E"
+                android:text="만들기"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <TextView
+        android:id="@+id/tv_groupTitle"
+        android:layout_width="62dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="80dp"
+        android:text="그룹 이름"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/et_groupTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupTitle" />
+
+    <TextView
+        android:id="@+id/tv_groupCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="그룹 카테고리"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_groupTitle" />
+
+    <Button
+        android:id="@+id/btn_category_1"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="공부"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+
+    <Button
+        android:id="@+id/btn_category_2"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="건강"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+
+    <Button
+        android:id="@+id/btn_category_3"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="기타"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+
+    <TextView
+        android:id="@+id/tv_groupCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="모집 인원"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_category_1" />
+
+    <TextView
+        android:id="@+id/tv_minCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="최소 인원"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/et_minCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:ems="2"
+        app:layout_constraintStart_toEndOf="@+id/tv_minCount"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
+
+    <TextView
+        android:id="@+id/tv_maxCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="최대 인원"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_minCount"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/et_maxCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ems="2"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/tv_maxCount"
+        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
+
+    <TextView
+        android:id="@+id/tv_howDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="목표 요일"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_minCount" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:orientation="horizontal"
-        android:layout_margin="10dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_howDays">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/ckbox_mon"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:hint="그룹 이름을 입력하세요!"
-            android:textSize="25dp"
-            android:id="@+id/text1"
-            android:textStyle="bold" />
+            android:layout_marginStart="24dp"
+            android:layout_weight="1"
+            android:text="월"
+            android:textColor="@android:color/black" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="그룹카테고리"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:id="@+id/text2"
-            android:layout_below="@+id/text1"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="모집인원"
-            android:textSize="25dp"
-            android:id="@+id/text3"
-            android:layout_below="@+id/text2"/>
-
-        <NumberPicker
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_alignBottom="@+id/text3"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/text3"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="15dp"
-            android:id="@+id/num1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="목표요일"
-            android:textSize="25dp"
-            android:id="@+id/text4"
-            android:layout_below="@+id/text3"/>
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="매일"
-            android:textSize="20dp"
-            android:id="@+id/text5"
-            android:layout_marginLeft="20dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/text4"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/text5"
-            android:layout_centerHorizontal="true"
-            android:text="주중"
-            android:textSize="20dp"
-            android:id="@+id/text6"
-            android:textStyle="bold"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/text6"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:text="주말"
-            android:textSize="20dp"
-            android:id="@+id/text7"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="목표시간"
-            android:textSize="25dp"
-            android:id="@+id/text8"
-            android:textStyle="bold"
-            android:layout_below="@+id/text7"/>
-
-        <NumberPicker
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_alignBottom="@+id/text8"
-            android:layout_alignTop="@+id/text8"
-            android:layout_toRightOf="@id/text8"
-            android:layout_marginRight="5dp"
-            android:textStyle="bold"
-            android:id="@+id/num2" />
-
-        <NumberPicker
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_alignBottom="@+id/num2"
-            android:layout_alignTop="@+id/num2"
-            android:layout_toRightOf="@id/num2"
-            android:layout_marginRight="5dp"
-            android:textStyle="bold"
-            android:id="@+id/num3" />
-
-        <NumberPicker
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_alignBottom="@+id/num3"
-            android:layout_alignTop="@+id/num3"
-            android:layout_toRightOf="@id/num3"
-            android:layout_marginRight="5dp"
-            android:textStyle="bold"
-            android:id="@+id/num4" />
-
-        <NumberPicker
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_alignBottom="@+id/num4"
-            android:layout_alignTop="@+id/num4"
-            android:layout_toRightOf="@id/num4"
-            android:layout_marginRight="5dp"
-            android:textStyle="bold"
-            android:id="@+id/num5" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="그룹공개여부"
-            android:textSize="25dp"
-            android:id="@+id/text9"
-            android:textStyle="bold"
-            android:layout_below="@+id/text8"/>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/text9"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/text9"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="15dp"
-            android:textStyle="bold"
-            android:id="@+id/swi" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="그룹소개"
-            android:id="@+id/text10"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:layout_below="@id/text9"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="그룹의 간단한 소개와 공지를 남겨주세요"
-            android:id="@+id/text11"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:layout_alignLeft="@id/text10"
-            android:layout_below="@id/text10"/>
-
-        <View
-            android:id="@+id/title_line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/text11"
-            android:layout_marginTop="8dp"
-            android:background="#dededede" />
-
-        <Button
-            android:id="@+id/btn_loadImage"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/ckbox_tue"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="생성하기"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:layout_below="@id/title_line"/>
+            android:text="화" />
+
+        <CheckBox
+            android:id="@+id/ckbox_wed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="수" />
+
+        <CheckBox
+            android:id="@+id/ckbox_thu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="목" />
+
+        <CheckBox
+            android:id="@+id/ckbox_fri"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="금" />
+
+        <CheckBox
+            android:id="@+id/ckbox_sat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="토" />
+
+        <CheckBox
+            android:id="@+id/ckbox_sun"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_weight="1"
+            android:text="일" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="목표 시간"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
+    <EditText
+        android:id="@+id/et_plan_time"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="01:00"
+        android:inputType="datetime"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/tv_group_announce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="그룹 소개"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_plan_time" />
+
+    <EditText
+        android:id="@+id/et_group_announce"
+        style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:maxLength="150"
+        android:maxLines="4"
+        android:gravity="top|start"
+        android:textAppearance="@android:style/TextAppearance.Material"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent">-->
 
 
+        <!--<Button-->
+            <!--android:id="@+id/btn_group_cancel"-->
+            <!--style="@android:style/Widget.Material.Button.Colored"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="취소" />-->
 
-    </RelativeLayout>
+        <!--<Button-->
+            <!--android:id="@+id/btn_group_create"-->
+            <!--style="@android:style/Widget.Material.Button.Colored"-->
+            <!--android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="그룹 만들기" />-->
+    <!--</LinearLayout>-->
 
-</ScrollView>
+
+</android.support.constraint.ConstraintLayout>

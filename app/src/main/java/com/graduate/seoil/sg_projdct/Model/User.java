@@ -7,13 +7,15 @@ public class User {
     private String imageURL;
     private String status;
     private String search;
+    private String registDate;
 
-    public User(String id, String username, String imageURL, String status, String search) {
+    public User(String id, String username, String imageURL, String status, String search, String registDate) {
         this.id = id;
         this.username = username;
         this.imageURL = imageURL;
         this.status = status;
         this.search = search;
+        this.registDate = registDate;
     }
 
     public User() {
@@ -59,4 +61,8 @@ public class User {
     public void setSearch(String search) {
         this.search = search;
     }
+
+    public String getRegistDate() { return registDate; }
+
+    public void setRegistDate(String registDate) { this.registDate = registDate; }
 }
