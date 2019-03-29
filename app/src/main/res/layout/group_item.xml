@@ -2,24 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="7dp">
+    android:layout_marginRight="7dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/groupList_profile_image"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_marginTop="12dp"
         android:layout_marginStart="10dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@mipmap/ic_launcher"
         app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"/>
+        app:civ_border_color="@color/blue_grey_900"/>
 
     <TextView
         android:id="@+id/tv_groupList_title"
         android:text="title"
         android:layout_toEndOf="@id/groupList_profile_image"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_marginStart="10dp"
+        android:textColor="@color/blue_grey_900"
         android:textSize="15sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -35,6 +37,7 @@
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#35454D"
         android:text="time"/>
     
     <TextView
@@ -46,11 +49,12 @@
         android:layout_toEndOf="@id/tv_groupList_hashTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#35454D"
         android:text="cycle"/>
 
     <TextView
-        android:id="@+id/tv_groupList_minCount"
-        android:layout_marginTop="5dp"
+        android:id="@+id/tv_groupList_currentUser"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/slash"
         android:layout_width="wrap_content"
@@ -59,7 +63,7 @@
 
     <TextView
         android:id="@+id/slash"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +72,7 @@
 
     <TextView
         android:id="@+id/tv_groupList_maxCount"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/myeong"
         android:layout_width="wrap_content"
@@ -77,7 +81,7 @@
 
     <TextView
         android:id="@+id/myeong"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,10 +91,11 @@
     <TextView
         android:id="@+id/tv_group_join"
         android:clickable="true"
-        android:layout_below="@id/tv_groupList_minCount"
+        android:layout_below="@id/tv_groupList_currentUser"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
+        android:textColor="@color/blue_grey_900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="참여하기"/>
@@ -99,7 +104,8 @@
 
     <View
         android:background="#CECECE"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="7dp"
         android:layout_below="@id/groupList_profile_image"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>

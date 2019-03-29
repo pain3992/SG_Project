@@ -14,13 +14,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.ExpandableListAdapter;
 import com.graduate.seoil.sg_projdct.Model.Group;
+import com.graduate.seoil.sg_projdct.Model.User;
 
 import org.w3c.dom.Text;
 
@@ -35,24 +43,27 @@ public class GroupRegistActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
+    FirebaseUser fuser;
+
+    private String username;
 
     RecyclerView recyclerview;
     EditText et_title, et_minCount, et_maxCount, et_planTime, et_announce;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
 
-    String key;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groupregister);
+
+        Intent intent = getIntent();
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.groupRegister_toolbar);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Group");
-        key = databaseReference.child("Group").push().getKey();
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         et_title = (EditText) findViewById(R.id.et_groupTitle);
         et_minCount = (EditText) findViewById(R.id.et_minCount);
@@ -61,6 +72,8 @@ public class GroupRegistActivity extends AppCompatActivity {
         et_announce = (EditText) findViewById(R.id.et_group_announce);
 
         chkBoxs = new CheckBox[chkBoxIds.length];
+
+        username = intent.getStringExtra("str_userName");
 
         toolbar.findViewById(R.id.groupRegister_create).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +84,6 @@ public class GroupRegistActivity extends AppCompatActivity {
                 int maxCount = Integer.parseInt(et_maxCount.getText().toString());
                 int planTime = Integer.parseInt(et_planTime.getText().toString());
                 String checked_days = "";
-                // TODO : [3월 28일] 그룹 만들기 할 때  목표시간 + 반복요일 DB에 넣어야 함..
 
                 long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -84,11 +96,31 @@ public class GroupRegistActivity extends AppCompatActivity {
                         checked_days += (chkBoxs[i].getText().toString());
                     }
                 }
-                String dayCycle = "default";
-                Group group = new Group(title, announce, "default", "default", getTime, dayCycle, planTime, minCount, maxCount);
-                databaseReference.child(key).setValue(group);
 
-                Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
+                // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
+                // TODO : 그룹은 하나 이상 못만들게 해야함.
+                Group group = new Group(title, announce, "default", "default", getTime, checked_days, planTime, minCount, maxCount);
+                databaseReference.child(fuser.getUid()).setValue(group);
+
+                // userList 코딩 ~
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+//                databaseReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        User user = dataSnapshot.getValue(User.class);
+//                        username = user.getUsername();
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+                databaseReference = firebaseDatabase.getReference("Group");
+                User user = new User(fuser.getUid(), username, "admin");
+                databaseReference.child(fuser.getUid()).child("userList").child(fuser.getUid()).setValue(user);
+
+                finish();
             }
         });
 

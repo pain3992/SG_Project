@@ -1,5 +1,7 @@
 package com.graduate.seoil.sg_projdct.Model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,13 +16,18 @@ public class Group {
     private String dayCycle;
 
     private int planTime;
-    private int user_min_count;
-    private int uesr_max_count;
+
+    private int current_user;
+    private int User_max_count;
 
 //    private List<String> goal_list;
 //    private List<String> group_list;
 
-    public Group(String title, String content, String goal, String imageURL, String registDate, String dayCycle, int planTime, int user_min_count, int uesr_max_count) {
+
+    public Group() {
+    }
+
+    public Group(String title, String content, String goal, String imageURL, String registDate, String dayCycle, int planTime, int current_user, int User_max_count) {
         this.title = title;
         this.content = content;
         this.goal = goal;
@@ -28,11 +35,8 @@ public class Group {
         this.registDate = registDate;
         this.dayCycle = dayCycle;
         this.planTime = planTime;
-        this.user_min_count = user_min_count;
-        this.uesr_max_count = uesr_max_count;
-    }
-
-    public Group() {
+        this.current_user = current_user;
+        this.User_max_count = User_max_count;
     }
 
     public String getTitle() {
@@ -67,20 +71,12 @@ public class Group {
         this.imageURL = imageURL;
     }
 
-    public int getUser_min_count() {
-        return user_min_count;
+    public int getUser_max_count() {
+        return User_max_count;
     }
 
-    public void setUser_min_count(int user_min_count) {
-        this.user_min_count = user_min_count;
-    }
-
-    public int getUesr_max_count() {
-        return uesr_max_count;
-    }
-
-    public void setUesr_max_count(int uesr_max_count) {
-        this.uesr_max_count = uesr_max_count;
+    public void setUser_max_count(int User_max_count) {
+        this.User_max_count = User_max_count;
     }
 
     public String getRegistDate() {
@@ -105,5 +101,12 @@ public class Group {
 
     public void setPlanTime(int planTime) {
         this.planTime = planTime;
+    }
+
+    public int getcurrent_user() {
+        return current_user;
+    }
+    public void setcurrent_user(int current_user) {
+        this.current_user = current_user;
     }
 }

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,10 +44,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class IndexActivity extends AppCompatActivity {
 
     CircleImageView profile_image;
-    TextView username, toolbar_title;
+    TextView username, toolbar_title, groupCreate;
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+
+    public String str_userName;
 
     Intent intent;
     @Override
@@ -54,14 +57,29 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        toolbar_title = findViewById(R.id.toolbar_title);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); // 이니시 프래그먼트 설정
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                str_userName = user.getUsername();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); // 이니시 프래그먼트 설정
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -70,6 +88,8 @@ public class IndexActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
+            Bundle bundle = new Bundle();
+            bundle.putString("str_Username", str_userName);
             switch (item.getItemId()) {
                 case R.id.navigation_group:
                     selectedFragment = new GroupListFragment();
@@ -81,7 +101,8 @@ public class IndexActivity extends AppCompatActivity {
                     selectedFragment = new HomeFragment();
                     break;
             }
-
+            assert selectedFragment != null;
+            selectedFragment.setArguments(bundle); // userName 넘기기
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             return true;
         }

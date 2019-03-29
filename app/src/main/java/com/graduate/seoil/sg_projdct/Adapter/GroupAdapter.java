@@ -1,5 +1,6 @@
 package com.graduate.seoil.sg_projdct.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.graduate.seoil.sg_projdct.ChatActivity;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -26,6 +30,9 @@ import java.util.List;
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
     private Context mContext;
     private List<Group> mGroups;
+
+    private JSONArray jsonArray;
+    private JSONObject jsonObject;
 
     public GroupAdapter(Context mContext, List<Group> mGroups) {
         this.mGroups = mGroups;
@@ -39,15 +46,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         return new GroupAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         final Group group = mGroups.get(i);
         viewHolder.group_title.setText(group.getTitle());
-        viewHolder.group_planTime.setText(String.valueOf(group.getPlanTime()));
-        viewHolder.group_dayCycle.setText(group.getDayCycle());
-        viewHolder.group_minCount.setText(String.valueOf(group.getUser_min_count()));
-        viewHolder.group_maxCount.setText(String.valueOf(group.getUesr_max_count()));
+        viewHolder.group_planTime.setText(String.format("#") + String.valueOf(group.getPlanTime() / 60) + String.format("시간"));
+        viewHolder.group_dayCycle.setText(String.format("#") + group.getDayCycle());
+        viewHolder.group_current_user.setText(String.valueOf(group.getcurrent_user()));
+        viewHolder.group_maxCount.setText(String.valueOf(group.getUser_max_count()));
 
+        // 그룹 리스트 프로필 사진.
         if (group.getImageURL().equals("default")) {
             viewHolder.group_profile_image.setImageResource(R.mipmap.ic_launcher);
         } else {
@@ -74,7 +83,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         public ImageView group_profile_image;
         public TextView group_planTime;
         public TextView group_dayCycle;
-        public TextView group_minCount;
+        public TextView group_current_user;
         public TextView group_maxCount;
 
         public ViewHolder(@NonNull View itemView) {
@@ -83,7 +92,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             group_profile_image = itemView.findViewById(R.id.groupList_profile_image);
             group_planTime = itemView.findViewById(R.id.tv_groupList_hashTime);
             group_dayCycle = itemView.findViewById(R.id.tv_groupList_hashCycle);
-            group_minCount = itemView.findViewById(R.id.tv_groupList_minCount);
+            group_current_user = itemView.findViewById(R.id.tv_groupList_currentUser);
             group_maxCount = itemView.findViewById(R.id.tv_groupList_maxCount);
         }
     }
