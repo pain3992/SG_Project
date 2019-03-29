@@ -16,6 +16,8 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".group_index" />
         <activity android:name=".SettingActivity" />
         <activity
             android:name=".ResetPasswordActivity"
@@ -29,7 +31,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".IndexActivity" />
-
         <activity
             android:name=".RegisterActivity"
             android:parentActivityName=".GStartActivity" />
@@ -43,26 +44,25 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".GroupRegistActivity" />
         <activity android:name=".StartActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".WSYActivity" />
         <activity android:name=".YouMinActivity" />
-
         <activity android:name=".BaeHoonActivity" />
         <activity android:name=".BaeHoonActivity2" />
         <activity android:name=".BaeHoonActivity3" />
 
-        <service android:name=".Notification.MyFirebaseIdService"
+        <service
+            android:name=".Notification.MyFirebaseIdService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".Notification.MyFirebaseMessaging"
+        <service
+            android:name=".Notification.MyFirebaseMessaging"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -73,7 +73,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
     </application>
 
 </manifest>

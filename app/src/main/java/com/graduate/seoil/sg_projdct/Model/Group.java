@@ -6,27 +6,30 @@ import java.util.List;
  * Created by baejanghun on 25/03/2019.
  */
 public class Group {
-    private String key;
     private String title;
     private String content;
     private String goal;
     private String imageURL;
     private String registDate;
+    private String dayCycle;
 
+    private int planTime;
     private int user_min_count;
     private int uesr_max_count;
 
 //    private List<String> goal_list;
 //    private List<String> group_list;
 
-    public Group(String title, String content, String goal, String imageURL, String registDate, int user_min_count, int uesr_max_count) {
+    public Group(String title, String content, String goal, String imageURL, String registDate, String dayCycle, int planTime, int user_min_count, int uesr_max_count) {
         this.title = title;
         this.content = content;
         this.goal = goal;
         this.imageURL = imageURL;
+        this.registDate = registDate;
+        this.dayCycle = dayCycle;
+        this.planTime = planTime;
         this.user_min_count = user_min_count;
         this.uesr_max_count = uesr_max_count;
-        this.registDate = registDate;
     }
 
     public Group() {
@@ -88,8 +91,19 @@ public class Group {
         this.registDate = registDate;
     }
 
-    @Override
-    public String toString() {
-        return this.title + "," + this.content;
+    public String getDayCycle() {
+        return dayCycle;
+    }
+
+    public void setDayCycle(String dayCycle) {
+        this.dayCycle = dayCycle;
+    }
+
+    public int getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(int planTime) {
+        this.planTime = planTime;
     }
 }

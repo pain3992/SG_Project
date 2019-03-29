@@ -71,6 +71,7 @@ public class GroupRegistActivity extends AppCompatActivity {
                 int maxCount = Integer.parseInt(et_maxCount.getText().toString());
                 int planTime = Integer.parseInt(et_planTime.getText().toString());
                 String checked_days = "";
+                // TODO : [3월 28일] 그룹 만들기 할 때  목표시간 + 반복요일 DB에 넣어야 함..
 
                 long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -83,8 +84,8 @@ public class GroupRegistActivity extends AppCompatActivity {
                         checked_days += (chkBoxs[i].getText().toString());
                     }
                 }
-
-                Group group = new Group(title, announce, "default", "default", getTime, minCount, maxCount);
+                String dayCycle = "default";
+                Group group = new Group(title, announce, "default", "default", getTime, dayCycle, planTime, minCount, maxCount);
                 databaseReference.child(key).setValue(group);
 
                 Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
