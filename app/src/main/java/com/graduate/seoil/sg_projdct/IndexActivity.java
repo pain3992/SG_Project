@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Fragments.ChatFragment;
+import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
+import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
+import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
+import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
 import com.graduate.seoil.sg_projdct.Model.User;
 
@@ -39,164 +44,67 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class IndexActivity extends AppCompatActivity {
 
     CircleImageView profile_image;
-    TextView username;
+    TextView username, toolbar_title, groupCreate;
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
+    public String str_userName;
+
     Intent intent;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_group:
-                    intent = new Intent(IndexActivity.this, GroupRegistActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_chart:
-                    intent = new Intent(IndexActivity.this, BaeHoonActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_home:
-                    return true;
-                case R.id.navigation_notifications:
-                    Toast.makeText(getApplicationContext(), "알림", Toast.LENGTH_SHORT);
-                    return true;
-                case R.id.navigation_setting:
-                    intent = new Intent(IndexActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                    return true;
-            }
-            return false;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
-
-        profile_image = findViewById(R.id.profile_image);
-        username = findViewById(R.id.username);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); // 이니시 프래그먼트 설정
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                username.setText(user.getUsername());
-
-                if (user.getImageURL().equals("default")) {
-                    profile_image.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
-                }
+                str_userName = user.getUsername();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager viewPager = findViewById(R.id.view_pager);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        viewPagerAdapter.addFragment(new ChatFragment(), "Chats");
-        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
-        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
-
-        viewPager.setAdapter(viewPagerAdapter);
-
-        tabLayout.setupWithViewPager(viewPager);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                // change this code because your app will crash
-                startActivity(new Intent(IndexActivity.this, GStartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                return true;
-        }
-
-        return false;
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        private ArrayList<Fragment> fragments;
-        private ArrayList<String> titles;
-
-        ViewPagerAdapter(FragmentManager fm) {
-            super(fm);
-            this.fragments = new ArrayList<>();
-            this.titles = new ArrayList<>();
-        }
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
-        public Fragment getItem(int i) {
-            return fragments.get(i);
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+            Bundle bundle = new Bundle();
+            bundle.putString("str_Username", str_userName);
+            switch (item.getItemId()) {
+                case R.id.navigation_group:
+                    selectedFragment = new GroupListFragment();
+                    break;
+                case R.id.navigation_chart:
+                    selectedFragment = new StatisticsFragment();
+                    break;
+                case R.id.navigation_home:
+                    selectedFragment = new HomeFragment();
+                    break;
+            }
+            assert selectedFragment != null;
+            selectedFragment.setArguments(bundle); // userName 넘기기
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            return true;
         }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            titles.add(title);
-        }
-
-        // Ctrl + O
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
-        }
-    }
-
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        status("online");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        status("offline");
-    }
+    };
 }

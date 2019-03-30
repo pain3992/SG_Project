@@ -8,6 +8,17 @@ public class User {
     private String status;
     private String search;
     private String registDate;
+    private String level;
+
+    public User() {
+
+    }
+
+    public User(String id, String username, String level) {
+        this.id = id;
+        this.username = username;
+        this.level = level;
+    }
 
     public User(String id, String username, String imageURL, String status, String search, String registDate) {
         this.id = id;
@@ -16,10 +27,6 @@ public class User {
         this.status = status;
         this.search = search;
         this.registDate = registDate;
-    }
-
-    public User() {
-
     }
 
     public String getId() {
@@ -65,4 +72,12 @@ public class User {
     public String getRegistDate() { return registDate; }
 
     public void setRegistDate(String registDate) { this.registDate = registDate; }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 }

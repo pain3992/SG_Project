@@ -16,7 +16,7 @@
             android:id="@+id/groupRegister_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/blue_grey_900"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:text="그룹 만들기"/>
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:textColor="#BD2E2E"
+                android:textColor="@color/blue_grey_500"
                 android:text="만들기"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -192,9 +192,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
