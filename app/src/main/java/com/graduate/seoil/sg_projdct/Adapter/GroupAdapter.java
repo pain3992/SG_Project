@@ -63,6 +63,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             Glide.with(mContext).load(group.getImageURL()).into(viewHolder.group_profile_image);
         }
 
+        // 그룹 리스트 클릭시 그룹 이동(그룹 가입 X시 그룹 정보로 이동)
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

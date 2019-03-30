@@ -98,24 +98,14 @@ public class GroupRegistActivity extends AppCompatActivity {
                 }
 
                 // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
-                // TODO : 그룹은 하나 이상 못만들게 해야함.
+                // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
+                // TODO : 그룹 가입시 default 프사는 유저 프로필사진으로.
                 Group group = new Group(title, announce, "default", "default", getTime, checked_days, planTime, minCount, maxCount);
                 databaseReference.child(fuser.getUid()).setValue(group);
 
                 // userList 코딩 ~
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
-//                databaseReference.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        User user = dataSnapshot.getValue(User.class);
-//                        username = user.getUsername();
-//                    }
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
                 databaseReference = firebaseDatabase.getReference("Group");
                 User user = new User(fuser.getUid(), username, "admin");
                 databaseReference.child(fuser.getUid()).child("userList").child(fuser.getUid()).setValue(user);
@@ -164,30 +154,4 @@ public class GroupRegistActivity extends AppCompatActivity {
 //
 //        recyclerview.setAdapter(new ExpandableListAdapter(data)); RecyclerView
     }
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_group:
-                    return true;
-                case R.id.navigation_chart:
-                    Toast.makeText(getApplicationContext(), "통계페이지", Toast.LENGTH_SHORT);
-                    return true;
-                case R.id.navigation_home:
-                    Intent intent = new Intent(GroupRegistActivity.this, IndexActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_notifications:
-                    Toast.makeText(getApplicationContext(), "알림", Toast.LENGTH_SHORT);
-                    return true;
-                case R.id.navigation_setting:
-                    Toast.makeText(getApplicationContext(), "세팅", Toast.LENGTH_SHORT);
-                    return true;
-            }
-            return false;
-        }
-    };
 }

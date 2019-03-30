@@ -32,6 +32,7 @@ import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
 import com.graduate.seoil.sg_projdct.GStartActivity;
+import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.User;
 import com.graduate.seoil.sg_projdct.R;
 
@@ -116,7 +117,7 @@ public class ChatActivity extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 // change this code because your app will crash
-                startActivity(new Intent(ChatActivity.this, IndexActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                startActivity(new Intent(ChatActivity.this, GStartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 return true;
         }
 
