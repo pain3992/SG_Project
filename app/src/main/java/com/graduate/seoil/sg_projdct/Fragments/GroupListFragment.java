@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +45,7 @@ public class GroupListFragment extends Fragment {
 
     private TextView create_group;
     private String str_userName;
+    private String str_userImageURL;
     private List<Group> mGroup;
     @Nullable
     @Override
@@ -59,12 +61,14 @@ public class GroupListFragment extends Fragment {
 
         if (getArguments() != null) {
             str_userName = getArguments().getString("str_Username");
+            str_userImageURL = getArguments().getString("str_userImageURL");
         }
         create_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), GroupRegistActivity.class);
                 intent.putExtra("str_userName", str_userName);
+                intent.putExtra("str_userImageURL", str_userImageURL);
                 startActivity(intent);
             }
         });

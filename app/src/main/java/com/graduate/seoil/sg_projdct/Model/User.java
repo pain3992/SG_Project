@@ -14,10 +14,11 @@ public class User {
 
     }
 
-    public User(String id, String username, String level) {
+    public User(String id, String username, String level, String imageURL) {
         this.id = id;
         this.username = username;
         this.level = level;
+        this.imageURL = imageURL;
     }
 
     public User(String id, String username, String imageURL, String status, String search, String registDate) {

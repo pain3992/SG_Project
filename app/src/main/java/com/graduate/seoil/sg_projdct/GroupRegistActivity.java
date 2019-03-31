@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -46,6 +47,7 @@ public class GroupRegistActivity extends AppCompatActivity {
     FirebaseUser fuser;
 
     private String username;
+    private String userImageURL;
 
     RecyclerView recyclerview;
     EditText et_title, et_minCount, et_maxCount, et_planTime, et_announce;
@@ -74,6 +76,9 @@ public class GroupRegistActivity extends AppCompatActivity {
         chkBoxs = new CheckBox[chkBoxIds.length];
 
         username = intent.getStringExtra("str_userName");
+        userImageURL = intent.getStringExtra("str_userImageURL");
+
+        Log.d("이미지URL 못불러옴", userImageURL);
 
         toolbar.findViewById(R.id.groupRegister_create).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,16 +104,15 @@ public class GroupRegistActivity extends AppCompatActivity {
 
                 // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
                 // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
-                // TODO : 그룹 가입시 default 프사는 유저 프로필사진으로.
-                Group group = new Group(title, announce, "default", "default", getTime, checked_days, planTime, minCount, maxCount);
-                databaseReference.child(fuser.getUid()).setValue(group);
+                // TODO : [3월 30일] 프로필 사진 변경시, 그룹의 유저리스트의 imageURL도 변경되어야 함.
+
+                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount);
+                databaseReference.child(title).setValue(group);
 
                 // userList 코딩 ~
-                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-
-                databaseReference = firebaseDatabase.getReference("Group");
-                User user = new User(fuser.getUid(), username, "admin");
-                databaseReference.child(fuser.getUid()).child("userList").child(fuser.getUid()).setValue(user);
+                databaseReference = firebaseDatabase.getReference("Group").child(title).child("userList");
+                User user = new User(fuser.getUid(), username, "admin", userImageURL);
+                databaseReference.child(fuser.getUid()).setValue(user);
 
                 finish();
             }
