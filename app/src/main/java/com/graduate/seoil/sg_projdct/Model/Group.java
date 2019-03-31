@@ -13,6 +13,7 @@ public class Group {
     private String goal;
     private String imageURL;
     private String registDate;
+    private String adminName;
     private String dayCycle;
 
     private int planTime;
@@ -27,12 +28,13 @@ public class Group {
     public Group() {
     }
 
-    public Group(String title, String content, String goal, String imageURL, String registDate, String dayCycle, int planTime, int current_user, int User_max_count) {
+    public Group(String title, String content, String goal, String imageURL, String registDate, String adminName, String dayCycle, int planTime, int current_user, int User_max_count) {
         this.title = title;
         this.content = content;
         this.goal = goal;
         this.imageURL = imageURL;
         this.registDate = registDate;
+        this.adminName = adminName;
         this.dayCycle = dayCycle;
         this.planTime = planTime;
         this.current_user = current_user;
@@ -108,5 +110,13 @@ public class Group {
     }
     public void setcurrent_user(int current_user) {
         this.current_user = current_user;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
     }
 }

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GroupInformation"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/index_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_grey_900"
+        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/MenuStyle">
+
+        <TextView
+            android:id="@+id/index_toolbar_title"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="그룹 정보"/>
+
+        <TextView
+            android:id="@+id/groupRegister_create"
+            android:clickable="true"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/blue_grey_500"
+            android:text="압장"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_groupInformation_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_900"
+            android:text="그룹 타이틀"/>
+
+        <View
+            android:id="@+id/line_1"
+            android:layout_below="@id/tv_groupInformation_title"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CECECE"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_registDate_before"
+            android:layout_below="@id/line_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="그룹 생성일  :  "
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_500"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_registDate"
+            android:layout_below="@id/line_1"
+            android:layout_toEndOf="@id/tv_groupInformation_registDate_before"
+            android:layout_marginTop="11dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_grey_500"
+            android:text="2019/03/21"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_userCount_before"
+            android:layout_below="@id/tv_groupInformation_registDate_before"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="현재 그룹원  :  "
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_500"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_currentUser"
+            android:layout_below="@id/tv_groupInformation_registDate"
+            android:layout_toEndOf="@id/tv_groupInformation_userCount_before"
+            android:layout_marginTop="11dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textColor="@color/blue_grey_500"/>
+
+        <TextView
+            android:id="@+id/slash"
+            android:layout_below="@id/tv_groupInformation_registDate"
+            android:layout_toEndOf="@id/tv_groupInformation_currentUser"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_groupList_maxCount"
+            android:text="/"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_maxUser"
+            android:layout_below="@id/tv_groupInformation_registDate"
+            android:layout_toEndOf="@id/slash"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_grey_500"
+            android:text="7"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line_2"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:background="#E7E6E6"/>
+
+    <RelativeLayout
+        android:id="@+id/relative2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_groupInformation_dayCycle"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="월화수목금"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_900"/>
+
+        <TextView
+            android:id="@+id/middle_spot"
+            android:layout_toEndOf="@id/tv_groupInformation_dayCycle"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="·"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_planTime"
+            android:layout_toEndOf="@id/middle_spot"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4시간"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_900"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/middle_spot2"
+            android:layout_toEndOf="@id/tv_groupInformation_planTime"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="·"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_currentUser2"
+            android:layout_toEndOf="@id/middle_spot2"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/blue_grey_900"/>
+
+        <TextView
+            android:id="@+id/tv_groupInformation_currentUser_after"
+            android:layout_toEndOf="@id/tv_groupInformation_currentUser2"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="명 참여중"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_900"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_groupListProfileImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_groupInformation_dayCycle"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line_3"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:background="#E7E6E6"/>
+
+    <RelativeLayout
+        android:id="@+id/relative3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/group_announce"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="그룹소개"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

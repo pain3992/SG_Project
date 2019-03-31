@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,8 @@ public class IndexActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
-    public String str_userName;
+    public static String str_userName;
+    public static String str_userImageURL;
 
     Intent intent;
     @Override
@@ -61,6 +63,8 @@ public class IndexActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
+
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); // 이니시 프래그먼트 설정
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -68,6 +72,7 @@ public class IndexActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 str_userName = user.getUsername();
+                str_userImageURL = user.getImageURL();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -88,8 +93,12 @@ public class IndexActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
+
+            // Session 역할 : 유저이름과 프로필사진 담기.
             Bundle bundle = new Bundle();
             bundle.putString("str_Username", str_userName);
+            bundle.putString("str_userImageURL", str_userImageURL);
+
             switch (item.getItemId()) {
                 case R.id.navigation_group:
                     selectedFragment = new GroupListFragment();
@@ -100,6 +109,10 @@ public class IndexActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     selectedFragment = new HomeFragment();
                     break;
+//                case R.id.navigation_setting:
+//                    Intent intent = new Intent(IndexActivity.this, SettingActivity.class);
+//                    finish();
+//                    startActivity(intent);
             }
             assert selectedFragment != null;
             selectedFragment.setArguments(bundle); // userName 넘기기
