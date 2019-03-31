@@ -28,49 +28,49 @@ import java.util.List;
  * Created by baejanghun on 28/03/2019.
  */
 public class GroupFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private GroupAdapter groupAdapter;
-
-    private List<Group> mGroup;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
-
-        recyclerView = view.findViewById(R.id.rv_groupList);
-        recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        mGroup = new ArrayList<>();
-
-        readGroupList();
-
-        return view;
-    }
-
-    private void readGroupList() {
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mGroup.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Group group = snapshot.getValue(Group.class);
-                    mGroup.add(group);
-                }
-
-                groupAdapter = new GroupAdapter(getContext(), mGroup);
-                recyclerView.setAdapter(groupAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private RecyclerView recyclerView;
+//    private GroupAdapter groupAdapter;
+//
+//    private List<Group> mGroup;
+//
+//    @Nullable
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+//
+//        recyclerView = view.findViewById(R.id.rv_groupList);
+//        recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+//        mGroup = new ArrayList<>();
+//
+//        readGroupList();
+//
+//        return view;
+//    }
+//
+//    private void readGroupList() {
+//        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
+//
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                mGroup.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Group group = snapshot.getValue(Group.class);
+//                    mGroup.add(group);
+//                }
+//
+//                groupAdapter = new GroupAdapter(getContext(), mGroup);
+//                recyclerView.setAdapter(groupAdapter);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

@@ -36,6 +36,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -106,13 +107,21 @@ public class GroupRegistActivity extends AppCompatActivity {
                 // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
                 // TODO : [3월 30일] 프로필 사진 변경시, 그룹의 유저리스트의 imageURL도 변경되어야 함.
 
-                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount);
+                HashMap<String, Object> userList = new HashMap<String, Object>();
+                HashMap<String, Object> userList_under = new HashMap<String, Object>();
+                userList_under.put("id", fuser.getUid());
+                userList_under.put("imageURL", userImageURL);
+                userList_under.put("level", "admin");
+                userList_under.put("username", username);
+                userList.put(fuser.getUid(), userList_under);
+
+                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount, userList);
                 databaseReference.child(title).setValue(group);
 
                 // userList 코딩 ~
-                databaseReference = firebaseDatabase.getReference("Group").child(title).child("userList");
-                User user = new User(fuser.getUid(), username, "admin", userImageURL);
-                databaseReference.child(fuser.getUid()).setValue(user);
+//                databaseReference = firebaseDatabase.getReference("Group").child(title).child("userList");
+//                User user = new User(fuser.getUid(), username, "admin", userImageURL);
+//                databaseReference.child(fuser.getUid()).setValue(user);
 
                 finish();
             }

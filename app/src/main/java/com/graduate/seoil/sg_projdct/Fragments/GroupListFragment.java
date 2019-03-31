@@ -6,7 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,7 +40,9 @@ import com.graduate.seoil.sg_projdct.R;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class GroupListFragment extends Fragment {
@@ -47,10 +53,12 @@ public class GroupListFragment extends Fragment {
     private String str_userName;
     private String str_userImageURL;
     private List<Group> mGroup;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+
         create_group = view.findViewById(R.id.groupRegister_create);
         recyclerView = view.findViewById(R.id.rv_groupList);
 
@@ -77,15 +85,8 @@ public class GroupListFragment extends Fragment {
 
         return view;
     }
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { // 프래그먼트 별로 메뉴바 생성 옵션 #2
-//        inflater.inflate(R.menu.fragment_toolbar, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
 
     private void readGroupList() {
-       // final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -94,10 +95,11 @@ public class GroupListFragment extends Fragment {
                 mGroup.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Group group = snapshot.getValue(Group.class);
+                    // System.out.println(snapshot.child("userList").getValue());
                     mGroup.add(group);
                 }
 
-                groupAdapter = new GroupAdapter(getContext(), mGroup);
+                groupAdapter = new GroupAdapter(getContext(), mGroup, str_userName, str_userImageURL);
                 recyclerView.setAdapter(groupAdapter);
 
             }
