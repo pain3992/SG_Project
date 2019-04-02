@@ -108,4 +108,11 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public static class Maincheck extends AppCompatActivity {
+        protected  void onCreate(Bundle savedInstanceState){
+
+        }
+
+    }
 }
