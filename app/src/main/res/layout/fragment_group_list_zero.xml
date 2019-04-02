@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.GroupListFragment">
+    tools:context=".Fragments.GroupListZero">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -68,10 +68,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_groupList"
-        android:layout_below="@id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/for_outsider_msg"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="60dp"
+        android:text="그룹에 없으시네요"
+        android:textColor="@color/blue_grey_900"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 </RelativeLayout>

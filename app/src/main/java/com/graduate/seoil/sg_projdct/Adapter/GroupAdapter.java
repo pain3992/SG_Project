@@ -3,6 +3,7 @@ package com.graduate.seoil.sg_projdct.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,14 +37,16 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     private Context mContext;
     private List<Group> mGroups;
 
-    private JSONArray jsonArray;
-    private JSONObject jsonObject;
+    private String userName;
+    private String userImageURL;
 
     FirebaseUser fuser;
 
-    public GroupAdapter(Context mContext, List<Group> mGroups) {
+    public GroupAdapter(Context mContext, List<Group> mGroups, String userName, String str_userImageURL) {
         this.mGroups = mGroups;
         this.mContext = mContext;
+        this.userName = userName;
+        this.userImageURL = str_userImageURL;
     }
 
     @NonNull
@@ -57,12 +61,19 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         final Group group = mGroups.get(i);
         viewHolder.group_title.setText(group.getTitle());
-        viewHolder.group_planTime.setText(String.format("#") + String.valueOf(group.getPlanTime() / 60) + String.format("시간"));
         viewHolder.group_dayCycle.setText(String.format("#") + group.getDayCycle());
         viewHolder.group_current_user.setText(String.valueOf(group.getcurrent_user()));
         viewHolder.group_maxCount.setText(String.valueOf(group.getUser_max_count()));
+        viewHolder.group_planTime.setText(String.format("#") + String.valueOf(group.getPlanTime() / 60) + String.format("시간"));
 
-        final String admin_uid = group.getAdminName();
+        // 그룹 정원 다 차면 참여하기 --> 마감
+        if (group.getcurrent_user() == group.getUser_max_count()) {
+            viewHolder.group_join.setText("마감");
+            viewHolder.group_join.setTextColor(Color.parseColor("#F44336"));
+        }
+
+        final HashMap<String, Object> userList = group.getUserList();
+
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -78,7 +89,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (admin_uid.equals(fuser.getUid())) {
+                if (userList.get(fuser.getUid()) != null) {
                     Intent intent = new Intent(mContext, ChatActivity.class);
                     mContext.startActivity(intent);
                 } else {
@@ -94,6 +105,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     bundle.putString("group_planTime", String.valueOf(group.getPlanTime() / 60));
                     bundle.putString("group_dayCycle", group.getDayCycle());
                     bundle.putString("group_announce", group.getContent());
+                    bundle.putString("userName", userName);
+                    bundle.putString("userImageURL", userImageURL);
+
                     intent.putExtras(bundle);
 
                     mContext.startActivity(intent);
@@ -115,6 +129,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         public TextView group_dayCycle;
         public TextView group_current_user;
         public TextView group_maxCount;
+        public TextView group_join;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +139,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             group_dayCycle = itemView.findViewById(R.id.tv_groupList_hashCycle);
             group_current_user = itemView.findViewById(R.id.tv_groupList_currentUser);
             group_maxCount = itemView.findViewById(R.id.tv_groupList_maxCount);
+            group_join = itemView.findViewById(R.id.tv_group_join);
         }
     }
 

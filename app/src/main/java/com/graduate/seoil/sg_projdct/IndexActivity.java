@@ -54,19 +54,16 @@ public class IndexActivity extends AppCompatActivity {
     public static String str_userImageURL;
 
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); // 이니시 프래그먼트 설정
-
+        // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -80,11 +77,25 @@ public class IndexActivity extends AppCompatActivity {
             }
         });
 
+        // 이니시 프래그먼트 설정
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
+    }
+
+    private void status(String status) {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -96,7 +107,7 @@ public class IndexActivity extends AppCompatActivity {
 
             // Session 역할 : 유저이름과 프로필사진 담기.
             Bundle bundle = new Bundle();
-            bundle.putString("str_Username", str_userName);
+            bundle.putString("str_userName", str_userName);
             bundle.putString("str_userImageURL", str_userImageURL);
 
             switch (item.getItemId()) {
@@ -116,7 +127,10 @@ public class IndexActivity extends AppCompatActivity {
             }
             assert selectedFragment != null;
             selectedFragment.setArguments(bundle); // userName 넘기기
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
             return true;
         }
     };

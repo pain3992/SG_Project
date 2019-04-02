@@ -1,7 +1,10 @@
 package com.graduate.seoil.sg_projdct.Model;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,14 +24,14 @@ public class Group {
     private int current_user;
     private int User_max_count;
 
-//    private List<String> goal_list;
-//    private List<String> group_list;
+    private HashMap<String, Object> userList;
+//    private HashMap<String, Object> group_list;
 
 
     public Group() {
     }
 
-    public Group(String title, String content, String goal, String imageURL, String registDate, String adminName, String dayCycle, int planTime, int current_user, int User_max_count) {
+    public Group(String title, String content, String goal, String imageURL, String registDate, String adminName, String dayCycle, int planTime, int current_user, int User_max_count, HashMap<String, Object> userList) {
         this.title = title;
         this.content = content;
         this.goal = goal;
@@ -39,6 +42,7 @@ public class Group {
         this.planTime = planTime;
         this.current_user = current_user;
         this.User_max_count = User_max_count;
+        this.userList = userList;
     }
 
     public String getTitle() {
@@ -118,5 +122,18 @@ public class Group {
 
     public void setAdminName(String adminName) {
         this.adminName = adminName;
+    }
+
+    public HashMap<String, Object> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(HashMap<String, Object> userList) {
+        this.userList = userList;
+    }
+
+    @NonNull
+    public String toString() {
+        return title + ", " + content + ", " + goal + ", " + registDate + ", " + adminName + ", " + dayCycle + ", " + userList;
     }
 }

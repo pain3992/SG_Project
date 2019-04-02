@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:textColor="@color/blue_grey_500"
-            android:text="압장"
+            android:text="입장"
             android:textSize="15sp"
             android:textStyle="bold"/>
 
@@ -167,7 +167,7 @@
             android:id="@+id/tv_groupInformation_planTime"
             android:layout_toEndOf="@id/middle_spot"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4시간"
@@ -190,7 +190,7 @@
             android:id="@+id/tv_groupInformation_currentUser2"
             android:layout_toEndOf="@id/middle_spot2"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
