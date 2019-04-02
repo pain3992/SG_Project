@@ -1,6 +1,6 @@
 package com.graduate.seoil.sg_projdct;
 
-import com.graduate.seoil.sg_projdct.Product;
+import com.graduate.seoil.sg_projdct.Model.Product;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;

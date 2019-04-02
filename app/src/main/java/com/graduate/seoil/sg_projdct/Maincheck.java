@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.graduate.seoil.sg_projdct.Adapter.ProductAdapter;
+import com.graduate.seoil.sg_projdct.Model.Product;
+
 import java.util.ArrayList;
 
 public class Maincheck   extends AppCompatActivity {

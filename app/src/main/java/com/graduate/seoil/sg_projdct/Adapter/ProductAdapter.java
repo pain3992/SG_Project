@@ -1,9 +1,14 @@
-package com.graduate.seoil.sg_projdct;
+package com.graduate.seoil.sg_projdct.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.graduate.seoil.sg_projdct.Company;
+import com.graduate.seoil.sg_projdct.CompanyViewHolder;
+import com.graduate.seoil.sg_projdct.Model.Product;
+import com.graduate.seoil.sg_projdct.ProductViewHolder;
+import com.graduate.seoil.sg_projdct.R;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 

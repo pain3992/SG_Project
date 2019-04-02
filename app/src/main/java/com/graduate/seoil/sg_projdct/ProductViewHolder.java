@@ -3,8 +3,7 @@ package com.graduate.seoil.sg_projdct;
 import android.view.View;
 import android.widget.TextView;
 
-import com.graduate.seoil.sg_projdct.Product;
-import com.graduate.seoil.sg_projdct.R;
+import com.graduate.seoil.sg_projdct.Model.Product;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 public class ProductViewHolder extends ChildViewHolder {

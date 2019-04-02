@@ -1,4 +1,4 @@
-package com.graduate.seoil.sg_projdct;
+package com.graduate.seoil.sg_projdct.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
