@@ -113,6 +113,7 @@ public class GroupRegistActivity extends AppCompatActivity {
                 userList_under.put("imageURL", userImageURL);
                 userList_under.put("level", "admin");
                 userList_under.put("username", username);
+                userList_under.put("registDate", getTime);
                 userList.put(fuser.getUid(), userList_under);
 
                 Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount, userList);

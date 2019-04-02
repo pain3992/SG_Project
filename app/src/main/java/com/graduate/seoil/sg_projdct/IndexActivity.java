@@ -54,6 +54,7 @@ public class IndexActivity extends AppCompatActivity {
     public static String str_userImageURL;
 
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +62,6 @@ public class IndexActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-
-        // 이니시 프래그먼트 설정
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
-                .commit();
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
@@ -81,6 +76,12 @@ public class IndexActivity extends AppCompatActivity {
 
             }
         });
+
+        // 이니시 프래그먼트 설정
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -106,7 +107,7 @@ public class IndexActivity extends AppCompatActivity {
 
             // Session 역할 : 유저이름과 프로필사진 담기.
             Bundle bundle = new Bundle();
-            bundle.putString("str_Username", str_userName);
+            bundle.putString("str_userName", str_userName);
             bundle.putString("str_userImageURL", str_userImageURL);
 
             switch (item.getItemId()) {

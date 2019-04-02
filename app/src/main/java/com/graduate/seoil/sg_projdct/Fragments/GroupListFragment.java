@@ -29,7 +29,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Path;
 import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.GroupAdapter;
 import com.graduate.seoil.sg_projdct.ChatActivity;
@@ -55,6 +57,8 @@ public class GroupListFragment extends Fragment {
     private String str_userImageURL;
     private List<Group> mGroup;
 
+    private int joinGroup_count = 0;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class GroupListFragment extends Fragment {
         create_group = view.findViewById(R.id.groupRegister_create);
 
         if (getArguments() != null) {
-            str_userName = getArguments().getString("str_Username");
+            str_userName = getArguments().getString("str_userName");
             str_userImageURL = getArguments().getString("str_userImageURL");
         }
 
@@ -72,6 +76,25 @@ public class GroupListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mGroup = new ArrayList<>();
+
+        System.out.println("유저네임, URL : " + str_userImageURL + ", " + str_userName);
+        readGroupList();
+        // 그룹 가입한 거 없으면 다른 페이지 뛰우기.
+//        if (joinGroup_count == 0) {
+//            Fragment selectedFragment;
+//            selectedFragment = new GroupListZero();
+//
+//            Bundle bundle = new Bundle();
+//            bundle.putString("str_userName", str_userName);
+//            bundle.putString("str_userImageURL", str_userImageURL);
+//            selectedFragment.setArguments(bundle);
+//
+//            assert getFragmentManager() != null;
+//            getFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragment_container, selectedFragment)
+//                    .commit();
+//        }
 
         TabLayout tabLayout = view.findViewById(R.id.groupList_tab_layout);
         tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
@@ -101,7 +124,7 @@ public class GroupListFragment extends Fragment {
             }
         });
 
-
+        // 그룹 만들기
         create_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,29 +135,35 @@ public class GroupListFragment extends Fragment {
             }
         });
 
-        readGroupList();
-
         return view;
     }
 
     private void readGroupList() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        assert fuser != null;
+
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mGroup.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Group group = snapshot.getValue(Group.class);
-                    // System.out.println(snapshot.child("userList").getValue());
-                    mGroup.add(group);
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (Objects.equals(postSnapshot.getKey(), "userList")) {
+                            for (DataSnapshot underSnapshot : postSnapshot.getChildren()) {
+                                if (Objects.equals(underSnapshot.getKey(), fuser.getUid())) {
+                                    joinGroup_count += 1;
+                                    Group group = snapshot.getValue(Group.class);
+                                    mGroup.add(group);
+                                }
+                            }
+                        }
+                    }
                 }
-
                 groupAdapter = new GroupAdapter(getContext(), mGroup, str_userName, str_userImageURL);
                 recyclerView.setAdapter(groupAdapter);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
