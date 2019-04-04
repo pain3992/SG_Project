@@ -2,6 +2,8 @@ package com.graduate.seoil.sg_projdct;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,38 +14,91 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class BaeHoonActivity3 extends AppCompatActivity {
-    private TextView _text;
-    private CountDownTimer _timer;
+    TextView timer ;
+    Button start, pause, reset;
+    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    Handler handler;
+    int Seconds, Minutes, MilliSeconds ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bae_hoon3);
         Intent intent = new Intent(this.getIntent());
-        _text = (TextView)findViewById(R.id.tvMsg);
+        timer = (TextView)findViewById(R.id.tvTimer);
+        start = (Button)findViewById(R.id.btStart);
+        pause = (Button)findViewById(R.id.btPause);
+        reset = (Button)findViewById(R.id.btReset);
 
-        _timer = new CountDownTimer(600*1000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                _text.setText("카운트: " + millisUntilFinished/1000);
+        handler = new Handler() ;
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                StartTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
+
+                reset.setEnabled(false);
+
             }
+        });
 
-            public void onFinish() {
-                _text.setText("finshed");
-            }
-        };
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        Button btnStart = (Button)findViewById(R.id.btnStart);
-        btnStart.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                _timer.start();
+                TimeBuff += MillisecondTime;
+
+                handler.removeCallbacks(runnable);
+
+                reset.setEnabled(true);
+
             }
         });
 
-        Button btnEnd = (Button)findViewById(R.id.btnStop);
-        btnEnd.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                _timer.cancel();
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MillisecondTime = 0L ;
+                StartTime = 0L ;
+                TimeBuff = 0L ;
+                UpdateTime = 0L ;
+                Seconds = 0 ;
+                Minutes = 0 ;
+                MilliSeconds = 0 ;
+
+                timer.setText("00:00:00");
+
             }
         });
+
     }
+
+    public Runnable runnable = new Runnable() {
+
+        public void run() {
+
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+
+            UpdateTime = TimeBuff + MillisecondTime;
+
+            Seconds = (int) (UpdateTime / 1000);
+
+            Minutes = Seconds / 60;
+
+            Seconds = Seconds % 60;
+
+            MilliSeconds = (int) (UpdateTime % 1000);
+
+            timer.setText("" + Minutes + ":"
+                    + String.format("%02d", Seconds) + ":"
+                    + String.format("%03d", MilliSeconds));
+
+            handler.postDelayed(this, 0);
+        }
+
+    };
+
 }
