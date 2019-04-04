@@ -1,6 +1,7 @@
 package com.graduate.seoil.sg_projdct;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -33,6 +34,7 @@ import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
+import com.graduate.seoil.sg_projdct.Fragments.SettingFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
 import com.graduate.seoil.sg_projdct.Model.User;
@@ -98,6 +100,18 @@ public class IndexActivity extends AppCompatActivity {
         reference.updateChildren(hashMap);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -120,10 +134,12 @@ public class IndexActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     selectedFragment = new HomeFragment();
                     break;
-//                case R.id.navigation_setting:
-//                    Intent intent = new Intent(IndexActivity.this, SettingActivity.class);
-//                    finish();
-//                    startActivity(intent);
+                case R.id.navigation_setting:
+//                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
+//                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                    editor.apply();
+                    selectedFragment = new SettingFragment();
+                    break;
             }
             assert selectedFragment != null;
             selectedFragment.setArguments(bundle); // userName 넘기기

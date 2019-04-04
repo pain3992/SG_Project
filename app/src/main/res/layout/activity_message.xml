@@ -13,10 +13,10 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/message_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/blue_grey_900"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 

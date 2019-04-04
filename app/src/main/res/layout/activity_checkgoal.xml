@@ -15,4 +15,6 @@
         android:textColor="#f0f"
         android:id="@+id/textView"/>
 
+    <!-- 승연 -->
+
 </FrameLayout>

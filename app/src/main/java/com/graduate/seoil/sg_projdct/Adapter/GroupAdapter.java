@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.graduate.seoil.sg_projdct.ChatActivity;
+import com.graduate.seoil.sg_projdct.GroupActivity;
 import com.graduate.seoil.sg_projdct.GroupInformation;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.R;
@@ -66,16 +67,20 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         viewHolder.group_maxCount.setText(String.valueOf(group.getUser_max_count()));
         viewHolder.group_planTime.setText(String.format("#") + String.valueOf(group.getPlanTime() / 60) + String.format("시간"));
 
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+        final HashMap<String, Object> userList = group.getUserList();
+
         // 그룹 정원 다 차면 참여하기 --> 마감
         if (group.getcurrent_user() == group.getUser_max_count()) {
             viewHolder.group_join.setText("마감");
             viewHolder.group_join.setTextColor(Color.parseColor("#F44336"));
         }
 
-        final HashMap<String, Object> userList = group.getUserList();
-
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-
+        if (userList.get(fuser.getUid()) != null) {
+            viewHolder.group_join.setText("입장하기");
+            viewHolder.group_join.setTextColor(Color.parseColor("#4C229B"));
+        }
 
         // 그룹 리스트 프로필 사진.
         // TODO : [3월 30일 에러] 앱 내에서 DB 읽기도 전에 액션을 하면 뻑 나는 경우 있음.
@@ -90,7 +95,15 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 if (userList.get(fuser.getUid()) != null) {
-                    Intent intent = new Intent(mContext, ChatActivity.class);
+                    // userList : {4aZRiZY7wtWaiJ8IM70VXhUPhLM2={level=user, imageURL=imageURL, id=4aZRiZY7wtWaiJ8IM70VXhUPhLM2, registDate=2019-04-02, username=얍얍}
+                    Intent intent = new Intent(mContext, GroupActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("group_title", group.getTitle());
+                    bundle.putString("userName", userName);
+                    bundle.putString("userImageURL", userImageURL);
+                    intent.putExtras(bundle);
+
                     mContext.startActivity(intent);
                 } else {
                     Intent intent = new Intent(mContext, GroupInformation.class);

@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Fragments.ChatFragment;
+import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
@@ -49,6 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
+    String str_userName, str_userImageURL;
+
     Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class ChatActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
@@ -70,9 +74,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.getUsername());
-//                Toast.makeText(ChatActivity.this, user.getUsername(), Toast.LENGTH_LONG).show();
+                str_userName = user.getUsername();
+                str_userImageURL = user.getImageURL();
 
-                if (user.getImageURL().equals("default")) {
+                if (str_userImageURL.equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
@@ -98,10 +103,8 @@ public class ChatActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
 
-        BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, new HomeFragment()).commit();
+//        BottomNavigationView navigation = findViewById(R.id.group_bottom_navigation);
+//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     @Override
@@ -119,9 +122,13 @@ public class ChatActivity extends AppCompatActivity {
                 // change this code because your app will crash
                 startActivity(new Intent(ChatActivity.this, GStartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 return true;
+            case android.R.id.home: {
+                finish();
+                return true;
+            }
         }
 
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -174,48 +181,5 @@ public class ChatActivity extends AppCompatActivity {
         super.onPause();
         status("offline");
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-            switch (item.getItemId()) {
-                case R.id.navigation_group:
-                    selectedFragment = new HomeFragment();
-                    break;
-                case R.id.navigation_chart:
-                    selectedFragment = new StatisticsFragment();
-                    break;
-                case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
-                    break;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, selectedFragment).commit();
-            return true;
-
-//            switch (item.getItemId()) {
-//                case R.id.navigation_group:
-//                    intent = new Intent(IndexActivity.this, GroupRegistActivity.class);
-//                    startActivity(intent);
-//                    return true;
-//                case R.id.navigation_chart:
-//                    intent = new Intent(IndexActivity.this, BaeHoonActivity.class);
-//                    startActivity(intent);
-//                    return true;
-//                case R.id.navigation_home:
-//                    return true;
-//                case R.id.navigation_notifications:
-//                    Toast.makeText(getApplicationContext(), "알림", Toast.LENGTH_SHORT);
-//                    return true;
-//                case R.id.navigation_setting:
-//                    intent = new Intent(IndexActivity.this, SettingActivity.class);
-//                    startActivity(intent);
-//                    return true;
-//            }
-//            return false;
-        }
-    };
 }
 

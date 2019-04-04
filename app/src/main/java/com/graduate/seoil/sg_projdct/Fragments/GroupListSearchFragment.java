@@ -36,10 +36,12 @@ import com.graduate.seoil.sg_projdct.GroupRegistActivity;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.GroupUserList;
 import com.graduate.seoil.sg_projdct.Model.User;
+import com.graduate.seoil.sg_projdct.Notification.Data;
 import com.graduate.seoil.sg_projdct.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GroupListSearchFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -52,6 +54,11 @@ public class GroupListSearchFragment extends Fragment {
 
     private EditText search_group;
 
+    private FirebaseUser fuser;
+    private DatabaseReference reference;
+
+    private ArrayList<String> groupList;
+
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list_search, container, false);
@@ -62,6 +69,26 @@ public class GroupListSearchFragment extends Fragment {
         recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        groupList = new ArrayList<>();
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // 현재 유저의 가입한 그룹 리스트 불러오기.
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    System.out.println("초기 값 : " + snapshot.getKey());
+                    groupList.add(snapshot.getKey());
+                }
+            }
+                        @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         mGroup = new ArrayList<>();
 
         Bundle bundle = getArguments();
@@ -70,16 +97,11 @@ public class GroupListSearchFragment extends Fragment {
         str_userImageURL = bundle.getString("str_userImageURL");
 
         TabLayout tabLayout = view.findViewById(R.id.groupSearch_tab_layout);
+
+        Objects.requireNonNull(tabLayout.getTabAt(1)).select(); // 그룹 검색에서는 "그룹검색"이 선텍되어있게.
         tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
                 Fragment selectedFragment = null;
                 selectedFragment = new GroupListFragment();
 
@@ -93,6 +115,14 @@ public class GroupListSearchFragment extends Fragment {
                         .beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
                         .commit();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
@@ -126,19 +156,33 @@ public class GroupListSearchFragment extends Fragment {
     }
 
     private void readGroupList() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
+
+        reference = FirebaseDatabase.getInstance().getReference("Group");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mGroup.clear();
+                long cur_user = 0;
+                long check_num = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Group group = snapshot.getValue(Group.class);
-                    // System.out.println(snapshot.child("userList").getValue());
-                    mGroup.add(group);
-                }
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (postSnapshot.getKey().equals("current_user"))
+                            cur_user = (long) postSnapshot.getValue();
+                        if (Objects.equals(postSnapshot.getKey(), "userList")) {
+                            for (DataSnapshot underSnapshot : postSnapshot.getChildren()) {
+                                if (!Objects.equals(underSnapshot.getKey(), fuser.getUid()))
+                                    check_num += 1;
+                            }
+                            if (cur_user == check_num) {
+                                Group group = snapshot.getValue(Group.class);
+                                mGroup.add(group);
+                            }
+                            check_num = 0;
+                        }
+                    }
 
-//                groupAdapter = new GroupInformationAdapter(getContext(), mGroup, str_userName, str_userImageURL);
+                }
                 groupAdapter = new GroupAdapter(getContext(), mGroup, str_userName, str_userImageURL);
                 recyclerView.setAdapter(groupAdapter);
 

@@ -8,6 +8,7 @@ public class GroupUserList {
     private String imageURL;
     private String level;
     private String username;
+    private String registDate;
 
     public GroupUserList() {
     }
@@ -17,11 +18,12 @@ public class GroupUserList {
         this.username = username;
     }
 
-    public GroupUserList(String id, String imageURL, String level, String username) {
+    public GroupUserList(String id, String imageURL, String level, String username, String registDate) {
         this.id = id;
         this.imageURL = imageURL;
         this.level = level;
         this.username = username;
+        this.registDate = registDate;
     }
 
     public String getId() {
@@ -54,5 +56,13 @@ public class GroupUserList {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRegistDate() {
+        return registDate;
+    }
+
+    public void setRegistDate(String registDate) {
+        this.registDate = registDate;
     }
 }
