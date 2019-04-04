@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+
     style="@style/myTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="6"
+    android:weightSum="10"
     android:screenOrientation="portrait"
     android:divider="?android:dividerHorizontal"
     android:showDividers="middle"
+    tools:context=".MainActivity"
+    android:background="#313F47">
 
-
-    tools:context=".MainActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
@@ -46,48 +48,42 @@
     </android.support.v7.widget.Toolbar>
 
 
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight="2"
+    <com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:primaryColor="@color/blue_grey_900"
+        app:textColor="@android:color/white"
+        app:selectedItem_textColor="@android:color/holo_red_light"
+        app:todayItem_textColor="@android:color/white"
+        app:todayItem_background="@drawable/circle_white_stroke_background"
+        app:selectedItem_background="@drawable/circle_white_solid_background"
+        app:buttonLeft_drawableTintColor="@android:color/white"
+        app:buttonRight_drawableTintColor="@android:color/white"
+        app:expandIconColor="@android:color/white">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:src="@drawable/circle_graph"
-                android:scaleType="fitXY"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </FrameLayout>
-    </LinearLayout>
-
+    </com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar>
 
 
     <FrameLayout
-        android:layout_weight="4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="10">
 
-        android:padding="16dp"
-
-        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/border">
-
+            android:layout_height="match_parent">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/goal_list"
                 android:name="com.ringsterz.picmemo.fragment.ItemFragment"
                 tools:context="com.ringsterz.picmemo.fragment.NotificationFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_rv"/>
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
@@ -102,7 +98,6 @@
             app:backgroundTint="#ffffff"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp" />
-
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab1"
@@ -123,14 +118,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="15sp"
-            android:backgroundTint="#32CD32"
             android:src="@drawable/ic_add_black_24dp" />
-
-
     </FrameLayout>
-
-
-
 
 
 </LinearLayout>
