@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AccountSetting"></activity>
+        <activity android:name=".GoalMaking"></activity>
+        <activity android:name=".AccountSetting" />
         <activity android:name=".PostAddActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="7dp">
+
+
+
+    <TextView
+        android:id="@+id/goalList_title"
+        android:text="title"
+        android:layout_toEndOf="@+id/groupList_profile_image"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/blue_grey_900"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLength="15"/>
+
+    <TextView
+        android:id="@+id/goalList_text"
+        android:background="#DDDCDC"
+        android:layout_toEndOf="@id/groupList_profile_image"
+        android:layout_below="@id/goalList_title"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#35454D"
+        android:text="time"/>
+
+  
+
+    <TextView
+        android:id="@+id/goalList_currentUser"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/slash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"/>
+
+    <TextView
+        android:id="@+id/slash"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/goalList_maxCount"
+        android:text="/"/>
+
+    <TextView
+        android:id="@+id/goalList_maxCount"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/myeong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"/>
+
+    <TextView
+        android:id="@+id/myeong"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="%"/>
+
+    <TextView
+        android:id="@+id/tv_group_join"
+        android:clickable="true"
+        android:layout_below="@id/goalList_currentUser"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="@color/blue_grey_900"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="인증방식: "/>
+
+
+
+    <View
+        android:background="#CECECE"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="7dp"
+        android:layout_below="@id/groupList_profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="130dp"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:background="#C9B937"-->
+    <!--android:gravity="center">-->
+    <!--<TextView-->
+    <!--android:text="굿입니다요."-->
+    <!--android:id="@+id/message"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+    <!--</LinearLayout>-->
+
+
+</RelativeLayout>
