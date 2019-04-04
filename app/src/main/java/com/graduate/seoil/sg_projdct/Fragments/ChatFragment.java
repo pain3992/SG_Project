@@ -4,13 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +26,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.graduate.seoil.sg_projdct.Adapter.UserAdapter;
 import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.Chatlist;
+import com.graduate.seoil.sg_projdct.Model.GroupUserList;
 import com.graduate.seoil.sg_projdct.Model.User;
 import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.graduate.seoil.sg_projdct.R;
@@ -29,8 +34,12 @@ import com.graduate.seoil.sg_projdct.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatFragment extends Fragment {
     private RecyclerView recyclerView;
+    private TextView tv_userName;
+    private CircleImageView civ_userImageURL;
 
     private UserAdapter userAdapter;
     private List<User> mUsers;
@@ -38,23 +47,78 @@ public class ChatFragment extends Fragment {
     FirebaseUser fuser;
     DatabaseReference reference;
 
-    private List<Chatlist> userList;
+    private List<GroupUserList> mUserList;
+    private String str_userName, str_userImageURL, group_title;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.group_recycler_view);
+        tv_userName = view.findViewById(R.id.group_userName);
+        civ_userImageURL = view.findViewById(R.id.group_userProfileImage);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        userList = new ArrayList<>();
+        if (getArguments() != null) {
+            group_title = getArguments().getString("group_title");
+            str_userName = getArguments().getString("userName");
+            str_userImageURL = getArguments().getString("userImageURL");
+        }
 
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid());
+        System.out.println("str_userImageURL --> " + str_userImageURL);
+
+        tv_userName.setText(str_userName);
+        if (str_userImageURL == null) {
+            civ_userImageURL.setImageResource(R.mipmap.ic_launcher);
+        } else {
+            Glide.with(view).load(str_userImageURL).into(civ_userImageURL);
+        }
+
+        TabLayout tabLayout = view.findViewById(R.id.groupList_tab_layout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Fragment selectedFragment;
+                selectedFragment = new ActivityFeedFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("group_title", group_title);
+                bundle.putString("userName", str_userName);
+                bundle.putString("userImageURL", str_userImageURL);
+                selectedFragment.setArguments(bundle);
+
+                assert getFragmentManager() != null;
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.group_fragment_container, selectedFragment)
+                        .commit();
+//                switch (tab.getPosition()) {
+//                    case 1:
+//
+//                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+
+        mUserList = new ArrayList<>();
+
+//        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.getUid());
+        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList"); // TODO : 4/2 방금에러 패스스트링
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -62,10 +126,12 @@ public class ChatFragment extends Fragment {
                     return;
                 }
 
-                userList.clear();
+                mUserList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
-                    userList.add(chatlist);
+                    GroupUserList userList = snapshot.getValue(GroupUserList.class);
+                    if (!userList.getId().equals(fuser.getUid())) { // 자기 자신은 채팅유저에 안뜨게
+                        mUserList.add(userList);
+                    }
                 }
 
                 chatList();
@@ -97,8 +163,8 @@ public class ChatFragment extends Fragment {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    for (Chatlist chatlist : userList) {
-                        if (user.getId().equals(chatlist.getId())) {
+                    for (GroupUserList userlist : mUserList) {
+                        if (user.getId().equals(userlist.getId())) {
                             mUsers.add(user);
                         }
                     }
@@ -113,5 +179,4 @@ public class ChatFragment extends Fragment {
             }
         });
     }
-
 }

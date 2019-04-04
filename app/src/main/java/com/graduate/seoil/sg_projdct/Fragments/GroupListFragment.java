@@ -65,7 +65,7 @@ public class GroupListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
 
         recyclerView = view.findViewById(R.id.rv_groupList);
-        create_group = view.findViewById(R.id.groupRegister_create);
+        create_group = view.findViewById(R.id.gl_groupRegister_create);
 
         if (getArguments() != null) {
             str_userName = getArguments().getString("str_userName");
@@ -144,6 +144,7 @@ public class GroupListFragment extends Fragment {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group");
 
+        // 가입한 그룹 리스트만 뛰우는 로직.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

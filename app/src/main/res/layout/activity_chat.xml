@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/blue_grey_900"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
@@ -39,7 +39,7 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+        android:background="@color/blue_grey_900"
             app:tabSelectedTextColor="#fff"
             app:tabIndicatorColor="#fff"
             app:tabTextColor="#fff"/>
@@ -53,12 +53,15 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_weight="1"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
+    <!--<android.support.design.widget.BottomNavigationView-->
+        <!--android:id="@+id/group_bottom_navigation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--app:itemTextColor="@android:color/white"-->
+        <!--app:itemBackground="@color/blue_grey_900"-->
+        <!--app:itemIconTint="@android:color/white"-->
+        <!--android:background="?android:attr/windowBackground"-->
+        <!--app:menu="@menu/navigation" />-->
 
 </LinearLayout>

@@ -16,7 +16,13 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".GroupInformation"></activity>
+        <activity android:name=".AccountSetting"></activity>
+        <activity android:name=".PostAddActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity android:name=".GroupActivity" />
+        <activity android:name=".GroupInformation" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".group_index" />
         <activity android:name=".SettingActivity" />
@@ -53,6 +59,7 @@
         <activity android:name=".BaeHoonActivity" />
         <activity android:name=".BaeHoonActivity2" />
         <activity android:name=".BaeHoonActivity3" />
+        <activity android:name=".Maincheck" />
 
         <service
             android:name=".Notification.MyFirebaseIdService"

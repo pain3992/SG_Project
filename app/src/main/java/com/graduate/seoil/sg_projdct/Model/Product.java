@@ -4,14 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Product implements Parcelable {
-   public final   String name;
+   public final String name;
+
+    private Product(Parcel in) {
+        name = in.readString();
+    }
 
     public Product(String name) {
         this.name = name;
-    }
-
-    protected Product(Parcel in) {
-        name = in.readString();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -26,9 +26,11 @@ public class Product implements Parcelable {
         }
 
     };
+
     public String getName() {
         return this.name;
     }
+
     @Override
     public int describeContents() {
         return 0;

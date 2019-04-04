@@ -7,6 +7,7 @@ import com.graduate.seoil.sg_projdct.Model.Product;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 public class ProductViewHolder extends ChildViewHolder {
+    // 승연
     private TextView mTextView;
 
     public ProductViewHolder(View itemView) {

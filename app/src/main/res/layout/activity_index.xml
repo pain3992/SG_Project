@@ -6,25 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".IndexActivity">
 
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/index_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"-->
-        <!--app:popupTheme="@style/MenuStyle">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/index_toolbar_title"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textColor="@android:color/black"-->
-            <!--android:textSize="20sp"-->
-            <!--android:textStyle="bold" />-->
-
-    <!--</android.support.v7.widget.Toolbar>-->
-
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

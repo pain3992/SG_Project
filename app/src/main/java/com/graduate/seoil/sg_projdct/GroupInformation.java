@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class GroupInformation extends AppCompatActivity {
+public class    GroupInformation extends AppCompatActivity {
     FirebaseUser fuser;
     DatabaseReference reference;
     TextView title, registDate, currentUser, currentUser2, maxUser, dayCycle, planTime, announce;
@@ -58,7 +58,7 @@ public class GroupInformation extends AppCompatActivity {
         dayCycle = findViewById(R.id.tv_groupInformation_dayCycle);
         planTime = findViewById(R.id.tv_groupInformation_planTime);
         announce = findViewById(R.id.group_announce);
-        enter_group = findViewById(R.id.groupRegister_create);
+        enter_group = findViewById(R.id.group_entrance);
 
         str_title = intent.getStringExtra("group_title");
         user_count = Integer.parseInt(intent.getStringExtra("group_currentUser")); // 그룹 현재 인원수
@@ -123,7 +123,11 @@ public class GroupInformation extends AppCompatActivity {
                     reference.updateChildren(groupList);
                     // ~ 유저 테이블에 그룹리스트 업데이트
 
-                    Intent intent = new Intent(GroupInformation.this, ChatActivity.class);
+                    Intent intent = new Intent(GroupInformation.this, GroupActivity.class);
+                    intent.putExtra("group_title", str_title);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("userImageURL", userImageURL);
+
                     startActivity(intent);
                     finish();
                 } else {

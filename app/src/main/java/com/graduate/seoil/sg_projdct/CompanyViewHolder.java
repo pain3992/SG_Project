@@ -6,6 +6,7 @@ import android.widget.TextView;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 public class CompanyViewHolder extends GroupViewHolder {
+    // 승연
     private TextView mTextView;
 
     public CompanyViewHolder(View itemView) {

@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.SettingFragment">
+    tools:context=".Fragments.SettingFragment"
+    android:background="#313F47"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/relative_setting_account"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="70dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/img_setting_account"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_account_circle_black_24dp" />
+
+        <TextView
+            android:id="@+id/tv_setting_account"
+            android:layout_toEndOf="@id/img_setting_account"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="계정"
+            android:textSize="20sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tv_setting_account_small"
+            android:layout_below="@id/tv_setting_account"
+            android:layout_toRightOf="@id/img_setting_account"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사용자 계정을 확인 및 수정이 가능합니다."
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/blue_grey_500"
+            android:textStyle="normal"/>
+   </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_setting_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded">
+
+        <ImageView
+            android:id="@+id/img_setting_notification"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_notifications_black_24dp" />
+
+        <TextView
+            android:id="@+id/tv_setting_notification"
+            android:layout_toEndOf="@id/img_setting_notification"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림 설정"
+            android:textSize="20sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tv_setting_notification_small"
+            android:layout_below="@id/tv_setting_notification"
+            android:layout_toRightOf="@id/img_setting_notification"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사용자 계정을 확인 및 수정이 가능합니다."
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/blue_grey_500"
+            android:textStyle="normal"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

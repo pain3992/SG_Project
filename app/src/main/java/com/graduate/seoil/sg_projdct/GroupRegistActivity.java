@@ -50,6 +50,8 @@ public class GroupRegistActivity extends AppCompatActivity {
     private String username;
     private String userImageURL;
 
+    private Button btn_study, btn_health, btn_etc;
+
     RecyclerView recyclerview;
     EditText et_title, et_minCount, et_maxCount, et_planTime, et_announce;
     CheckBox[] chkBoxs;
@@ -62,7 +64,7 @@ public class GroupRegistActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.groupRegister_toolbar);
+        TextView group_regist = findViewById(R.id.groupRegister_create);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Group");
@@ -74,14 +76,18 @@ public class GroupRegistActivity extends AppCompatActivity {
         et_planTime = (EditText) findViewById(R.id.et_plan_time);
         et_announce = (EditText) findViewById(R.id.et_group_announce);
 
+        btn_study = findViewById(R.id.btn_category_1);
+        btn_health = findViewById(R.id.btn_category_2);
+        btn_etc = findViewById(R.id.btn_category_3);
+
         chkBoxs = new CheckBox[chkBoxIds.length];
 
         username = intent.getStringExtra("str_userName");
         userImageURL = intent.getStringExtra("str_userImageURL");
 
-        Log.d("이미지URL 못불러옴", userImageURL);
+        Log.d("이미지URL 못불러옴", userImageURL); // TODO : Error -> username, userimageURL 읽기전에 프래그먼트 이동시에.
 
-        toolbar.findViewById(R.id.groupRegister_create).setOnClickListener(new View.OnClickListener() {
+        group_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = et_title.getText().toString();
@@ -119,53 +125,24 @@ public class GroupRegistActivity extends AppCompatActivity {
                 Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount, userList);
                 databaseReference.child(title).setValue(group);
 
-                // userList 코딩 ~
-//                databaseReference = firebaseDatabase.getReference("Group").child(title).child("userList");
-//                User user = new User(fuser.getUid(), username, "admin", userImageURL);
-//                databaseReference.child(fuser.getUid()).setValue(user);
+                // User테이블에 가입한 그룹 추가하기.
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
+                HashMap<String, Object> groupList = new HashMap<>();
+                groupList.put("title", title);
+                groupList.put("registDate", getTime);
+                databaseReference.child(title).setValue(groupList);
 
                 finish();
             }
         });
 
-//        recyclerview = (RecyclerView) findViewById(R.id.expanded_recyclerview);
-//        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//        List<ExpandableListAdapter.Item> data = new ArrayList<>();
-//
-//
-//        ExpandableListAdapter.Item places1 = new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Fruits");
-//        places1.invisibleChildren = new ArrayList<>();
-//        places1.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Apple"));
-//        places1.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Orange"));
-//        places1.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Banana"));
-////        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Fruits"));
-////        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Apple"));
-////        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Orange"));
-////        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Banana"));
-//        ExpandableListAdapter.Item places2 = new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Places");
-//        places2.invisibleChildren = new ArrayList<>();
-//        places2.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Kerala"));
-//        places2.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Tamil Nadu"));
-//        places2.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Karnataka"));
-//        places2.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Maharashtra"));
-//
-//
-//        ExpandableListAdapter.Item places3 = new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Cars");
-//        places3.invisibleChildren = new ArrayList<>();
-//        places3.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Cadillac"));
-//        places3.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Audi"));
-//        places3.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Benz"));
-//        places3.invisibleChildren.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "KIA"));
-//        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Cars"));
-//        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Audi"));
-//        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Aston Martin"));
-//        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "BMW"));
-//        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "Cadillac"));
-//
-//        data.add(places1);
-//        data.add(places2);
-//        data.add(places3);
-//
-//        recyclerview.setAdapter(new ExpandableListAdapter(data)); RecyclerView
+        btn_study.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupRegistActivity.this, Maincheck.class);
+                intent.putExtra("category", btn_study.getText().toString());
+                startActivity(intent);
+            }
+        });
     }
 }
