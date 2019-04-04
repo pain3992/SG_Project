@@ -1,29 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    a:orientation="vertical"
-    a:layout_width="fill_parent"
-    a:layout_height="fill_parent"
-    a:gravity="center">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorPrimary">
+
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:paddingBottom="90dp">
+
 
     <TextView
-        a:id="@+id/tvMsg"
-        a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:text="타이머 정보"
-        a:gravity="center"
-        />
+        android:text="00:00:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTimer"
+        android:textSize="50dp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_marginTop="120dp"
+        android:paddingBottom="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
-        a:id="@+id/btnStart"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:text="start Timer"
-        />
+        android:text="Start"
+        android:background="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTimer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="41dp"
+        android:id="@+id/btStart" />
 
     <Button
-        a:id="@+id/btnStop"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:text="stop Timer"
-        />
-</LinearLayout>
+        android:text="Pause"
+        android:background="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btPause"
+        android:layout_alignBaseline="@+id/btStart"
+        android:layout_alignBottom="@+id/btStart"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Reset"
+        android:background="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btPause"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/btReset" />
+
+</RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>
