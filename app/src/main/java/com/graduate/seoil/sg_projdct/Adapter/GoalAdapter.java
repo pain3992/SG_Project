@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.graduate.seoil.sg_projdct.BaeHoonActivity2;
+import com.graduate.seoil.sg_projdct.PlanInformationActivity;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 import com.graduate.seoil.sg_projdct.R;
 
@@ -46,25 +46,24 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull GoalAdapter.ViewHolder viewHolder, int i) {
         final Goal goal = mGoals.get(i);
-        viewHolder.goal_title.setText(goal.getgoalname());
-        viewHolder.goal_text.setText(goal.getgoaltext());
+        viewHolder.goal_title.setText(goal.getTitle());
+        viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()));
+        if (goal.getTime_status() == 0) {
+            viewHolder.goal_percentage.setText("00:00");
+        } else {
+            viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()));
+        }
+
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-
-
-
-
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    Intent intent = new Intent(mContext, BaeHoonActivity2.class);
-
+                    Intent intent = new Intent(mContext, PlanInformationActivity.class);
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("goal_title", goal.getgoalname());
-                    bundle.putString("goal_text", goal.getgoaltext());
+                    bundle.putString("goal_title", goal.getTitle());
                     intent.putExtras(bundle);
 
                     mContext.startActivity(intent);
@@ -80,15 +79,15 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView goal_title;
-
-        public TextView goal_text;
+        public TextView goal_percentage;
+        public TextView goal_play_time;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             goal_title= itemView.findViewById(R.id.goalList_title);
-
-            goal_text = itemView.findViewById(R.id.goalList_text);
+            goal_percentage = itemView.findViewById(R.id.plan_percentage);
+            goal_play_time = itemView.findViewById(R.id.plan_now_time);
 
         }
     }

@@ -3,7 +3,6 @@ package com.graduate.seoil.sg_projdct;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -39,7 +38,7 @@ public class BaeHoonActivity extends ListActivity implements View.OnClickListene
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), BaeHoonActivity2.class);
+                Intent intent = new Intent(getApplicationContext(), PlanInformationActivity.class);
 
 
                 startActivity(intent);
@@ -76,7 +75,7 @@ public class BaeHoonActivity extends ListActivity implements View.OnClickListene
                 break;
             case R.id.fab1:
                 anim();
-                Intent intent = new Intent(this, BaeHoonActivity3.class);
+                Intent intent = new Intent(this, TimerActivity.class);
                 startActivity(intent);
                 break;
             case R.id.fab2:

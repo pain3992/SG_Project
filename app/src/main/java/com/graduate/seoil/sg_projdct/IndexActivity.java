@@ -65,6 +65,7 @@ public class IndexActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
+
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
             @Override

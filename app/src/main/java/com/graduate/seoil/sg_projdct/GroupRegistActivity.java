@@ -1,8 +1,11 @@
 package com.graduate.seoil.sg_projdct;
 
+import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.ExpandableListAdapter;
+import com.graduate.seoil.sg_projdct.Fragments.TimePickerFragment;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.User;
 
@@ -41,7 +46,7 @@ import java.util.List;
 
 
 
-public class GroupRegistActivity extends AppCompatActivity {
+public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     FirebaseAuth auth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
@@ -53,7 +58,8 @@ public class GroupRegistActivity extends AppCompatActivity {
     private Button btn_study, btn_health, btn_etc;
 
     RecyclerView recyclerview;
-    EditText et_title, et_minCount, et_maxCount, et_planTime, et_announce;
+    TextView et_planTime;
+    EditText et_title, et_minCount, et_maxCount, et_announce;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
 
@@ -73,7 +79,7 @@ public class GroupRegistActivity extends AppCompatActivity {
         et_title = (EditText) findViewById(R.id.et_groupTitle);
         et_minCount = (EditText) findViewById(R.id.et_minCount);
         et_maxCount = (EditText) findViewById(R.id.et_maxCount);
-        et_planTime = (EditText) findViewById(R.id.et_plan_time);
+        et_planTime = (TextView) findViewById(R.id.et_plan_time);
         et_announce = (EditText) findViewById(R.id.et_group_announce);
 
         btn_study = findViewById(R.id.btn_category_1);
@@ -87,6 +93,14 @@ public class GroupRegistActivity extends AppCompatActivity {
 
         Log.d("이미지URL 못불러옴", userImageURL); // TODO : Error -> username, userimageURL 읽기전에 프래그먼트 이동시에.
 
+        et_planTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "time picker");
+            }
+        });
+
         group_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +108,12 @@ public class GroupRegistActivity extends AppCompatActivity {
                 String announce = et_announce.getText().toString();
                 int minCount = Integer.parseInt(et_minCount.getText().toString());
                 int maxCount = Integer.parseInt(et_maxCount.getText().toString());
-                int planTime = Integer.parseInt(et_planTime.getText().toString());
+                String str_time = et_planTime.getText().toString();
+                int index = str_time.indexOf(":");
+                int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
+                int minute = Integer.parseInt(str_time.substring(index + 1));
+                int time = hour + minute;
+
                 String checked_days = "";
 
                 long now = System.currentTimeMillis();
@@ -122,7 +141,7 @@ public class GroupRegistActivity extends AppCompatActivity {
                 userList_under.put("registDate", getTime);
                 userList.put(fuser.getUid(), userList_under);
 
-                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, planTime, minCount, maxCount, userList);
+                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, time, minCount, maxCount, userList);
                 databaseReference.child(title).setValue(group);
 
                 // User테이블에 가입한 그룹 추가하기.
@@ -144,5 +163,15 @@ public class GroupRegistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        TextView textView = findViewById(R.id.et_plan_time);
+        if (minute != 0)
+            textView.setText(hourOfDay + ":" + minute);
+        else
+            textView.setText(hourOfDay + ":" + minute + "0");
     }
 }

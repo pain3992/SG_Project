@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +46,8 @@ public class ActivityFeedFragment extends Fragment {
 
     private List<String> followingList;
 
+    FirebaseUser fuser;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activity_feed, container, false);
@@ -52,6 +55,8 @@ public class ActivityFeedFragment extends Fragment {
         tv_userName = view.findViewById(R.id.feed_userName);
         civ_userImageURL = view.findViewById(R.id.feed_userProfileImage);
         create_feed = view.findViewById(R.id.create_feed);
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView = view.findViewById(R.id.post_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -149,13 +154,14 @@ public class ActivityFeedFragment extends Fragment {
     }
 
     private void readPosts() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(group_title);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postLists.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    System.out.println("snapshot --> " + snapshot.getValue());
                     Post post = snapshot.getValue(Post.class);
                     for (String id : followingList) {
                         if (post.getPublisher().equals(id)) {

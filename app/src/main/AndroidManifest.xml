@@ -58,8 +58,8 @@
         <activity android:name=".WSYActivity" />
         <activity android:name=".YouMinActivity" />
         <activity android:name=".BaeHoonActivity" />
-        <activity android:name=".BaeHoonActivity2" />
-        <activity android:name=".BaeHoonActivity3" />
+        <activity android:name=".PlanInformationActivity" />
+        <activity android:name=".TimerActivity" />
         <activity android:name=".Maincheck" />
 
         <service

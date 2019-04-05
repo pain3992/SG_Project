@@ -51,7 +51,7 @@
         android:layout_marginTop="80dp"
         android:text="그룹 이름"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +75,7 @@
         android:layout_marginTop="8dp"
         android:text="그룹 카테고리"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_groupTitle" />
@@ -126,7 +126,7 @@
         android:layout_marginTop="16dp"
         android:text="모집 인원"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_category_1" />
@@ -138,6 +138,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="최소 인원"
+        android:textColor="@color/blue_grey_500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
 
@@ -159,6 +160,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="최대 인원"
+        android:textColor="@color/blue_grey_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_minCount"
         app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
@@ -182,7 +184,7 @@
         android:layout_marginTop="24dp"
         android:text="목표 요일"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_minCount" />
@@ -260,23 +262,23 @@
         android:layout_marginTop="16dp"
         android:text="목표 시간"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
-    <EditText
+    <TextView
         android:id="@+id/et_plan_time"
         android:layout_width="wrap_content"
         android:layout_height="41dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="01:00"
-        android:inputType="datetime"
         android:textAlignment="center"
+        android:text="0 : 0"
+        android:textSize="30sp"
+        android:textColor="@color/blue_grey_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
@@ -288,8 +290,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="그룹 소개"
+        android:clickable="true"
+        android:focusable="true"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_500"
+        android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_plan_time" />

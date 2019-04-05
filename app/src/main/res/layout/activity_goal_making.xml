@@ -1,55 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GoalMaking">
-    <LinearLayout
+    tools:context=".GoalMaking"
+    android:background="?android:attr/windowBackground">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
 
-
-
-        <EditText
-            android:id="@+id/new_note_title"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/groupRegister_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="제목을 입력하세요"
-            android:padding="10dp" />
+            android:background="@color/blue_grey_900"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+            app:popupTheme="@style/MenuStyle">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="10dp"
-            android:alpha=".3"
-            android:background="@android:color/black" />
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="목표 만들기"/>
 
-        <EditText
-            android:id="@+id/new_note_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <TextView
+        android:id="@+id/tv_plan_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="목표 이름"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/et_plan_title"
+        android:layout_below="@id/tv_plan_title"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="목표명을 입력하세요!"/>
+
+    <TextView
+        android:id="@+id/tv_plan_hour_before"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_plan_title"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="하루 목표시간"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <RelativeLayout
+        android:id="@+id/goal_making_rel1"
+        android:layout_below="@id/tv_plan_hour_before"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
+        android:background="@drawable/rounded_rv_inner">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_plan_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_plan_hour_before"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:textColor="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="00:00"/>
+
+    <TextView
+        android:id="@+id/tv_start_hour_before"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_plan_hour"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="시작 시간"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <CheckBox
+        android:id="@+id/ckb_start_hour"
+        android:layout_below="@id/tv_plan_hour"
+        android:layout_toStartOf="@id/tv_start_hour_after"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="-8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_start_hour_after"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_plan_hour"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="사용"
+        android:textSize="10sp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <RelativeLayout
+        android:id="@+id/rel2"
+        android:layout_below="@id/tv_start_hour_before"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
+        android:background="@drawable/rounded_rv_inner">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_start_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_start_hour_before"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:textColor="#757575"
+        android:text="00:00"/>
+
+    <TextView
+        android:id="@+id/tv_select_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_start_hour"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="기간 선택"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <RelativeLayout
+        android:id="@+id/goal_making_rel2"
+        android:layout_below="@id/tv_select_date"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/iv_calendar_before"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_date_range_black_24dp"/>
+
+        <TextView
+            android:id="@+id/tv_calendar_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_calendar_before"
+            android:layout_toStartOf="@id/tv_wave"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:textColor="@color/blue_grey_900"
+            android:text="2020.04.01"/>
+
+        <TextView
+            android:id="@+id/tv_wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:textColor="@color/blue_grey_900"
+            android:text="~"/>
+
+        <ImageView
+            android:id="@+id/iv_calendar_after"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/tv_wave"
+            android:src="@drawable/ic_date_range_black_24dp"/>
+
+        <TextView
+            android:id="@+id/tv_calendar_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_calendar_after"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:textColor="@color/blue_grey_900"
+            android:text="2020.04.08"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_select_days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goal_making_rel2"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="요일 선택"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/blue_grey_900"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_below="@id/tv_select_days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/ckbox_monday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:ems="10"
-            android:gravity="top"
-            android:hint="내용을 입력하세요"
-            android:inputType="textMultiLine"
-            android:padding="10dp" />
+            android:text="월"
+            android:textColor="@android:color/black" />
 
-        <Button
-            android:id="@+id/new_note_btn"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/ckbox_tuesday"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="목표 생성"
-            android:textColor="@android:color/white" />
+            android:layout_weight="1"
+            android:text="화" />
+
+        <CheckBox
+            android:id="@+id/ckbox_wednesday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="수" />
+
+        <CheckBox
+            android:id="@+id/ckbox_thursday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="목" />
+
+        <CheckBox
+            android:id="@+id/ckbox_friday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="금" />
+
+        <CheckBox
+            android:id="@+id/ckbox_saturday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="토" />
+
+        <CheckBox
+            android:id="@+id/ckbox_sunday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_weight="1"
+            android:text="일" />
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="20dp">
+
+        <Button
+            android:id="@+id/plan_cancel"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/round_button"
+            android:text="취소" />
+
+        <Button
+            android:id="@+id/plan_make"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/round_button_color"
+            android:text="등록"
+            android:textColor="@android:color/white"/>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
