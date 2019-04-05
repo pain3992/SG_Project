@@ -14,20 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.graduate.seoil.sg_projdct.Adapter.GoalAdapter;
-import com.graduate.seoil.sg_projdct.BaeHoonActivity2;
-import com.graduate.seoil.sg_projdct.BaeHoonActivity3;
+import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 import com.graduate.seoil.sg_projdct.R;
@@ -41,6 +40,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements View.OnClickListener {
     DatabaseReference mDatabase;
     FirebaseDatabase firebaseDatabase;
+    FirebaseUser fuser;
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
@@ -63,6 +63,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = view.findViewById(R.id.goal_list);
 
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+
         recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (getArguments() != null) {
@@ -74,9 +76,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
             @Override
             public void onDaySelect() {
-//                Day day = collapsibleCalendar.getSelectedDay();
-//                Log.i(getClass().getName(), "Selected Day: "
-//                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+                Day day = collapsibleCalendar.getSelectedDay();
+                Log.i(getClass().getName(), "Selected Day: "
+                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
             }
 
             @Override
@@ -116,7 +118,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
     private void readGoalList() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+//        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
+//                .startAt(s)
+//                .endAt(s+"\uf8ff");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -143,11 +148,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.fab:
                 anim();
-                Toast.makeText(getContext(), "Floating Action Button", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.fab1:
                 anim();
-                Intent intent = new Intent(getContext(), BaeHoonActivity3.class);
+                Intent intent = new Intent(getContext(), TimerActivity.class);
                 startActivity(intent);
                 break;
             case R.id.fab2:

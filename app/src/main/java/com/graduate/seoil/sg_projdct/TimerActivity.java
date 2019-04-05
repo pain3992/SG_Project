@@ -1,7 +1,6 @@
 package com.graduate.seoil.sg_projdct;
 
 import android.content.Intent;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class BaeHoonActivity3 extends AppCompatActivity {
+public class TimerActivity extends AppCompatActivity {
     TextView timer ;
     Button start, pause, reset;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
@@ -23,7 +19,7 @@ public class BaeHoonActivity3 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bae_hoon3);
+        setContentView(R.layout.activity_timer);
         Intent intent = new Intent(this.getIntent());
         timer = (TextView)findViewById(R.id.tvTimer);
         start = (Button)findViewById(R.id.btStart);

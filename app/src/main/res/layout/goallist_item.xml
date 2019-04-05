@@ -9,8 +9,8 @@
         android:id="@+id/goalList_title"
         android:text="title"
         android:layout_toEndOf="@+id/groupList_profile_image"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
         android:textColor="@color/blue_grey_900"
         android:textSize="15sp"
         android:textStyle="bold"
@@ -18,25 +18,13 @@
         android:layout_height="wrap_content"
         android:maxLength="15"/>
 
-    <TextView
-        android:id="@+id/goalList_text"
-        android:background="#DDDCDC"
-        android:layout_toEndOf="@id/groupList_profile_image"
-        android:layout_below="@id/goalList_title"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#35454D"
-        android:text="time"/>
-
-  
 
     <TextView
-        android:id="@+id/goalList_currentUser"
+        android:id="@+id/plan_percentage"
         android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/slash"
+        android:textColor="@color/blue_grey_900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"/>
@@ -54,30 +42,32 @@
         android:id="@+id/goalList_maxCount"
         android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/myeong"
+        android:layout_toLeftOf="@id/percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/blue_grey_900"
         android:text="100"/>
 
     <TextView
-        android:id="@+id/myeong"
+        android:id="@+id/percent"
         android:layout_marginTop="12dp"
         android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:textColor="@color/blue_grey_900"
         android:text="%"/>
 
     <TextView
-        android:id="@+id/tv_group_join"
+        android:id="@+id/plan_now_time"
         android:clickable="true"
-        android:layout_below="@id/goalList_currentUser"
+        android:layout_below="@id/plan_percentage"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:textColor="@color/blue_grey_900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="인증방식: "/>
+        android:text="00:00"/>
 
 </RelativeLayout>

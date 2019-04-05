@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,6 +43,8 @@ public class PostAddActivity extends AppCompatActivity {
 
     String group_title, userName, userImageURL;
 
+    FirebaseUser fuser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,8 @@ public class PostAddActivity extends AppCompatActivity {
         group_title = intent.getStringExtra("group_title");
         userName = intent.getStringExtra("userName");
         userImageURL = intent.getStringExtra("userImageURL");
+
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
         close = findViewById(R.id.postAdd_close);
@@ -126,7 +131,7 @@ public class PostAddActivity extends AppCompatActivity {
                         hashMap.put("description", description.getText().toString());
                         hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                        reference.child(postid).setValue(hashMap);
+                        reference.child(group_title).child(fuser.getUid()).setValue(hashMap);
 
                         progressDialog.dismiss();
 

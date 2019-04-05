@@ -115,36 +115,44 @@ public class GroupActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
+//            Fragment selectedFragment = null;
+            String selectedFragment = "";
+            Intent intent = new Intent(GroupActivity.this, IndexActivity.class);
+
+            switch (item.getItemId()) {
+                case R.id.navigation_group:
+//                    selectedFragment = new GroupListFragment();
+                    selectedFragment = "GroupListFragment()";
+                    break;
+                case R.id.navigation_chart:
+//                    selectedFragment = new StatisticsFragment();
+                    selectedFragment = "StatisticsFragment()";
+                    break;
+                case R.id.navigation_home:
+                    selectedFragment = "HomeFragment()";
+//                    selectedFragment = new HomeFragment();
+                    break;
+                case R.id.navigation_setting:
+                    selectedFragment = "SettingFragment()";
+//                    selectedFragment = new SettingFragment();
+                    break;
+            }
 
             // Session 역할 : 유저이름과 프로필사진 담기.
             Bundle bundle = new Bundle();
             bundle.putString("str_userName", str_userName);
             bundle.putString("str_userImageURL", str_userImageURL);
+            bundle.putString("selectedFragment", selectedFragment);
 
-            switch (item.getItemId()) {
-                case R.id.navigation_group:
-                    selectedFragment = new GroupListFragment();
-                    break;
-                case R.id.navigation_chart:
-                    selectedFragment = new StatisticsFragment();
-                    break;
-                case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
-                    break;
-                case R.id.navigation_setting:
-//                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
-//                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                    editor.apply();
-                    selectedFragment = new SettingFragment();
-                    break;
-            }
-            assert selectedFragment != null;
-            selectedFragment.setArguments(bundle); // userName 넘기기
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.group_fragment_container, selectedFragment)
-                    .commit();
+            startActivity(intent);
+            finish();
+
+//            assert selectedFragment != null;
+//            selectedFragment.setArguments(bundle); // userName 넘기기
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.group_fragment_container, selectedFragment)
+//                    .commit();
             return true;
         }
     };
