@@ -196,7 +196,6 @@ public class GroupListSearchFragment extends Fragment {
     }
 
     private void search_group(String s) {
-        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         Query query = FirebaseDatabase.getInstance().getReference("Group").orderByChild("title")
                 .startAt(s)
                 .endAt(s+"\uf8ff");

@@ -118,16 +118,16 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 String end_date = tv_end_date.getText().toString();
                 String checked_days = "";
 
-                int from_idx_first = start_date.indexOf("-", 0);
-                int from_idx_second = start_date.indexOf("-", 1);
-                int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
-                int from_month  = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
-                int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
-                int to_idx_first = end_date.indexOf("-", 0);
-                int to_idx_second = end_date.indexOf("-", 1);
-                int to_year = Integer.parseInt(start_date.substring(0, to_idx_first));
-                int to_month  = Integer.parseInt(start_date.substring(to_idx_first + 1, to_idx_second));
-                int to_day = Integer.parseInt(start_date.substring(to_idx_second + 1));
+//                int from_idx_first = start_date.indexOf("-", 0);
+//                int from_idx_second = start_date.indexOf("-", 1);
+//                int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
+//                int from_month  = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
+//                int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
+//                int to_idx_first = end_date.indexOf("-", 0);
+//                int to_idx_second = end_date.indexOf("-", 1);
+//                int to_year = Integer.parseInt(start_date.substring(0, to_idx_first));
+//                int to_month  = Integer.parseInt(start_date.substring(to_idx_first + 1, to_idx_second));
+//                int to_day = Integer.parseInt(start_date.substring(to_idx_second + 1));
 
 
 

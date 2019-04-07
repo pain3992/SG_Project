@@ -64,6 +64,14 @@ public class IndexActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        
+        Intent intent = getIntent();
+        String toss_selectFragment = intent.getStringExtra("selectedFragment");
+        if ( toss_selectFragment == null ) {
+            Toast.makeText(this, "처음 뛰울떄 뜨는 인덱스", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "그룹 액티비티에서 인덱스로 넘어온거", Toast.LENGTH_SHORT).show();
+        }
 
 
         // 유저네임, 프로필URL 불러오기.
@@ -80,37 +88,14 @@ public class IndexActivity extends AppCompatActivity {
             }
         });
 
-        // 이니시 프래그먼트 설정
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
-                .commit();
-
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
-    }
+        // 이니시 프래그먼트 설정
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        status("online");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        status("offline");
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -139,16 +124,37 @@ public class IndexActivity extends AppCompatActivity {
 //                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
 //                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
 //                    editor.apply();
+
+//                     SharedPreference prefs = getContext().getSharedPreference("PREFS", Context.MODE_PRIVATE);
+//                     profileId = prefs.getString("profileid", "none");
                     selectedFragment = new SettingFragment();
                     break;
             }
-            assert selectedFragment != null;
-            selectedFragment.setArguments(bundle); // userName 넘기기
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment)
-                    .commit();
+            if (selectedFragment != null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
             return true;
         }
     };
+
+    private void status(String status) {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
+    }
 }

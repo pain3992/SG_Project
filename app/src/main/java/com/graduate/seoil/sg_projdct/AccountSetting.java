@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.RelativeLayout;
@@ -33,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 import com.graduate.seoil.sg_projdct.Model.User;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,9 +54,25 @@ public class AccountSetting extends AppCompatActivity {
     private StorageTask uploadTask;
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setting);
+
+        Toolbar toolbar = findViewById(R.id.account_setting_toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         profile_image = findViewById(R.id.setting_account_profile_image);
         userName = findViewById(R.id.setting_account_userName);
@@ -89,6 +108,8 @@ public class AccountSetting extends AppCompatActivity {
 
             }
         });
+
+
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
