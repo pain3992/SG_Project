@@ -20,14 +20,14 @@
             app:popupTheme="@style/MenuStyle">
 
             <TextView
-                android:id="@+id/index_toolbar_title"
+                android:id="@+id/groupList_toolbar_title"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:text="그룹 리스트"/>
+                android:text="가입한 그룹"/>
 
             <TextView
                 android:id="@+id/gl_groupRegister_create"
@@ -46,36 +46,89 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/groupList_tab_layout"
+        <LinearLayout
+            android:id="@+id/groupList_tab_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/appBarLayout"
+            android:layout_marginLeft="-5dp"
+            android:layout_marginRight="-5dp"
             android:background="@color/blue_grey_900"
-            app:tabIndicatorColor="@color/blue_grey_900"
-            app:tabSelectedTextColor="#fff"
-            app:tabTextAppearance="@style/MyCustomTabText"
-            app:tabTextColor="#aabbcc">
+            android:orientation="horizontal">
 
-            <android.support.design.widget.TabItem
-                android:id="@+id/entered_group_list"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/groupList_join_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="참여 그룹 리스트" />
+                android:layout_weight="1"
+                android:src="@drawable/ic_grouplist"
+                style="?android:attr/buttonBarButtonStyle"/>
 
-            <android.support.design.widget.TabItem
-                android:id="@+id/group_search"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/groupList_search_list"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="그룹 검색"/>
+                android:layout_weight="1"
+                android:src="@drawable/ic_grouplist_search"
+                style="?android:attr/buttonBarButtonStyle"/>
 
-        </android.support.design.widget.TabLayout>
+        </LinearLayout>
+
+        <!--<android.support.design.widget.TabLayout-->
+            <!--android:id="@+id/groupList_tab_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/blue_grey_900"-->
+            <!--app:tabIndicatorColor="@color/blue_grey_900"-->
+            <!--app:tabSelectedTextColor="#fff"-->
+            <!--app:tabTextAppearance="@style/MyCustomTabText"-->
+            <!--app:tabTextColor="#aabbcc">-->
+
+            <!--<android.support.design.widget.TabItem-->
+                <!--android:id="@+id/entered_group_list"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="참여 그룹 리스트" />-->
+
+            <!--<android.support.design.widget.TabItem-->
+                <!--android:id="@+id/group_search"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="그룹 검색"/>-->
+
+        <!--</android.support.design.widget.TabLayout>-->
 
     </android.support.design.widget.AppBarLayout>
+
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_groupList"
         android:layout_below="@id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <EditText
+        android:id="@+id/et_search_groups"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="Search..."/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_groupList_Search"
+        android:layout_below="@id/et_search_groups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBarLayout">
+
+    </android.support.v7.widget.RecyclerView>
+
 
 </RelativeLayout>

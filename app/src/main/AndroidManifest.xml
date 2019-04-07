@@ -57,7 +57,6 @@
         <activity android:name=".ChatActivity" />
         <activity android:name=".WSYActivity" />
         <activity android:name=".YouMinActivity" />
-        <activity android:name=".BaeHoonActivity" />
         <activity android:name=".PlanInformationActivity" />
         <activity android:name=".TimerActivity" />
         <activity android:name=".Maincheck" />
