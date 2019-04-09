@@ -69,6 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:text="0 likes"
             android:textStyle="bold"
             android:textColor="@color/blue_grey_900"/>
 
@@ -77,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:text="koddev"
             android:textStyle="bold"
             android:textColor="@color/blue_grey_900"/>
 
@@ -85,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:text="description"
             android:textStyle="bold"
             android:textColor="@color/blue_grey_900"/>
 
@@ -94,9 +97,17 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:text="20명이 봤음."
+            android:text="View All 0 Comments"
             android:textColor="@color/blue_grey_900"/>
+
+        <TextView
+            android:id="@+id/post_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
+            android:text="2019/04/07"
+            android:textSize="10sp"/>
 
     </LinearLayout>
 

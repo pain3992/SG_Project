@@ -16,21 +16,10 @@
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".GoalMaking"></activity>
-        <activity android:name=".AccountSetting" />
-        <activity android:name=".PostAddActivity" />
+        <activity android:name=".GroupInformationInner"></activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".GroupActivity" />
-        <activity android:name=".GroupInformation" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".group_index" />
-        <activity android:name=".SettingActivity" />
-        <activity
-            android:name=".ResetPasswordActivity"
-            android:parentActivityName=".LoginActivity" />
-        <activity android:name=".MessageActivity" /> <!-- Firebase Login from "KOD Dev" -->
         <activity android:name=".GStartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,23 +27,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IndexActivity" />
-        <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".GStartActivity" />
         <activity
             android:name=".LoginActivity"
             android:parentActivityName=".GStartActivity" />
         <activity
-            android:name=".TemplateActivity"
-            android:label="@string/title_activity_template" />
+            android:name=".RegisterActivity"
+            android:parentActivityName=".GStartActivity" />
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ResetPasswordActivity"
+            android:parentActivityName=".LoginActivity" />
+        <activity android:name=".IndexActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".GoalMaking" />
+        <activity android:name=".AccountSetting" />
+        <activity android:name=".GroupActivity" />
+        <activity android:name=".GroupInformation" />
         <activity android:name=".GroupRegistActivity" />
-        <activity android:name=".StartActivity" />
+        <activity android:name=".PostAddActivity" />
         <activity android:name=".ChatActivity" />
+        <activity android:name=".group_index" />
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".MessageActivity" /> <!-- Firebase Login from "KOD Dev" -->
+        <activity android:name=".TemplateActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".StartActivity" />
         <activity android:name=".WSYActivity" />
         <activity android:name=".YouMinActivity" />
         <activity android:name=".PlanInformationActivity" />

@@ -74,34 +74,7 @@
 
         </LinearLayout>
 
-        <!--<android.support.design.widget.TabLayout-->
-            <!--android:id="@+id/groupList_tab_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/blue_grey_900"-->
-            <!--app:tabIndicatorColor="@color/blue_grey_900"-->
-            <!--app:tabSelectedTextColor="#fff"-->
-            <!--app:tabTextAppearance="@style/MyCustomTabText"-->
-            <!--app:tabTextColor="#aabbcc">-->
-
-            <!--<android.support.design.widget.TabItem-->
-                <!--android:id="@+id/entered_group_list"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="참여 그룹 리스트" />-->
-
-            <!--<android.support.design.widget.TabItem-->
-                <!--android:id="@+id/group_search"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="그룹 검색"/>-->
-
-        <!--</android.support.design.widget.TabLayout>-->
-
     </android.support.design.widget.AppBarLayout>
-
-
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_groupList"
@@ -123,12 +96,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
+        android:id="@+id/outsider_layout"
+        android:layout_below="@id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/appBarLayout">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_above="@id/outsider"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_sad"/>
+
+        <TextView
+            android:id="@+id/outsider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:inputType="textMultiLine"
+            android:text="가입한 그룹이 없으시군요.."
+            android:textAlignment="center"
+            />
+
+    </RelativeLayout>
+
 
 
 </RelativeLayout>

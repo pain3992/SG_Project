@@ -56,9 +56,9 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        recyclerView = view.findViewById(R.id.group_recycler_view);
-        tv_userName = view.findViewById(R.id.group_userName);
-        civ_userImageURL = view.findViewById(R.id.group_userProfileImage);
+//        recyclerView = view.findViewById(R.id.group_recycler_view);
+//        tv_userName = view.findViewById(R.id.group_userName);
+//        civ_userImageURL = view.findViewById(R.id.group_userProfileImage);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -80,39 +80,6 @@ public class ChatFragment extends Fragment {
             Glide.with(view).load(str_userImageURL).into(civ_userImageURL);
         }
 
-        TabLayout tabLayout = view.findViewById(R.id.groupList_tab_layout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Fragment selectedFragment;
-                selectedFragment = new ActivityFeedFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("group_title", group_title);
-                bundle.putString("userName", str_userName);
-                bundle.putString("userImageURL", str_userImageURL);
-                selectedFragment.setArguments(bundle);
-
-                assert getFragmentManager() != null;
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.group_fragment_container, selectedFragment)
-                        .commit();
-//                switch (tab.getPosition()) {
-//                    case 1:
-//
-//                }
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
 
 

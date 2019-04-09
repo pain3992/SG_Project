@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,8 @@ public class GroupListFragment extends Fragment {
     private DatabaseReference reference;
 
     private RecyclerView recyclerView, recyclerView_search;
+    private RecyclerView recyclerView_groupInfo, recyclerView_groupFeed;
+    private RelativeLayout outsider_view;
     private GroupAdapter groupAdapter;
     private ImageButton btn_join_list, btn_search_list;
 
@@ -71,6 +74,11 @@ public class GroupListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+
+        if (getArguments() != null) {
+            str_userName = getArguments().getString("str_userName");
+            str_userImageURL = getArguments().getString("str_userImageURL");
+        }
 
         btn_join_list = view.findViewById(R.id.groupList_join_list);
         btn_search_list = view.findViewById(R.id.groupList_search_list);
@@ -91,21 +99,21 @@ public class GroupListFragment extends Fragment {
         sGroup = new ArrayList<>();
         groupAdapter = new GroupAdapter(getContext(), sGroup, str_userName, str_userImageURL);
         recyclerView_search.setAdapter(groupAdapter);
-        iGroup = new ArrayList<>();
 
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView_search.setVisibility(View.GONE);
-        et_search_group.setVisibility(View.GONE);
+        iGroup = new ArrayList<>();
+        outsider_view = view.findViewById(R.id.outsider_layout);
 
         invite_title = new ArrayList<>();
 
         readGroupList();
         readSearchList();
 
-        if (getArguments() != null) {
-            str_userName = getArguments().getString("str_userName");
-            str_userImageURL = getArguments().getString("str_userImageURL");
-        }
+        System.out.println("Size --> " + invite_title.size());
+
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView_search.setVisibility(View.GONE);
+        et_search_group.setVisibility(View.GONE);
+        outsider_view.setVisibility(View.GONE);
 
         // 그룹 만들기
         create_group.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +152,7 @@ public class GroupListFragment extends Fragment {
                 recyclerView.setVisibility(View.VISIBLE);
                 recyclerView_search.setVisibility(View.GONE);
                 et_search_group.setVisibility(View.GONE);
+                outsider_view.setVisibility(View.GONE);
                 toolbar_title.setText("가입한 그룹");
             }
         });
@@ -155,6 +164,7 @@ public class GroupListFragment extends Fragment {
                 recyclerView.setVisibility(View.GONE);
                 recyclerView_search.setVisibility(View.VISIBLE);
                 et_search_group.setVisibility(View.VISIBLE);
+                outsider_view.setVisibility(View.GONE);
                 toolbar_title.setText("그룹 검색");
             }
         });

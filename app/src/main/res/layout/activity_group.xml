@@ -10,18 +10,6 @@
         android:id="@+id/group_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/group_bottom_navigation"/>
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/group_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:itemTextColor="@android:color/white"
-        app:itemBackground="@color/blue_grey_900"
-        app:itemIconTint="@android:color/white"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
-
+        android:layout_below="@id/appBarLayout" />
 
 </RelativeLayout>

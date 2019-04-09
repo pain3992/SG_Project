@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".PostAddActivity"
     android:orientation="vertical">
-    
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/postAdd_bar"
         android:layout_width="match_parent"

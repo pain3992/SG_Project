@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AccountSetting"
-    android:background="#313F47">
+    android:background="@color/blue_grey_800">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/bar_layout"

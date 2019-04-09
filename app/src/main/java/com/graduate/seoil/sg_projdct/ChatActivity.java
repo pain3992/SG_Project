@@ -47,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView profile_image;
     TextView username;
 
-    FirebaseUser firebaseUser;
+    FirebaseUser fuser;
     DatabaseReference reference;
 
     String str_userName, str_userImageURL;
@@ -66,8 +66,8 @@ public class ChatActivity extends AppCompatActivity {
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -162,7 +162,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
     private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);

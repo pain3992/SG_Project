@@ -1,5 +1,6 @@
 package com.graduate.seoil.sg_projdct.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         Post post = mPost.get(i);
         Glide.with(mContext).load(post.getPostimage()).into(viewHolder.post_image);
+        viewHolder.post_date.setText(post.getregistDate());
 
         if (post.getDescription().equals("")) {
             viewHolder.description.setVisibility(View.GONE);
@@ -70,7 +72,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image_profile, post_image, like, comment, save;
-        public TextView username, likes, publisher, description, comments;
+        public TextView username, likes, publisher, description, comments, post_date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +87,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             likes = itemView.findViewById(R.id.post_likes);
             publisher = itemView.findViewById(R.id.post_publisher);
             description = itemView.findViewById(R.id.post_description);
+            post_date = itemView.findViewById(R.id.post_date);
         }
     }
 
@@ -95,10 +98,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageURL()).into(image_profile);
+                Activity activity = (Activity) mContext;
+                if (activity.isFinishing())
+                    return;
+                Glide.with(mContext).load(user.getImageURL()).into(image_profile); // TODO : 에러 발생 4/8 - you cannot start a load for a destroyed activity / 그룹 검색 할떄 발생
                 username.setText(user.getUsername());
                 publisher.setText(user.getUsername());
-
             }
 
             @Override

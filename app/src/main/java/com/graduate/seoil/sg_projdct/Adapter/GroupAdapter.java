@@ -7,26 +7,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.graduate.seoil.sg_projdct.ChatActivity;
 import com.graduate.seoil.sg_projdct.GroupActivity;
 import com.graduate.seoil.sg_projdct.GroupInformation;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.R;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +47,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.group_item, viewGroup, false);
+
         return new GroupAdapter.ViewHolder(view);
     }
 
@@ -104,6 +98,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     bundle.putString("userImageURL", userImageURL);
                     intent.putExtras(bundle);
 
+//                    fragment.setArguments(bundle);
+//                    FragmentManager fragmentManager = ((IndexActivity)mContext).getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentTransaction.add(R.id.fragment_container, fragment);
+//                    fragmentTransaction.commit();
                     mContext.startActivity(intent);
                 } else {
                     Intent intent = new Intent(mContext, GroupInformation.class);

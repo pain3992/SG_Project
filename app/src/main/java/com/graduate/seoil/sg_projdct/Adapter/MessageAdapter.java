@@ -31,10 +31,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     FirebaseUser fuser;
 
-    public MessageAdapter(Context mContext, List<Chat> mChat, String imageurl) {
+    public MessageAdapter(Context mContext, List<Chat> mChat) {
         this.mChat = mChat;
         this.mContext = mContext;
-        this.imageurl = imageurl;
+//        this.imageurl = imageurl;
     }
 
     @NonNull
@@ -56,10 +56,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         viewHolder.show_message.setText(chat.getMessage());
 
-        if (imageurl.equals("default")) {
+        if (chat.getSender_imageUrl().equals("default")) {
             viewHolder.profile_image.setImageResource(R.mipmap.ic_launcher);;
         } else {
-            Glide.with(mContext).load(imageurl).into(viewHolder.profile_image);
+            Glide.with(mContext).load(chat.getSender_imageUrl()).into(viewHolder.profile_image);
         }
 
         if (position == mChat.size() - 1) {
