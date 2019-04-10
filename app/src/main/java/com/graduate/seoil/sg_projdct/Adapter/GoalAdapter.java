@@ -64,6 +64,8 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
                     Bundle bundle = new Bundle();
 
                     bundle.putString("goal_title", goal.getTitle());
+                    bundle.putInt("goal_time", goal.getPlan_time());
+
                     intent.putExtras(bundle);
 
                     mContext.startActivity(intent);

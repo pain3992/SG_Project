@@ -5,8 +5,10 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,19 +18,17 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.Locale;
 
 public class PlanInformationActivity extends AppCompatActivity {
-    //timer
-//    ProgressBar mProgressBar;
-//    CountDownTimer mCountDownTimer;
-//    int i=0;
-    private static final long START_TIME_IN_MILLIS = 600000;
+    int i=0;
+    ProgressBar progressBar;
+    private static final long START_TIME_IN_MILLIS = 60000;
     private TextView mTextCount;
     private Button mStart;
 
     private Button mReset;
 
-    private CountDownTimer mCoutDown;
+    CountDownTimer mCoutDown;
 
-    private boolean mTimerRunning;
+    private boolean mTimerRunning = false;
     private long mTimeLeft = START_TIME_IN_MILLIS;
 
     FirebaseUser fuser;
@@ -42,31 +42,14 @@ public class PlanInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_information);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
         Intent intent = getIntent();
-
-//        mProgressBar=(ProgressBar)findViewById(R.id.progressbar);
-//        mProgressBar.setProgress(i);
-//        mCountDownTimer=new CountDownTimer(5000,1000) {
-//
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                Log.v("Log_tag", "Tick of Progress"+ i+ millisUntilFinished);
-//                i++;
-//                mProgressBar.setProgress((int)i*100/(5000/1000));
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                //Do what you want
-//                i++;
-//                mProgressBar.setProgress(100);
-//            }
-//        };
-//        mCountDownTimer.start();
         mTextCount = findViewById(R.id.tvTimer);
         mStart = findViewById(R.id.btStart);
         mReset = findViewById(R.id.btReset);
+        progressBar = (ProgressBar)findViewById(R.id.bar_Timer);
+        progressBar.setProgress(i);
+        progressBar.setMax(100);
 
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,20 +73,23 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         updateCountDownText();
 
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
         title = findViewById(R.id.goal_name);
         text = findViewById(R.id.goal_content);
 
         title.setText(intent.getStringExtra("goal_title"));
-        text.setText(intent.getStringExtra("goal_text"));
+        text.setText(Integer.toString(intent.getIntExtra("goal_time",0)));
     }
 
     private void startTimer() {
         mCoutDown = new CountDownTimer(mTimeLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.v("Log_tag", "Tick of Progress"+ i+ millisUntilFinished);
+                i++;
+                progressBar.setProgress((int)i*50/((int)mTimeLeft/1000));
                 mTimeLeft = millisUntilFinished;
                 updateCountDownText();
+
             }
 
             @Override
@@ -112,6 +98,8 @@ public class PlanInformationActivity extends AppCompatActivity {
                 mStart.setText("Start");
                 mStart.setVisibility(View.INVISIBLE);
                 mReset.setVisibility(View.VISIBLE);
+                i++;
+                progressBar.setProgress(100);
             }
         }.start();
 
@@ -130,6 +118,9 @@ public class PlanInformationActivity extends AppCompatActivity {
     private void resetTimer() {
         mTimeLeft = START_TIME_IN_MILLIS;
         updateCountDownText();
+        progressBar.setProgress(0);
+        mCoutDown.onFinish();
+        mTimerRunning = false;
         mReset.setVisibility(View.INVISIBLE);
         mStart.setVisibility(View.VISIBLE);
     }
