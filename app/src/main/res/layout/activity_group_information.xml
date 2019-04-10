@@ -217,9 +217,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-        </android.support.v7.widget.RecyclerView>
+            android:orientation="horizontal" />
 
     </RelativeLayout>
 
@@ -233,13 +231,13 @@
     <RelativeLayout
         android:id="@+id/relative3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/group_announce"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="그룹소개"/>
 
     </RelativeLayout>

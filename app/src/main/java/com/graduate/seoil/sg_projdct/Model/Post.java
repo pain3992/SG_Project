@@ -8,15 +8,17 @@ public class Post {
     private String postimage;
     private String description;
     private String publisher;
+    private String registDate;
 
     public Post() {
     }
 
-    public Post(String postid, String postimage, String description, String publisher) {
+    public Post(String postid, String postimage, String description, String publisher, String registDate) {
         this.postid = postid;
         this.postimage = postimage;
         this.description = description;
         this.publisher = publisher;
+        this.registDate = registDate;
     }
 
     public String getPostid() {
@@ -49,5 +51,13 @@ public class Post {
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
+    }
+
+    public String getregistDate() {
+        return registDate;
+    }
+
+    public void setregistDate(String registDate) {
+        this.registDate = registDate;
     }
 }

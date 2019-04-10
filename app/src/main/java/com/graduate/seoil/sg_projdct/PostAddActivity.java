@@ -29,6 +29,8 @@ import com.google.firebase.storage.StorageTask;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class PostAddActivity extends AppCompatActivity {
@@ -68,11 +70,11 @@ public class PostAddActivity extends AppCompatActivity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
-                intent.putExtra("group_title", group_title);
-                intent.putExtra("userName", userName);
-                intent.putExtra("userImageURL", userImageURL);
-                startActivity(intent);
+//                Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
+//                intent.putExtra("group_title ", group_title);
+//                intent.putExtra("userName", userName);
+//                intent.putExtra("userImageURL", userImageURL);
+//                startActivity(intent);
                 finish();
             }
         });
@@ -85,7 +87,7 @@ public class PostAddActivity extends AppCompatActivity {
         });
 
         CropImage.activity()
-                .setAspectRatio(1, 1)
+                .setAspectRatio(2, 1)
                 .start(PostAddActivity.this);
 
     }
@@ -125,21 +127,28 @@ public class PostAddActivity extends AppCompatActivity {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
                         String postid = reference.push().getKey();
 
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String getTime = sdf.format(date);
+
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("postid", postid);
                         hashMap.put("postimage", myUri);
                         hashMap.put("description", description.getText().toString());
                         hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        hashMap.put("registDate", getTime);
 
-                        reference.child(group_title).child(fuser.getUid()).setValue(hashMap);
+//                        reference.child(group_title).child(fuser.getUid()).child(postid).setValue(hashMap);
+                        reference.child(group_title).child(postid).setValue(hashMap);
 
                         progressDialog.dismiss();
 
-                        Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
-                        intent.putExtra("group_title", group_title);
-                        intent.putExtra("userName", userName);
-                        intent.putExtra("userImageURL", userImageURL);
-                        startActivity(intent);
+//                        Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
+//                        intent.putExtra("group_title", group_title);
+//                        intent.putExtra("userName", userName);
+//                        intent.putExtra("userImageURL", userImageURL);
+//                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(PostAddActivity.this, "실패!", Toast.LENGTH_SHORT).show();
@@ -167,12 +176,12 @@ public class PostAddActivity extends AppCompatActivity {
 
             image_added.setImageURI(imageUri);
         } else {
-            Toast.makeText(this, "뭔가 잘못됨 ㅋ", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
-            intent.putExtra("group_title", group_title);
-            intent.putExtra("userName", userName);
-            intent.putExtra("userImageURL", userImageURL);
-            startActivity(intent);
+            Toast.makeText(this, "이미지 안올림.", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(PostAddActivity.this, GroupActivity.class);
+//            intent.putExtra("group_title", group_title);
+//            intent.putExtra("userName", userName);
+//            intent.putExtra("userImageURL", userImageURL);
+//            startActivity(intent);
             finish();
         }
     }

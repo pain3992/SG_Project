@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
+import com.graduate.seoil.sg_projdct.Adapter.GroupAdapter;
 import com.graduate.seoil.sg_projdct.Fragments.ChatFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
@@ -67,12 +68,6 @@ public class IndexActivity extends AppCompatActivity {
         
         Intent intent = getIntent();
         String toss_selectFragment = intent.getStringExtra("selectedFragment");
-        if ( toss_selectFragment == null ) {
-            Toast.makeText(this, "처음 뛰울떄 뜨는 인덱스", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "그룹 액티비티에서 인덱스로 넘어온거", Toast.LENGTH_SHORT).show();
-        }
-
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
@@ -92,8 +87,20 @@ public class IndexActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
+
+
         // 이니시 프래그먼트 설정
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        if ( toss_selectFragment == null ) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        } else { // 그룹 액티비티에서 넘어온 거
+            if (toss_selectFragment.equals("Statistics"))
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StatisticsFragment()).commit();
+            else if (toss_selectFragment.equals("Home"))
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            else if (toss_selectFragment.equals("Setting"))
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingFragment()).commit();
+        }
+
 
 
     }
@@ -113,12 +120,15 @@ public class IndexActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_group:
                     selectedFragment = new GroupListFragment();
+                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_chart:
                     selectedFragment = new StatisticsFragment();
+                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_home:
                     selectedFragment = new HomeFragment();
+                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_setting:
 //                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
@@ -128,8 +138,10 @@ public class IndexActivity extends AppCompatActivity {
 //                     SharedPreference prefs = getContext().getSharedPreference("PREFS", Context.MODE_PRIVATE);
 //                     profileId = prefs.getString("profileid", "none");
                     selectedFragment = new SettingFragment();
+                    selectedFragment.setArguments(bundle);
                     break;
             }
+
             if (selectedFragment != null)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 

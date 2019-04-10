@@ -5,12 +5,14 @@ public class Chat {
     private String sender;
     private String receiver;
     private String message;
+    private String sender_imageUrl;
     private boolean isseen;
 
-    public Chat(String sender, String receiver, String message, boolean isseen) {
+    public Chat(String sender, String receiver, String message, String sender_imageUrl, boolean isseen) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.sender_imageUrl = sender_imageUrl;
         this.isseen = isseen;
     }
 
@@ -39,6 +41,14 @@ public class Chat {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSender_imageUrl() {
+        return sender_imageUrl;
+    }
+
+    public void setSender_imageUrl(String sender_imageUrl) {
+        this.sender_imageUrl = sender_imageUrl;
     }
 
     public boolean isIsseen() {

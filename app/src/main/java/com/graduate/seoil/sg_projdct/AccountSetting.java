@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.graduate.seoil.sg_projdct.Model.User;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -133,7 +134,10 @@ public class AccountSetting extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, IMAGE_REQUEST);;
+        startActivityForResult(intent, IMAGE_REQUEST);
+//        CropImage.activity()
+//                .setAspectRatio(1, 1)
+//                .start(AccountSetting.this);
     }
 
     private String getFileExtension(Uri uri) {
@@ -194,6 +198,22 @@ public class AccountSetting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+//        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//            imageUri = result.getUri();
+//
+//            profile_image.setImageURI(imageUri);
+//
+//            if (uploadTask != null && uploadTask.isInProgress()) {
+//                Toast.makeText(getApplicationContext(), "Upload in progess", Toast.LENGTH_SHORT).show();
+//            } else {
+//                uploadImage();
+//            }
+//        } else {
+//            Toast.makeText(this, "이미지 안올림.", Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
 
         if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {

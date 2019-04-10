@@ -20,19 +20,15 @@
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/profile_image"/>
-
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_message_userList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/username"
-                android:layout_marginStart="25dp"
-                android:text="username"
-                android:textColor="#fff"
-                android:textStyle="bold"/>
+                android:layout_below="@id/tv_groupInformation_dayCycle"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal" />
 
         </android.support.v7.widget.Toolbar>
 
