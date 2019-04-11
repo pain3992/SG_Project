@@ -20,7 +20,6 @@ import java.util.Locale;
 public class PlanInformationActivity extends AppCompatActivity {
     int i=0;
     ProgressBar progressBar;
-    private static final long START_TIME_IN_MILLIS = 60000;
     private TextView mTextCount;
     private Button mStart;
 
@@ -29,13 +28,14 @@ public class PlanInformationActivity extends AppCompatActivity {
     CountDownTimer mCoutDown;
 
     private boolean mTimerRunning = false;
-    private long mTimeLeft = START_TIME_IN_MILLIS;
+    private long mTimeLeft;
 
     FirebaseUser fuser;
     DatabaseReference reference;
     TextView title, text;
     String str_title;
     RecyclerView recyclerView;
+    int plan_time;
 
 
     @Override
@@ -78,15 +78,18 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         title.setText(intent.getStringExtra("goal_title"));
         text.setText(Integer.toString(intent.getIntExtra("goal_time",0)));
+        plan_time = intent.getIntExtra("goal_time",0);
+
+        mTimeLeft = plan_time * 60000;
     }
 
     private void startTimer() {
         mCoutDown = new CountDownTimer(mTimeLeft, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.v("Log_tag", "Tick of Progress"+ i+ millisUntilFinished);
                 i++;
-                progressBar.setProgress((int)i*50/((int)mTimeLeft/1000));
+                progressBar.setProgress(i*100/(plan_time * 60000/1000));
+                System.out.println("남은 시간 --> " + millisUntilFinished);
                 mTimeLeft = millisUntilFinished;
                 updateCountDownText();
 
@@ -116,21 +119,35 @@ public class PlanInformationActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        mTimeLeft = START_TIME_IN_MILLIS;
+        mTimeLeft = plan_time * 60000;
         updateCountDownText();
         progressBar.setProgress(0);
-        mCoutDown.onFinish();
+        mCoutDown.cancel();
         mTimerRunning = false;
         mReset.setVisibility(View.INVISIBLE);
         mStart.setVisibility(View.VISIBLE);
+        i = 0;
     }
 
     public void updateCountDownText() {
-        int minutes = (int) (mTimeLeft / 1000) / 60;
+        int hours = (int) (mTimeLeft/(1000*60*60))%24;
+        int minutes = (int) (mTimeLeft / (1000*60)) % 60;
         int seconds = (int) (mTimeLeft / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours,minutes, seconds);
 
         mTextCount.setText(timeLeftFormatted);
+    }
+    private String twoDigitString(long number) {
+
+        if (number == 0) {
+            return "00";
+        }
+
+        if (number / 10 == 0) {
+            return "0" + number;
+        }
+
+        return String.valueOf(number);
     }
 }

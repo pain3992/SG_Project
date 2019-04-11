@@ -55,13 +55,12 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
     private String username;
     private String userImageURL;
 
-    private Button btn_study, btn_health, btn_etc;
-
     RecyclerView recyclerview;
     TextView et_planTime;
     EditText et_title, et_minCount, et_maxCount, et_announce;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +80,6 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
         et_maxCount = (EditText) findViewById(R.id.et_maxCount);
         et_planTime = (TextView) findViewById(R.id.et_plan_time);
         et_announce = (EditText) findViewById(R.id.et_group_announce);
-
-        btn_study = findViewById(R.id.btn_category_1);
-        btn_health = findViewById(R.id.btn_category_2);
-        btn_etc = findViewById(R.id.btn_category_3);
 
         chkBoxs = new CheckBox[chkBoxIds.length];
 
@@ -152,15 +147,6 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 databaseReference.child(title).setValue(groupList);
 
                 finish();
-            }
-        });
-
-        btn_study.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(GroupRegistActivity.this, Maincheck.class);
-                intent.putExtra("category", btn_study.getText().toString());
-                startActivity(intent);
             }
         });
     }

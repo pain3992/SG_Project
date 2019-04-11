@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/blue_grey_800">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -37,87 +38,54 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
                 android:textColor="@color/blue_grey_500"
-                android:text="만들기"
+                android:text="완료"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <TextView
-        android:id="@+id/tv_groupTitle"
-        android:layout_width="62dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="80dp"
-        android:text="그룹 이름"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/blue_grey_900"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.TextInputEditText
         android:id="@+id/et_groupTitle"
-        android:layout_width="0dp"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:hint="그룹명을 입력하세요!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupTitle" />
-
-    <TextView
-        android:id="@+id/tv_groupCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="그룹 카테고리"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
         android:textColor="@color/blue_grey_900"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_groupTitle" />
+        android:textColorHint="@color/blue_grey_900"
+        android:textSize="20sp"
+        android:hint="그룹명을 입력하세요!"
+        android:background="@drawable/rounded"/>
 
-    <Button
-        android:id="@+id/btn_category_1"
-        style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/group_category"
+        android:layout_below="@id/et_groupTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="공부"
-        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rounded"
+        android:padding="10dp">
 
-    <Button
-        android:id="@+id/btn_category_2"
-        style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="건강"
-        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="대학 편입 준비생(sample data)"
+            android:textColor="@color/blue_grey_900"
+            android:textSize="20sp"/>
 
-    <Button
-        android:id="@+id/btn_category_3"
-        style="@android:style/Widget.Material.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:text="기타"
-        android:textAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCategory" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_right_arrow"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_groupCount"
@@ -133,125 +101,77 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_category_1" />
 
     <TextView
-        android:id="@+id/tv_minCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:text="최소 인원"
-        android:textColor="@color/blue_grey_500"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
-
-    <android.support.design.widget.TextInputEditText
-        android:id="@+id/et_minCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:ems="2"
-        app:layout_constraintStart_toEndOf="@+id/tv_minCount"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
-
-    <TextView
-        android:id="@+id/tv_maxCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="최대 인원"
-        android:textColor="@color/blue_grey_500"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_minCount"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
-
-    <android.support.design.widget.TextInputEditText
-        android:id="@+id/et_maxCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:ems="2"
-        android:inputType="number"
-        android:textAlignment="center"
-        app:layout_constraintStart_toEndOf="@+id/tv_maxCount"
-        app:layout_constraintTop_toBottomOf="@+id/tv_groupCount" />
-
-    <TextView
         android:id="@+id/tv_howDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
         android:text="목표 요일"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:textColor="@color/blue_grey_900"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_minCount" />
+        tools:layout_editor_absoluteY="348dp" />
 
 
     <LinearLayout
+        android:layout_below="@+id/group_category"
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_howDays">
+        android:weightSum="7">
 
         <CheckBox
             android:id="@+id/ckbox_mon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="월"
-            android:textColor="@android:color/black" />
+            android:button="@drawable/monday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_tue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="화" />
+            android:button="@drawable/tuesday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_wed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="수" />
+            android:button="@drawable/wednesday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_thu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="목" />
+            android:button="@drawable/thursday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_fri"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="금" />
+            android:button="@drawable/friday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_sat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="토" />
+            android:button="@drawable/saturday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_sun"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
             android:layout_weight="1"
-            android:text="일" />
+            android:button="@drawable/sunday_selector" />
 
     </LinearLayout>
 
@@ -349,4 +269,4 @@
     <!--</LinearLayout>-->
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
