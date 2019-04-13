@@ -16,4 +16,8 @@
     <color name="blue_grey_500">#607d8b</color>
     <color name="blue_grey_400">#78909c</color>
     <color name="blue_grey_300">#90a4ae</color>
+
+    <color name="exersior_dark_blue">#121529</color>
+    <color name="exersior_blue">#1039D7</color>
+    <color name="exersior_red">#EE001E</color>
 </resources>
