@@ -53,7 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder viewHolder, int position) {
 
         Chat chat = mChat.get(position);
-
+        System.out.println("mChat --> " + chat);
         viewHolder.show_message.setText(chat.getMessage());
 
         if (chat.getSender_imageUrl().equals("default")) {

@@ -55,6 +55,10 @@ public class IndexActivity extends AppCompatActivity {
 
     public static String str_userName;
     public static String str_userImageURL;
+    private String toss_selectFragment;
+
+    public static final int GROUP_ACTIVITY = 1;
+    public static boolean IS_TRUN;
 
     Intent intent;
 
@@ -63,11 +67,13 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
+        IS_TRUN = false;
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         
         Intent intent = getIntent();
-        String toss_selectFragment = intent.getStringExtra("selectedFragment");
+        toss_selectFragment = intent.getStringExtra("selectedFragment");
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
@@ -85,23 +91,44 @@ public class IndexActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
+    }
 
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
         // 이니시 프래그먼트 설정
-        if ( toss_selectFragment == null ) {
+        BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+        if ( toss_selectFragment == null && !IS_TRUN) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            navigation.setSelectedItemId(R.id.navigation_home);
         } else { // 그룹 액티비티에서 넘어온 거
-            if (toss_selectFragment.equals("Statistics"))
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StatisticsFragment()).commit();
-            else if (toss_selectFragment.equals("Home"))
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-            else if (toss_selectFragment.equals("Setting"))
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingFragment()).commit();
+//            if (toss_selectFragment.equals("Statistics"))
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StatisticsFragment()).commit();
+//            else if (toss_selectFragment.equals("Home"))
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//            else if (toss_selectFragment.equals("Setting"))
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingFragment()).commit();
         }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IS_TRUN = true;
+        if (requestCode == GROUP_ACTIVITY) {
+            if (resultCode != RESULT_OK) {
 
+            }
+            if (resultCode == RESULT_OK) {
+                String result = data.getExtras().getString(GroupActivity.RESULT_DATA);
+
+                BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+                if (result.equals("GroupListFragment")) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GroupListFragment()).commit();
+                    navigation.setSelectedItemId(R.id.navigation_group);
+                }
+            }
+        }
 
     }
 

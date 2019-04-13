@@ -108,8 +108,6 @@ public class GroupListFragment extends Fragment {
         readGroupList();
         readSearchList();
 
-        System.out.println("Size --> " + invite_title.size());
-
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView_search.setVisibility(View.GONE);
         et_search_group.setVisibility(View.GONE);
@@ -241,7 +239,7 @@ public class GroupListFragment extends Fragment {
     private void search_group(String s) {
         iGroup.clear();
         for (Group list : sGroup) {
-            if (list.getTitle().startsWith(s)) {
+            if (list.getTitle().toLowerCase().startsWith(s)) {
                 iGroup.add(list);
             }
         }

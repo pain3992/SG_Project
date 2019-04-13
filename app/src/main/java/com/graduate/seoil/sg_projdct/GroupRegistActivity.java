@@ -1,13 +1,21 @@
 package com.graduate.seoil.sg_projdct;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,13 +23,22 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +48,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.graduate.seoil.sg_projdct.Adapter.ExpandableListAdapter;
 import com.graduate.seoil.sg_projdct.Fragments.TimePickerFragment;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.User;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.w3c.dom.Text;
 
@@ -46,21 +68,27 @@ import java.util.List;
 
 
 
-public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NumberPicker.OnValueChangeListener {
     FirebaseAuth auth;
-    DatabaseReference databaseReference;
+    DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
     FirebaseUser fuser;
+
+    Uri imageUri;
+    String myUri = "";
+    StorageTask uploadTask;
+    StorageReference storageReference;
 
     private String username;
     private String userImageURL;
 
-    RecyclerView recyclerview;
-    TextView et_planTime;
-    EditText et_title, et_minCount, et_maxCount, et_announce;
+    TextView et_planTime, groupInner_title, tv_profile_added, group_invite_user_count, et_maxCount, group_regist;
+    EditText et_title, et_minCount, et_announce, category;
+    ImageView profile_image, iv_profile_added;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
 
+    private String mUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +97,21 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
 
         Intent intent = getIntent();
 
-        TextView group_regist = findViewById(R.id.groupRegister_create);
-
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Group");
+        reference = firebaseDatabase.getReference("Group");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
-        et_title = (EditText) findViewById(R.id.et_groupTitle);
-        et_minCount = (EditText) findViewById(R.id.et_minCount);
-        et_maxCount = (EditText) findViewById(R.id.et_maxCount);
-        et_planTime = (TextView) findViewById(R.id.et_plan_time);
-        et_announce = (EditText) findViewById(R.id.et_group_announce);
+        tv_profile_added = findViewById(R.id.tv_profile_added);
+        group_regist = findViewById(R.id.groupRegister_create);
+
+        et_title = findViewById(R.id.tv_title); // 타이틀
+        et_announce = findViewById(R.id.et_group_announce); // 그룹 소개
+        et_planTime = findViewById(R.id.et_group_regist_plan_time); // 목표 시간
+        profile_image = findViewById(R.id.iv_group_regist); // 프로필 이미지
+        iv_profile_added = findViewById(R.id.iv_profile_added); // 프로필 이미지 적용후
+        category = findViewById(R.id.et_category); // 카테고리
+        group_invite_user_count = findViewById(R.id.group_invite_user_count); // 모집 인원
 
         chkBoxs = new CheckBox[chkBoxIds.length];
 
@@ -96,32 +128,82 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
             }
         });
 
+        profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setAspectRatio(2, 1)
+                        .start(GroupRegistActivity.this);
+            }
+        });
+
+        iv_profile_added.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setAspectRatio(2, 1)
+                        .start(GroupRegistActivity.this);
+            }
+        });
+
+        group_invite_user_count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePickerShow();
+            }
+        });
+
         group_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String str_count = group_invite_user_count.getText().toString();
+                int index_count = str_count.indexOf("명");
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
                 String title = et_title.getText().toString();
                 String announce = et_announce.getText().toString();
-                int minCount = Integer.parseInt(et_minCount.getText().toString());
-                int maxCount = Integer.parseInt(et_maxCount.getText().toString());
                 String str_time = et_planTime.getText().toString();
+                String checked_days = "";
+                String getTime = sdf.format(date);
+                String categorys = category.getText().toString();
+                int maxCount = Integer.parseInt(str_count.substring(0, index_count));
+
                 int index = str_time.indexOf(":");
                 int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
                 int minute = Integer.parseInt(str_time.substring(index + 1));
                 int time = hour + minute;
 
-                String checked_days = "";
-
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String getTime = sdf.format(date);
-
-                for(int i = 0; i < chkBoxIds.length; i++) {
-                    chkBoxs[i] = (CheckBox) findViewById(chkBoxIds[i]);
+                for (int i = 0; i < chkBoxIds.length; i++) {
+                    chkBoxs[i] = findViewById(chkBoxIds[i]);
                     if (chkBoxs[i].isChecked()) {
-                        checked_days += (chkBoxs[i].getText().toString());
+                        switch (i) {
+                            case 0:
+                                checked_days = "월";
+                                break;
+                            case 1:
+                                checked_days += "화";
+                                break;
+                            case 2:
+                                checked_days += "수";
+                                break;
+                            case 3:
+                                checked_days += "목";
+                                break;
+                            case 4:
+                                checked_days += "금";
+                                break;
+                            case 5:
+                                checked_days += "토";
+                                break;
+                            case 6:
+                                checked_days += "일";
+                                break;
+                        }
                     }
                 }
+
 
                 // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
                 // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
@@ -136,28 +218,169 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 userList_under.put("registDate", getTime);
                 userList.put(fuser.getUid(), userList_under);
 
-                Group group = new Group(title, announce, "default", userImageURL, getTime, fuser.getUid(), checked_days, time, minCount, maxCount, userList);
-                databaseReference.child(title).setValue(group);
+
+                Group group = new Group(title, announce, categorys, mUri, getTime, fuser.getUid(), checked_days, time, 1, maxCount, userList);
+                reference = FirebaseDatabase.getInstance().getReference("Group");
+                reference.child(title).setValue(group);
 
                 // User테이블에 가입한 그룹 추가하기.
-                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
+                reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
                 HashMap<String, Object> groupList = new HashMap<>();
                 groupList.put("title", title);
                 groupList.put("registDate", getTime);
-                databaseReference.child(title).setValue(groupList);
+                reference.child(title).setValue(groupList);
+
+                // 공지사항 넣기
+                reference = FirebaseDatabase.getInstance().getReference("Group").child(title).child("notifications");
+                String notyid = reference.push().getKey();
+
+                HashMap<String, Object> notifications = new HashMap<>();
+                notifications.put("notyid", notyid);
+                notifications.put("content", "공지사항을 작성해보세요.");
+                notifications.put("registDate", getTime);
+                notifications.put("writer", "작심성공 운영자");
+                reference.child(notyid).setValue(notifications);
+
+                // 그룹 가입시 기본 포스트 하나 들어가기
+                reference = FirebaseDatabase.getInstance().getReference("Posts");
+                String postid = reference.push().getKey();
+
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("postid", postid);
+                hashMap.put("postimage", "https://firebasestorage.googleapis.com/v0/b/sg-project-chat.appspot.com/o/posts%2F1555002256229.null?alt=media&token=dd479c7b-4d73-402e-8cb6-00b36660ed34");
+                hashMap.put("description", "서로간에 계획실천 인증사진을 올려보세요!");
+                hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
+                hashMap.put("registDate", getTime);
+
+                assert postid != null;
+                reference.child(title).child(postid).setValue(hashMap);
 
                 finish();
             }
         });
     }
 
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadImage() {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Uploading");
+        pd.show();
+
+//        groupInner_title.setTextColor(Color.parseColor("#313F47"));
+//        cardView_before.setVisibility(View.GONE);
+
+        if (imageUri != null) {
+            final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+
+            uploadTask = fileReference.putFile(imageUri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    return fileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        mUri = downloadUri.toString();
+
+//                        reference = FirebaseDatabase.getInstance().getReference("Group").child(et_title.getText().toString());
+//                        HashMap<String, Object> map = new HashMap<>();
+//                        map.put("imageURL", mUri);
+//                        reference.updateChildren(map);
+
+                        profile_image.setVisibility(View.GONE);
+                        Glide.with(GroupRegistActivity.this).load(mUri).into(iv_profile_added);
+                        iv_profile_added.setVisibility(View.VISIBLE);
+
+//                        group_profile_image.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+//                        cardView_after.setVisibility(View.VISIBLE);
+//                        groupInner_title.setVisibility(View.VISIBLE);
+//                        groupInner_title.setTextColor(Color.parseColor("#FFFFFF"));
+
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)tv_profile_added.getLayoutParams();
+                        params.addRule(RelativeLayout.BELOW, R.id.iv_profile_added);
+
+                        pd.dismiss();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                        pd.dismiss();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "No Image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            imageUri = result.getUri();
+
+            if (uploadTask != null && uploadTask.isInProgress()) {
+                Toast.makeText(getApplicationContext(), "Upload in progess", Toast.LENGTH_SHORT).show();
+            } else {
+                uploadImage();
+            }
+        } else {
+            Toast.makeText(this, "이미지 안올림.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        TextView textView = findViewById(R.id.et_plan_time);
+        TextView textView = findViewById(R.id.et_group_regist_plan_time);
         if (minute != 0)
             textView.setText(hourOfDay + ":" + minute);
         else
             textView.setText(hourOfDay + ":" + minute + "0");
+    }
+
+    public void timePickerShow()
+    {
+        final Dialog d = new Dialog(GroupRegistActivity.this);
+        d.setTitle("NumberPicker");
+        d.setContentView(R.layout.dialog);
+        ImageView b1 = d.findViewById(R.id.button1);
+        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
+        np.setMaxValue(20);
+        np.setMinValue(2);
+        np.setWrapSelectorWheel(false);
+        np.setOnValueChangedListener(this);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                group_invite_user_count.setText(String.valueOf(np.getValue()) + "명");
+                d.dismiss();
+            }
+        });
+        d.show();
+
+
+    }
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
     }
 }
