@@ -26,7 +26,7 @@ public class Group {
     private int User_max_count;
 
     private HashMap<String, Object> userList;
-//    private HashMap<String, Object> group_list;
+    private HashMap<String, Object> notifications;
 
 
     public Group() {
@@ -44,6 +44,7 @@ public class Group {
         this.current_user = current_user;
         this.User_max_count = User_max_count;
         this.userList = userList;
+//        this.notifications = notifications;
     }
 
     public String getTitle() {
@@ -131,6 +132,14 @@ public class Group {
 
     public void setUserList(HashMap<String, Object> userList) {
         this.userList = userList;
+    }
+
+    public HashMap<String, Object> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(HashMap<String, Object> notifications) {
+        this.notifications = notifications;
     }
 
     @NonNull

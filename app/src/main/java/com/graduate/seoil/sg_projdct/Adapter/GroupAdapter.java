@@ -1,6 +1,7 @@
 package com.graduate.seoil.sg_projdct.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +24,8 @@ import com.graduate.seoil.sg_projdct.R;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static com.graduate.seoil.sg_projdct.IndexActivity.GROUP_ACTIVITY;
 
 /**
  * Created by baejanghun on 28/03/2019.
@@ -73,7 +76,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
 
         if (userList.get(fuser.getUid()) != null) {
             viewHolder.group_join.setText("입장하기");
-            viewHolder.group_join.setTextColor(Color.parseColor("#4C229B"));
+            viewHolder.group_join.setTextColor(Color.parseColor("#D81B60"));
         }
 
         // 그룹 리스트 프로필 사진.
@@ -96,14 +99,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     bundle.putString("group_title", group.getTitle());
                     bundle.putString("userName", userName);
                     bundle.putString("userImageURL", userImageURL);
+//                    bundle.putString(GroupActivity.SEND_DATA, "GroupListFragment");
                     intent.putExtras(bundle);
 
+//                    mContext.startActivity(intent);
+                    ((Activity)mContext).startActivityForResult(intent, GROUP_ACTIVITY);
 //                    fragment.setArguments(bundle);
 //                    FragmentManager fragmentManager = ((IndexActivity)mContext).getSupportFragmentManager();
 //                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                    fragmentTransaction.add(R.id.fragment_container, fragment);
 //                    fragmentTransaction.commit();
-                    mContext.startActivity(intent);
+
                 } else {
                     Intent intent = new Intent(mContext, GroupInformation.class);
 

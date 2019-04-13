@@ -1,10 +1,12 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -55,7 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupFragment extends Fragment  {
     private CircleImageView userImageURL;
-    private String str_userName, str_userImageURL, group_title;
+    private String str_userName, str_userImageURL, group_title, receive;
     private RelativeLayout post_write;
     private ImageView back_button;
     private ImageButton group_feed, group_chat, group_info;
@@ -73,12 +75,14 @@ public class GroupFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_group, container, false);
+
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (getArguments() != null) {
             group_title = getArguments().getString("group_title");
             str_userName = getArguments().getString("userName");
             str_userImageURL = getArguments().getString("userImageURL");
+//            receive = getArguments().getString("receive");
         }
 
         group_feed = view.findViewById(R.id.group_feed);
@@ -98,13 +102,10 @@ public class GroupFragment extends Fragment  {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postLists = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postLists);
+        postAdapter = new PostAdapter(getContext(), postLists, group_title);
         recyclerView.setAdapter(postAdapter);
 
         fl_group_information = view.findViewById(R.id.group_information);
-
-
-
 
         checkFollowing();
 
@@ -147,10 +148,27 @@ public class GroupFragment extends Fragment  {
             }
         });
 
+//        getActivity().onBackPressed();
+
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                String result = "GroupListFragment";
+                intent.putExtra(GroupActivity.RESULT_DATA, result);
+                Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
                 Objects.requireNonNull(getActivity()).onBackPressed();
+
+//                if (!receive.equals("")) {
+//                    Intent intent = new Intent();
+//                    intent.putExtra(RESULT_DATA, receive);
+//
+//                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
+//                } else {
+//                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_CANCELED);
+//                }
+//                getActivity().finish();
+//                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -173,7 +191,7 @@ public class GroupFragment extends Fragment  {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     groupUserList.add(snapshot.getKey());
                 }
-
+                groupUserList.add("JiQeRTHwbpSRSl7OVIc4hGx531l2"); // 관리자
                 readPosts();
             }
 

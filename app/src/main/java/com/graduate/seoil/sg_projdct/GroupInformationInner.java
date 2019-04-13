@@ -14,6 +14,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -33,17 +35,30 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.graduate.seoil.sg_projdct.Adapter.GroupInformationAdapter;
+import com.graduate.seoil.sg_projdct.Adapter.GroupInformationInnerAdapter;
+import com.graduate.seoil.sg_projdct.Adapter.NotificationAdapter;
+import com.graduate.seoil.sg_projdct.Adapter.PostAdapter;
+import com.graduate.seoil.sg_projdct.Adapter.UserAdapter;
 import com.graduate.seoil.sg_projdct.Model.Group;
+import com.graduate.seoil.sg_projdct.Model.GroupNotification;
+import com.graduate.seoil.sg_projdct.Model.GroupUserList;
+import com.graduate.seoil.sg_projdct.Model.User;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class GroupInformationInner extends AppCompatActivity {
     Uri imageUri;
@@ -55,8 +70,14 @@ public class GroupInformationInner extends AppCompatActivity {
     DatabaseReference reference;
 
     ImageView group_profile, backButton;
-    TextView title, usercount, registDate;
+    TextView title, usercount, registDate, time, days;
     String group_title;
+    RecyclerView notifications, recyclerView_userList;
+
+    List<GroupNotification> mNotifications;
+    List<GroupUserList> mUser;
+    NotificationAdapter notiAdapter;
+    GroupInformationInnerAdapter groupInformationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +88,6 @@ public class GroupInformationInner extends AppCompatActivity {
         group_title = intent.getStringExtra("group_title");
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
         group_profile = findViewById(R.id.setting_account_profile_image);
@@ -75,7 +95,25 @@ public class GroupInformationInner extends AppCompatActivity {
         usercount = findViewById(R.id.groupInner_usercount);
         registDate = findViewById(R.id.groupInner_registDate);
         backButton = findViewById(R.id.groupInner_backButton);
+        time = findViewById(R.id.groupInner_times);
+        days = findViewById(R.id.groupInner_days);
 
+        notifications = findViewById(R.id.groupInner_notification);
+        notifications.setHasFixedSize(true);
+        notifications.setLayoutManager(new LinearLayoutManager(GroupInformationInner.this));
+        mNotifications = new ArrayList<>();
+        notiAdapter = new NotificationAdapter(getApplicationContext(), mNotifications);
+        notifications.setAdapter(notiAdapter);
+
+        recyclerView_userList = findViewById(R.id.groupInner_rv_userList);
+        recyclerView_userList.setHasFixedSize(true);
+        recyclerView_userList.setLayoutManager(new LinearLayoutManager(GroupInformationInner.this));
+        mUser = new ArrayList<>();
+        groupInformationAdapter = new GroupInformationInnerAdapter(getApplicationContext(), mUser);
+        recyclerView_userList.setAdapter(groupInformationAdapter);
+
+
+        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
         reference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -87,6 +125,8 @@ public class GroupInformationInner extends AppCompatActivity {
                 title.setText(group.getTitle());
                 usercount.setText("그룹 인원 " + String.valueOf(group.getcurrent_user()) + "명");
                 registDate.setText("|  개설일 " + group.getRegistDate());
+                time.setText("#" + String.valueOf(group.getPlanTime() / 60) + "시간");
+                days.setText("#" + group.getDayCycle());
             }
 
             @Override
@@ -94,6 +134,45 @@ public class GroupInformationInner extends AppCompatActivity {
 
             }
         });
+
+        // 공지사항 긁어오기.
+        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    GroupNotification group = snapshot.getValue(GroupNotification.class);
+                    mNotifications.add(group);
+                }
+                Collections.reverse(mNotifications);
+                notiAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        // 유저 긁어오기
+        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList"); // TODO : 4/2 방금에러 패스스트링
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUser.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    GroupUserList userList = snapshot.getValue(GroupUserList.class);
+                    mUser.add(userList);
+                }
+                notiAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         group_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +190,9 @@ public class GroupInformationInner extends AppCompatActivity {
             }
         });
     }
+
+
+
 
     private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
@@ -173,9 +255,10 @@ public class GroupInformationInner extends AppCompatActivity {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$여기시점$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$은?");
             imageUri = result.getUri();
 
-            group_profile.setImageURI(imageUri);
+//            group_profile.setImageURI(imageUri);
 
             if (uploadTask != null && uploadTask.isInProgress()) {
                 Toast.makeText(getApplicationContext(), "Upload in progess", Toast.LENGTH_SHORT).show();

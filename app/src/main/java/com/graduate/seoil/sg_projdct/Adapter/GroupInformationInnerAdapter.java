@@ -20,26 +20,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by baejanghun on 30/03/2019.
  */
-public class MessageUserListAdapter extends RecyclerView.Adapter<MessageUserListAdapter.ViewHolder> {
+public class GroupInformationInnerAdapter extends RecyclerView.Adapter<GroupInformationInnerAdapter.ViewHolder> {
     private static final String TAG = "GroupInformationAdapter";
 
     // vars
     private List<GroupUserList> groupUserLists;
     private Context mContext;
 
-    public MessageUserListAdapter(Context mContext, List<GroupUserList> groupUserLists) {
+    public GroupInformationInnerAdapter(Context mContext, List<GroupUserList> groupUserLists) {
         this.mContext = mContext;
         this.groupUserLists = groupUserLists;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView image;
-        TextView name;
+        TextView name, registDate, level;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.preview_url);
             name = itemView.findViewById(R.id.preview_name);
+            registDate = itemView.findViewById(R.id.groupInner_item_registDate);
+            level = itemView.findViewById(R.id.groupInner_item_level);
         }
     }
 
@@ -47,7 +49,7 @@ public class MessageUserListAdapter extends RecyclerView.Adapter<MessageUserList
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Log.d(TAG, "onCreateViewHolder : called");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.message_preview_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.group_inner_preview_item, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -58,11 +60,21 @@ public class MessageUserListAdapter extends RecyclerView.Adapter<MessageUserList
         final GroupUserList groupUserList = groupUserLists.get(i);
 
         viewHolder.name.setText(groupUserList.getUsername());
+        viewHolder.registDate.setText(groupUserList.getRegistDate());
+
+        viewHolder.level.setText(groupUserList.getLevel());
         if (groupUserList.getImageURL().equals("default")) {
             viewHolder.image.setImageResource(R.mipmap.ic_launcher);
         } else {
             Glide.with(mContext).load(groupUserList.getImageURL()).into(viewHolder.image);
         }
+//        viewHolder.image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick : clicked on an image");
+//                Toast.makeText(mContext, "호냐", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override

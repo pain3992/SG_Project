@@ -233,63 +233,64 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_below="@id/tv_select_days"
+        android:layout_below="@+id/tv_select_days"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:orientation="horizontal"
+        android:weightSum="7">
 
         <CheckBox
             android:id="@+id/ckbox_monday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:text="월"
-            android:textColor="@android:color/black" />
+            android:button="@drawable/monday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_tuesday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="화" />
+            android:button="@drawable/tuesday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_wednesday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="수" />
+            android:button="@drawable/wednesday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_thursday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="목" />
+            android:button="@drawable/thursday_selector"/>
 
         <CheckBox
             android:id="@+id/ckbox_friday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="금" />
+            android:button="@drawable/friday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_saturday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="토" />
+            android:button="@drawable/saturday_selector" />
 
         <CheckBox
             android:id="@+id/ckbox_sunday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
             android:layout_weight="1"
-            android:text="일" />
+            android:button="@drawable/sunday_selector" />
 
     </LinearLayout>
 

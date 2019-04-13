@@ -57,6 +57,7 @@ public class MessageActivity extends AppCompatActivity {
     EditText text_send;
 
     MessageAdapter messageAdapter;
+    MessageUserListAdapter messageUserListAdapter;
     List<Chat> mchat;
     List<GroupUserList> mUserList;
 
@@ -109,8 +110,6 @@ public class MessageActivity extends AppCompatActivity {
         group_title = intent.getStringExtra("group_title");
         userImageURL = intent.getStringExtra("userImageURL");
 
-        mUserList = new ArrayList<>();
-
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -126,9 +125,9 @@ public class MessageActivity extends AppCompatActivity {
                     GroupUserList userList = snapshot.getValue(GroupUserList.class);
                     if (!userList.getId().equals(fuser.getUid())) { // 자기 자신은 채팅유저에 안뜨게
                         mUserList.add(userList);
-
                     }
                 }
+                messageUserListAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -136,11 +135,13 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        MessageUserListAdapter messageUserListAdapter = new MessageUserListAdapter(this, mUserList);
 
         recyclerView_userList = findViewById(R.id.rv_message_userList);
+        recyclerView_userList.setHasFixedSize(true);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_userList.setLayoutManager(linearLayoutManager);
+        mUserList = new ArrayList<>();
+        messageUserListAdapter = new MessageUserListAdapter(this, mUserList);
         recyclerView_userList.setAdapter(messageUserListAdapter);
 
         // 그룹 채팅 일어오기.
@@ -332,16 +333,15 @@ public class MessageActivity extends AppCompatActivity {
         reference.updateChildren(hashMap);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        status("online");
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        reference.removeEventListener(seenListener);
-//        status("offline");
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
+    }
 }

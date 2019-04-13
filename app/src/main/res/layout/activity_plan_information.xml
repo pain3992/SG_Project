@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="70dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="10dp"
             android:background="#ffffff"
             android:text="Start"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +50,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="70dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="10dp"
             android:background="#ffffff"
             android:text="Reset"
             android:visibility="invisible"
@@ -81,19 +81,25 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7">
+        android:layout_weight="7"
+        android:weightSum="10"
+        android:background="@drawable/rounded"
+        android:padding="5dp"
+        android:layout_margin="10dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
 
             <TextView
                 android:id="@+id/goal_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="16dp"
-                android:padding="16dp"
+                android:textSize="15sp"
+                android:layout_margin="5dp"
+                android:padding="10dp"
                 android:text="목표의 제목"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
             <View
@@ -101,21 +107,55 @@
                 android:layout_below="@+id/goal_name"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#CECECE"/>
+                android:background="@color/blue_grey_800"/>
 
             <TextView
                 android:id="@+id/goal_content"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/line_1"
-                android:layout_margin="16dp"
-                android:padding="16dp"
+                android:layout_margin="5dp"
+                android:padding="10dp"
                 android:text="목표의 내용"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+            <View
+                android:id="@+id/line_2"
+                android:layout_below="@+id/goal_content"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/blue_grey_800"/>
+
+
+            <TextView
+                android:id="@+id/goal_rate"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/line_2"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:text="달성률"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/goal_rate"
+                android:layout_alignParentEnd="true"
+                android:padding="15dp"
+                android:textAlignment="center"
+                android:background="@drawable/rounded_rv"
+                android:text="조기달성"
+                android:textColor="#ffffff"
+                android:layout_centerVertical="true"/>
+
         </RelativeLayout>
+
     </ScrollView>
 
 

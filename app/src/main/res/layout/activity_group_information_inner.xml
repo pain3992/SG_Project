@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_grey_800"
-    tools:context=".GroupInformationInner">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -39,79 +38,168 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cv_setting_account"
-        android:layout_below="@id/appBarLayout"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/blue_grey_800"
+            tools:context=".GroupInformationInner">
 
-            <ImageView
-                android:id="@+id/setting_account_profile_image"
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_setting_account"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
 
-            </ImageView>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/setting_account_profile_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/groupInner_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/groupInner_title"
+                        android:layout_alignTop="@id/setting_account_profile_image"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="프로필 사진"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/groupInner_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/groupInner_usercount"
+                        android:layout_marginStart="8dp"
+                        android:text="그룹 타이틀"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/groupInner_usercount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_alignBottom="@+id/setting_account_profile_image"
+                        android:text="그룹 인원 "
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/groupInner_registDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/groupInner_usercount"
+                        android:layout_alignBottom="@+id/setting_account_profile_image"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@android:color/white"
+                        android:text="|  개설일 2019/04/07 "
+                        android:textSize="10sp"
+                        android:textStyle="bold"/>
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <RelativeLayout
+                android:id="@+id/groupInner_rel1"
+                android:layout_below="@id/cv_setting_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/groupInner_days"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="요일"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/blue_grey_900"/>
+
+                <TextView
+                    android:id="@+id/groupInner_times"
+                    android:layout_toEndOf="@id/groupInner_days"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시간"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/blue_grey_900"/>
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/groupInner_label"
+                android:id="@+id/groupInner_notification_tv"
+                android:layout_below="@+id/groupInner_rel1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/groupInner_title"
-                android:layout_alignTop="@id/setting_account_profile_image"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="프로필 사진"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/groupInner_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/groupInner_usercount"
-                android:layout_marginStart="8dp"
-                android:text="그룹 타이틀"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="공지 사항"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/groupInner_notification"
+                android:layout_below="@+id/groupInner_notification_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"/>
 
             <TextView
-                android:id="@+id/groupInner_usercount"
+                android:id="@+id/groupInner_userList"
+                android:layout_below="@+id/groupInner_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="5dp"
-                android:layout_alignBottom="@+id/setting_account_profile_image"
-                android:text="그룹 인원 "
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="그룹원"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="@android:color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/groupInner_registDate"
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/groupInner_rv_userList"
+                android:layout_below="@id/groupInner_userList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/groupInner_usercount"
-                android:layout_alignBottom="@+id/setting_account_profile_image"
-                android:layout_marginStart="5dp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@android:color/white"
-                android:text="|  개설일 2019/04/07 "
-                android:textSize="10sp"
-                android:textStyle="bold"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+
+            </android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-
-
-
-
-</RelativeLayout>
+    </ScrollView>
+</LinearLayout>
