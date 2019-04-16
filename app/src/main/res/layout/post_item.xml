@@ -109,6 +109,11 @@
             android:text="2019/04/07"
             android:textSize="10sp"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CECECE" />
+
     </LinearLayout>
 
 </RelativeLayout>

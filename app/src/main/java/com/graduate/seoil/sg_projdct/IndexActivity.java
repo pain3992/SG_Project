@@ -91,23 +91,10 @@ public class IndexActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 이니시 프래그먼트 설정
-        BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
-        if ( toss_selectFragment == null && !IS_TRUN) {
+        if ( toss_selectFragment == null && !IS_TRUN) { // 이니시 프래그먼트 설정
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
             navigation.setSelectedItemId(R.id.navigation_home);
-        } else { // 그룹 액티비티에서 넘어온 거
-//            if (toss_selectFragment.equals("Statistics"))
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new StatisticsFragment()).commit();
-//            else if (toss_selectFragment.equals("Home"))
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-//            else if (toss_selectFragment.equals("Setting"))
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingFragment()).commit();
         }
     }
 
