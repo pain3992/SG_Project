@@ -1,17 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:background="@color/blue_grey_800"
+    android:id="@+id/container">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/index_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_grey_800"
+        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/MenuStyle">
+
+        <TextView
+            android:id="@+id/goal_solute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginEnd="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="조기 달성"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blue_grey_500"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat" />
+
+        <TextView
+            android:id="@+id/goalList_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="목표 제목"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/goal_delete"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="삭제"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blue_grey_500"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat" />
+
+    </android.support.v7.widget.Toolbar>
+
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="@color/blue_grey_900">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/blue_grey_800"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/index_toolbar">
 
         <TextView
             android:id="@+id/tvTimer"
@@ -33,37 +95,35 @@
 
         <Button
             android:id="@+id/btStart"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:layout_marginBottom="10dp"
-            android:background="#ffffff"
+            android:layout_marginStart="32dp"
             android:text="Start"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+
         <Button
             android:id="@+id/btReset"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/btPause"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginEnd="70dp"
-            android:layout_marginBottom="10dp"
-            android:background="#ffffff"
+            android:layout_marginEnd="32dp"
             android:text="Reset"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
 
-
         <ProgressBar
             android:id="@+id/bar_Timer"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
@@ -78,86 +138,134 @@
     </android.support.constraint.ConstraintLayout>
 
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:weightSum="10"
-        android:background="@drawable/rounded"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_grey"
         android:padding="5dp"
-        android:layout_margin="10dp">
-        <RelativeLayout
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/imageButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_centerInParent="true">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/blue_grey_300"
+            android:src="@drawable/arrow_greyup" />
+        <TextView
+            android:id="@+id/goal_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목표시간"
+            android:textSize="17sp"
+            android:textColor="@color/blue_grey_500"
+            android:layout_below="@id/imageButton"
+            android:layout_toLeftOf="@id/goal_concentrates"
+            android:paddingRight="40dp"
+            android:paddingTop="3dp"/>
+
+        <TextView
+            android:id="@+id/goal_concentrates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="집중도"
+            android:textSize="17sp"
+            android:textColor="@color/blue_grey_500"
+            android:layout_below="@id/imageButton"
+            android:layout_centerInParent="true"
+            android:paddingTop="3dp"/>
+
+        <TextView
+            android:id="@+id/goal_achieves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="달성률"
+            android:textSize="17sp"
+            android:textColor="@color/blue_grey_500"
+            android:layout_below="@id/imageButton"
+            android:layout_toRightOf="@id/goal_concentrates"
+            android:paddingLeft="40dp"
+            android:paddingTop="3dp"/>
+
+        <TextView
+            android:id="@+id/goal_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goal_concentrates"
+            android:text="A"
+            android:paddingTop="5dp"
+            android:layout_centerInParent="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+
+        <TextView
+            android:id="@+id/goal_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goal_times"
+            android:text="1시간 20분"
+            android:layout_toLeftOf="@id/goal_name"
+            android:paddingRight="55dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+
+        <TextView
+            android:id="@+id/goal_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goal_achieves"
+            android:text="50%"
+            android:layout_toRightOf="@id/goal_name"
+            android:paddingLeft="70dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+
+
+
+        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+            android:id="@+id/plancontent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goal_name"
+            android:layout_centerInParent="true"
+            android:background="@color/blue_grey_300"
+            app:ael_duration="500"
+            app:ael_expanded="true"
+            app:ael_interpolator="accelerate"
+            app:ael_orientation="vertical">
 
             <TextView
-                android:id="@+id/goal_name"
+                android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:textSize="15sp"
-                android:layout_margin="5dp"
-                android:padding="10dp"
-                android:text="목표의 제목"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-            <View
-                android:id="@+id/line_1"
-                android:layout_below="@+id/goal_name"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/blue_grey_800"/>
-
-            <TextView
-                android:id="@+id/goal_content"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/line_1"
-                android:layout_margin="5dp"
-                android:padding="10dp"
-                android:text="목표의 내용"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-            <View
-                android:id="@+id/line_2"
-                android:layout_below="@+id/goal_content"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/blue_grey_800"/>
+                android:layout_margin="10dp"
+                android:text="sample is a good thing really man qwejioqwejiwqojeioqwjeioqj iojeiqowj eioqwjeio qjwioe jqoiwj eiowqj eiojq oiwje ioqwjieo jqwoi "
+                android:textSize="18sp" />
 
 
-            <TextView
-                android:id="@+id/goal_rate"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/line_2"
-                android:layout_margin="5dp"
-                android:padding="10dp"
-                android:text="달성률"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/goal_rate"
-                android:layout_alignParentEnd="true"
-                android:padding="15dp"
-                android:textAlignment="center"
-                android:background="@drawable/rounded_rv"
-                android:text="조기달성"
-                android:textColor="#ffffff"
-                android:layout_centerVertical="true"/>
 
-        </RelativeLayout>
-
-    </ScrollView>
+    </RelativeLayout>
 
 
 
-</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
