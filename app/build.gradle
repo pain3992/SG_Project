@@ -62,6 +62,7 @@ dependencies {
     // Calendar
     implementation 'com.github.MetaLapras:Calendar:1.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'
