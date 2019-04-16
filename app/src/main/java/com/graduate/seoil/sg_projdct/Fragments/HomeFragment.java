@@ -1,6 +1,9 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,11 +33,17 @@ import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 import com.graduate.seoil.sg_projdct.R;
-import com.shrikanthravi.collapsiblecalendarview.data.Day;
-import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
+import in.co.ashclan.ashclanzcalendar.data.Day;
+import in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -48,19 +57,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private List<Goal> listItems = new ArrayList<>();
     private ListView database_listview;
     private GoalAdapter adapter;
-    private String str_userName;
-    private String str_userImageURL;
-    String key;
+    long timestamp, timestamp2;
+    String str_userName, str_userImageURL;
+    String key, getTime;
     Goal goal;
     int clickCounter = 0;
 
     String goalname;
-
     String goaltext;
+
+    public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
         recyclerView = view.findViewById(R.id.goal_list);
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -72,18 +83,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             str_userImageURL = getArguments().getString("str_userImageURL");
         }
 
-        final CollapsibleCalendar collapsibleCalendar = view.findViewById(R.id.calendarView);
-        collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
+        collapsibleCalendar.setCalendarListener(new in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar.CalendarListener() {
             @Override
             public void onDaySelect() {
                 Day day = collapsibleCalendar.getSelectedDay();
-                Log.i(getClass().getName(), "Selected Day: "
+//                Calendar cal = Calendar.getInstance();
+//                cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//                Log.e("무슨 요일?", String.valueOf(cal.getTime()));
+                Log.e("onDaySelect:--> ", "Selected Day: "
                         + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
             }
 
             @Override
             public void onItemClick(View view) {
-
+                Day day = collapsibleCalendar.getSelectedDay();
+                Log.i(getClass().getName(), "The Day of Clicked View: "
+                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
             }
 
             @Override
@@ -102,33 +117,86 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-
         fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
 
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
+        fab =  view.findViewById(R.id.fab);
+        fab1 = view.findViewById(R.id.fab1);
+        fab2 = view.findViewById(R.id.fab2);
 
-        fab.setOnClickListener((View.OnClickListener) this);
-        fab1.setOnClickListener((View.OnClickListener) this);
-        fab2.setOnClickListener((View.OnClickListener) this);
-        readGoalList();
+        fab.setOnClickListener(this);
+        fab.setBackgroundColor(Color.parseColor("#386385"));
+        fab1.setOnClickListener(this);
+        fab2.setOnClickListener(this);
+
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        getTime = sdf.format(date);
+        final int from_idx_first = getTime.indexOf("-", 1);
+        final int from_idx_second = getTime.indexOf("-", from_idx_first + 1);
+        final String year = getTime.substring(0, from_idx_first);
+        final int month = Integer.parseInt(getTime.substring(from_idx_first + 1, from_idx_second));
+        final String day = getTime.substring(from_idx_second + 1);
+
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        cal.set(Integer.parseInt(year), month, Integer.parseInt(day));
+        cal2.set(Integer.parseInt(year), month, Integer.parseInt(day));
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        cal2.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        Date dateun = null;
+        Date dateun2 = null;
+        try {
+            dateun = formatter.parse(formatter.format(cal.getTime()));
+            dateun2 = formatter.parse(formatter.format(cal2.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long output = Objects.requireNonNull(dateun).getTime() / 1000L;
+        long output2 = Objects.requireNonNull(dateun2).getTime() / 1000L;
+        String str = Long.toString(output);
+        String str2 = Long.toString(output2);
+        timestamp = Long.parseLong(str) * 1000;
+        timestamp2 = Long.parseLong(str2) * 1000;
+
         return  view;
-
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        readGoalList();
+    }
+
     private void readGoalList() {
+        System.out.println("t1, t2 --> " + timestamp + "/" + timestamp2);
+        Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp")
+                .endAt(timestamp2);
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-//        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
-//                .startAt(s)
-//                .endAt(s+"\uf8ff");
-        reference.addValueEventListener(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Goal goal = snapshot.getValue(Goal.class);
-                    listItems.add(goal);
+                    System.out.println("힝힝힝"+snapshot.getValue()); // TODO : 힝힝힝
+
+                    String date = snapshot.getKey();
+                    int index_one = date.indexOf("-", 1);
+                    int index_two = date.indexOf("-", index_one + 1);
+                    int year = Integer.parseInt(date.substring(0, index_one));
+                    int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
+                    int day = Integer.parseInt(date.substring(index_two + 1));
+
+                    // 색깔 칠하기.
+                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                    System.out.println("date --> " + date + " getTime --> " + getTime);
+                    if (date.equals(getTime)) {
+                        System.out.println("snapShot --> " + snapshot.getValue());
+                        Goal goal = snapshot.getValue(Goal.class);
+                        listItems.add(goal);
+                    }
                 }
                 adapter = new GoalAdapter(getContext(), listItems);
                 recyclerView.setAdapter(adapter);

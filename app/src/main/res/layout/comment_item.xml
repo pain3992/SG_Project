@@ -2,19 +2,20 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/comment_item_image_profile"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:layout_margin="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:orientation="vertical"
+        android:layout_margin="8dp"
         android:layout_toEndOf="@id/comment_item_image_profile">
 
         <TextView
@@ -31,5 +32,11 @@
             android:maxLines="5"/>
 
     </LinearLayout>
+
+    <!--<View-->
+        <!--android:layout_below="@id/comment_item_image_profile"-->
+        <!--android:layout_width="match_parent"-->
+         <!--android:background="#CECECE"-->
+        <!--android:layout_height="1dp" />-->
 
 </RelativeLayout>

@@ -246,36 +246,5 @@ public class GroupListFragment extends Fragment {
         System.out.println("iGroup --> " + iGroup);
         groupAdapter = new GroupAdapter(getContext(), iGroup, str_userName, str_userImageURL);
         recyclerView_search.setAdapter(groupAdapter);
-
-//        fuser = FirebaseAuth.getInstance().getCurrentUser();
-//        Query query = FirebaseDatabase.getInstance().getReference("Group").orderByChild("title")
-//                .startAt(s)
-//                .endAt(s+"\uf8ff");
-//
-//
-//
-//        query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                sGroup.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    for (String title : invite_title) {
-//                        System.out.println("invite_title --> " + title);
-//                        System.out.println("snapshot.getKey() --> " + snapshot.getKey());
-//                        if (!snapshot.getKey().equals(title)) {
-//                            Group group = snapshot.getValue(Group.class);
-//                            sGroup.add(group);
-//                        }
-//                    }
-//                }
-//                groupAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 }

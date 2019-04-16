@@ -217,52 +217,95 @@
                 <CheckBox
                     android:id="@+id/ckbox_mon"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/monday_selector"/>
+                    android:button="@null"
+                    android:background="@drawable/monday_selector" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_tue"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/tuesday_selector"/>
+                    android:button="@null"
+                    android:background="@drawable/tuesday_selector"/>
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_wed"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/wednesday_selector" />
+                    android:button="@null"
+                    android:background="@drawable/wednesday_selector"/>
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_thu"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/thursday_selector"/>
+                    android:button="@null"
+                    android:background="@drawable/thursday_selector"/>
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_fri"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/friday_selector" />
+                    android:button="@null"
+                    android:background="@drawable/friday_selector" />
+
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_sat"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/saturday_selector" />
+                    android:button="@null"
+                    android:background="@drawable/saturday_selector"/>
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:text="@string/title_group"
+                    android:textColor="@color/blue_grey_800"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_sun"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:button="@drawable/sunday_selector" />
+                    android:button="@null"
+                    android:background="@drawable/sunday_selector"/>
 
             </LinearLayout>
 
