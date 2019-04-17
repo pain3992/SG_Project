@@ -243,7 +243,6 @@ public class GroupListFragment extends Fragment {
                 iGroup.add(list);
             }
         }
-        System.out.println("iGroup --> " + iGroup);
         groupAdapter = new GroupAdapter(getContext(), iGroup, str_userName, str_userImageURL);
         recyclerView_search.setAdapter(groupAdapter);
     }

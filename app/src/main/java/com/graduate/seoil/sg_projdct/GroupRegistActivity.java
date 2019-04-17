@@ -69,6 +69,7 @@ import java.util.List;
 
 
 public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NumberPicker.OnValueChangeListener {
+    public final int GROUP_REGISTER_ACTIVITY = 0;
     FirebaseAuth auth;
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
@@ -87,6 +88,8 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
     ImageView profile_image, iv_profile_added;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
+
+    RelativeLayout group_category;
 
     private String mUri;
 
@@ -110,6 +113,7 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
         et_planTime = findViewById(R.id.et_group_regist_plan_time); // 목표 시간
         profile_image = findViewById(R.id.iv_group_regist); // 프로필 이미지
         iv_profile_added = findViewById(R.id.iv_profile_added); // 프로필 이미지 적용후
+        group_category = findViewById(R.id.group_category); // 카테고리 RelativeLayout
         category = findViewById(R.id.et_category); // 카테고리
         group_invite_user_count = findViewById(R.id.group_invite_user_count); // 모집 인원
 
@@ -143,6 +147,14 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 CropImage.activity()
                         .setAspectRatio(2, 1)
                         .start(GroupRegistActivity.this);
+            }
+        });
+
+        group_category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupRegistActivity.this, CategoryActivity.class);
+                startActivityForResult(intent, GROUP_REGISTER_ACTIVITY);
             }
         });
 

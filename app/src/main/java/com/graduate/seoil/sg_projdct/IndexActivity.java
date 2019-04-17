@@ -71,9 +71,6 @@ public class IndexActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-        
-        Intent intent = getIntent();
-        toss_selectFragment = intent.getStringExtra("selectedFragment");
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
@@ -92,8 +89,7 @@ public class IndexActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        if ( toss_selectFragment == null && !IS_TRUN) { // 이니시 프래그먼트 설정
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        if ( savedInstanceState == null && !IS_TRUN) { // 이니시 프래그먼트 설정
             navigation.setSelectedItemId(R.id.navigation_home);
         }
     }
@@ -156,8 +152,11 @@ public class IndexActivity extends AppCompatActivity {
                     break;
             }
 
-            if (selectedFragment != null)
+            if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            }
+
+
 
             return true;
         }
