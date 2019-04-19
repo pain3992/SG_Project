@@ -84,7 +84,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 intent.putExtra("group_title", group_title);
                 intent.putExtra("notyid", notifications.getNoty_id());
                 intent.putExtra("writer_id", notifications.getWriter_id());
-                mContext.startActivity(intent);
+                mContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 
