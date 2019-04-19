@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -53,6 +55,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.graduate.seoil.sg_projdct.Adapter.ExpandableListAdapter;
+import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
 import com.graduate.seoil.sg_projdct.Fragments.TimePickerFragment;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.User;
@@ -69,6 +72,7 @@ import java.util.List;
 
 
 public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NumberPicker.OnValueChangeListener {
+    public final int GROUP_REGISTER_ACTIVITY = 0;
     FirebaseAuth auth;
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
@@ -82,11 +86,13 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
     private String username;
     private String userImageURL;
 
-    TextView et_planTime, groupInner_title, tv_profile_added, group_invite_user_count, et_maxCount, group_regist;
-    EditText et_title, et_minCount, et_announce, category;
-    ImageView profile_image, iv_profile_added;
+    TextView et_planTime, groupInner_title, tv_profile_added, group_invite_user_count, et_maxCount, group_regist, category;
+    EditText et_title, et_minCount, et_announce;
+    ImageView profile_image, iv_profile_added, back_button;
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_mon, R.id.ckbox_tue, R.id.ckbox_wed, R.id.ckbox_thu, R.id.ckbox_fri, R.id.ckbox_sat, R.id.ckbox_sun};
+
+    RelativeLayout group_category;
 
     private String mUri;
 
@@ -110,8 +116,10 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
         et_planTime = findViewById(R.id.et_group_regist_plan_time); // 목표 시간
         profile_image = findViewById(R.id.iv_group_regist); // 프로필 이미지
         iv_profile_added = findViewById(R.id.iv_profile_added); // 프로필 이미지 적용후
+        group_category = findViewById(R.id.group_category); // 카테고리 RelativeLayout
         category = findViewById(R.id.et_category); // 카테고리
         group_invite_user_count = findViewById(R.id.group_invite_user_count); // 모집 인원
+        back_button = findViewById(R.id.groupRegister_backButton);
 
         chkBoxs = new CheckBox[chkBoxIds.length];
 
@@ -145,6 +153,15 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                         .start(GroupRegistActivity.this);
             }
         });
+
+        group_category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupRegistActivity.this, CategoryActivity.class);
+                startActivityForResult(intent, GROUP_REGISTER_ACTIVITY);
+            }
+        });
+
 
         group_invite_user_count.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,15 +248,15 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 reference.child(title).setValue(groupList);
 
                 // 공지사항 넣기
-                reference = FirebaseDatabase.getInstance().getReference("Group").child(title).child("notifications");
-                String notyid = reference.push().getKey();
-
-                HashMap<String, Object> notifications = new HashMap<>();
-                notifications.put("notyid", notyid);
-                notifications.put("content", "공지사항을 작성해보세요.");
-                notifications.put("registDate", getTime);
-                notifications.put("writer", "작심성공 운영자");
-                reference.child(notyid).setValue(notifications);
+//                reference = FirebaseDatabase.getInstance().getReference("Group").child(title).child("notifications");
+//                String notyid = reference.push().getKey();
+//
+//                HashMap<String, Object> notifications = new HashMap<>();
+//                notifications.put("notyid", notyid);
+//                notifications.put("content", "공지사항을 작성해보세요.");
+//                notifications.put("registDate", getTime);
+//                notifications.put("writer", "작심성공 운영자");
+//                reference.child(notyid).setValue(notifications);
 
                 // 그룹 가입시 기본 포스트 하나 들어가기
                 reference = FirebaseDatabase.getInstance().getReference("Posts");
@@ -250,11 +267,27 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 hashMap.put("postimage", "https://firebasestorage.googleapis.com/v0/b/sg-project-chat.appspot.com/o/posts%2F1555002256229.null?alt=media&token=dd479c7b-4d73-402e-8cb6-00b36660ed34");
                 hashMap.put("description", "서로간에 계획실천 인증사진을 올려보세요!");
                 hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
-                hashMap.put("registDate", getTime);
+                hashMap.put("registDate", System.currentTimeMillis());
 
                 assert postid != null;
                 reference.child(title).child(postid).setValue(hashMap);
 
+                IndexActivity.GROUP_COUNT += 1;
+                GroupListFragment.recyclerView.setVisibility(View.VISIBLE);
+                GroupListFragment.outsider_view.setVisibility(View.GONE);
+
+                Intent intent = new Intent(GroupRegistActivity.this, GroupActivity.class);
+                intent.putExtra("group_title", title);
+                intent.putExtra("userName", username);
+                intent.putExtra("userImageURL", userImageURL);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
             }
         });
@@ -342,9 +375,19 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
             } else {
                 uploadImage();
             }
+        } else if (requestCode == GROUP_REGISTER_ACTIVITY) {
+            if (resultCode != RESULT_OK) {
+                category.setText("Data Error");
+            }
+            if (resultCode == RESULT_OK) {
+                String result = data.getExtras().getString(CategoryActivity.RESULT_DATA);
+                category.setText(result);
+            }
         } else {
             Toast.makeText(this, "이미지 안올림.", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     @SuppressLint("SetTextI18n")

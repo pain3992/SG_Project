@@ -65,6 +65,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     String goalname;
     String goaltext;
+    String str_year, str_day;
+    int str_month;
 
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
     @Nullable
@@ -90,8 +92,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                Calendar cal = Calendar.getInstance();
 //                cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 //                Log.e("무슨 요일?", String.valueOf(cal.getTime()));
+
                 Log.e("onDaySelect:--> ", "Selected Day: "
                         + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal")
+                        .child(fuser.getUid()).child(day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay());
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        listItems.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Goal goal = snapshot.getValue(Goal.class);
+                            listItems.add(goal);
+                        }
+                        adapter = new GoalAdapter(getContext(), listItems);
+                        recyclerView.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -134,17 +156,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         getTime = sdf.format(date);
         final int from_idx_first = getTime.indexOf("-", 1);
         final int from_idx_second = getTime.indexOf("-", from_idx_first + 1);
-        final String year = getTime.substring(0, from_idx_first);
-        final int month = Integer.parseInt(getTime.substring(from_idx_first + 1, from_idx_second));
-        final String day = getTime.substring(from_idx_second + 1);
+        str_year = getTime.substring(0, from_idx_first);
+        str_month = Integer.parseInt(getTime.substring(from_idx_first + 1, from_idx_second));
+        str_day = getTime.substring(from_idx_second + 1);
 
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-        cal.set(Integer.parseInt(year), month, Integer.parseInt(day));
-        cal2.set(Integer.parseInt(year), month, Integer.parseInt(day));
+        cal.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
+        cal2.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         cal2.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        System.out.println("그주 일욜, 토욜 : " + sdf.format(cal.getTime()) + ", " + sdf.format(cal2.getTime()));
         Date dateun = null;
         Date dateun2 = null;
         try {
@@ -160,14 +183,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         timestamp = Long.parseLong(str) * 1000;
         timestamp2 = Long.parseLong(str2) * 1000;
 
+        readGoalList();
+
         return  view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        readGoalList();
-    }
 
     private void readGoalList() {
         System.out.println("t1, t2 --> " + timestamp + "/" + timestamp2);
@@ -180,8 +200,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println("힝힝힝"+snapshot.getValue()); // TODO : 힝힝힝
-
                     String date = snapshot.getKey();
                     int index_one = date.indexOf("-", 1);
                     int index_two = date.indexOf("-", index_one + 1);
@@ -191,11 +209,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                     // 색깔 칠하기.
                     collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-                    System.out.println("date --> " + date + " getTime --> " + getTime);
-                    if (date.equals(getTime)) {
-                        System.out.println("snapShot --> " + snapshot.getValue());
-                        Goal goal = snapshot.getValue(Goal.class);
-                        listItems.add(goal);
+                    if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                        for (DataSnapshot postshot : snapshot.getChildren()) {
+                            Goal goal = postshot.getValue(Goal.class);
+                            listItems.add(goal);
+                        }
                     }
                 }
                 adapter = new GoalAdapter(getContext(), listItems);

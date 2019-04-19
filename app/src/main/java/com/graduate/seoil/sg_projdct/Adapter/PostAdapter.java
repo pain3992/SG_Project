@@ -58,12 +58,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         return new PostAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = mPost.get(i);
         Glide.with(mContext).load(post.getPostimage()).into(viewHolder.post_image);
-        viewHolder.post_date.setText(post.getregistDate());
+
+        long regTime = post.getregistDate();
+        long curTime = System.currentTimeMillis();
+        long diffTime = (curTime - regTime) / 1000;
+        if (diffTime < TIME_MAXIMUM.SEC) {
+            viewHolder.post_date.setText("방금 전");
+        } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
+            viewHolder.post_date.setText(diffTime + "분 전");
+        } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
+            viewHolder.post_date.setText(diffTime + "시간 전");
+        } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
+            viewHolder.post_date.setText(diffTime + "일 전");
+        } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
+            viewHolder.post_date.setText(diffTime + "달 전");
+        } else {
+            viewHolder.post_date.setText(diffTime + "년 전");
+        }
 
         if (post.getDescription().equals("")) {
             viewHolder.description.setVisibility(View.GONE);
@@ -204,5 +221,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
             }
         });
+    }
+
+    private static class TIME_MAXIMUM {
+        public static final int SEC = 60;
+        public static final int MIN = 60;
+        public static final int HOUR = 24;
+        public static final int DAY = 30;
+        public static final int MONTH = 12;
     }
 }

@@ -55,10 +55,13 @@ public class IndexActivity extends AppCompatActivity {
 
     public static String str_userName;
     public static String str_userImageURL;
+    int join_group_cnt;
     private String toss_selectFragment;
 
     public static final int GROUP_ACTIVITY = 1;
     public static boolean IS_TRUN;
+
+    public static int GROUP_COUNT;
 
     Intent intent;
 
@@ -71,9 +74,6 @@ public class IndexActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-        
-        Intent intent = getIntent();
-        toss_selectFragment = intent.getStringExtra("selectedFragment");
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
@@ -82,6 +82,18 @@ public class IndexActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 str_userName = user.getUsername();
                 str_userImageURL = user.getImageURL();
+
+                reference.child("groupList").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        GROUP_COUNT = (int) dataSnapshot.getChildrenCount();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -92,8 +104,7 @@ public class IndexActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        if ( toss_selectFragment == null && !IS_TRUN) { // 이니시 프래그먼트 설정
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        if ( savedInstanceState == null && !IS_TRUN) { // 이니시 프래그먼트 설정
             navigation.setSelectedItemId(R.id.navigation_home);
         }
     }
@@ -156,8 +167,11 @@ public class IndexActivity extends AppCompatActivity {
                     break;
             }
 
-            if (selectedFragment != null)
+            if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            }
+
+
 
             return true;
         }

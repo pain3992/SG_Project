@@ -173,12 +173,35 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 int minute = Integer.parseInt(str_time.substring(index + 1));
                 int time = hour + minute;
 
-                for(int i = 0; i < chkBoxIds.length; i++) {
+                for (int i = 0; i < chkBoxIds.length; i++) {
                     chkBoxs[i] = findViewById(chkBoxIds[i]);
                     if (chkBoxs[i].isChecked()) {
-                        checked_days += (chkBoxs[i].getText().toString());
+                        switch (i) {
+                            case 0:
+                                checked_days = "월";
+                                break;
+                            case 1:
+                                checked_days += "화";
+                                break;
+                            case 2:
+                                checked_days += "수";
+                                break;
+                            case 3:
+                                checked_days += "목";
+                                break;
+                            case 4:
+                                checked_days += "금";
+                                break;
+                            case 5:
+                                checked_days += "토";
+                                break;
+                            case 6:
+                                checked_days += "일";
+                                break;
+                        }
                     }
                 }
+
 
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
                 cal = Calendar.getInstance();
@@ -210,8 +233,10 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                             output = dateun.getTime()/1000L;
                             str = Long.toString(output);
                             timestamp = Long.parseLong(str) * 1000; // timestamp
+                            String goal_id = reference.child(date).push().getKey();
                             Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                            reference.child(date).push().setValue(goal);
+                            assert goal_id != null;
+                            reference.child(date).child(title).setValue(goal);
                         }
 //                            jDays.put(String.valueOf(d), jTitle);
 //                        reference.child(String.valueOf(from_year) + "/" + String.valueOf(from_month)).updateChildren(jDays);
@@ -231,8 +256,10 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     output = dateun.getTime()/1000L;
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp
+                                    String goal_id = reference.child(date).push().getKey();
                                     Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    reference.child(date).push().setValue(goal);
+                                    assert goal_id != null;
+                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);
@@ -251,8 +278,10 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     output = dateun.getTime()/1000L;
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
+                                    String goal_id = reference.child(date).push().getKey();
                                     Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    reference.child(date).push().setValue(goal);
+                                    assert goal_id != null;
+                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);
@@ -270,8 +299,10 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     output = dateun.getTime()/1000L;
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp
+                                    String goal_id = reference.child(date).push().getKey();
                                     Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    reference.child(date).push().setValue(goal);
+                                    assert goal_id != null;
+                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);

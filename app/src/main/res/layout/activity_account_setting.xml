@@ -20,6 +20,12 @@
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
+            <ImageView
+                android:id="@+id/account_setting_backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_button"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

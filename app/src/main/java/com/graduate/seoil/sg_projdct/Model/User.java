@@ -9,6 +9,7 @@ public class User {
     private String search;
     private String registDate;
     private String level;
+    private String category;
 
     public User() {
 
@@ -80,5 +81,13 @@ public class User {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

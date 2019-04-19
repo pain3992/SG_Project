@@ -102,24 +102,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_above="@id/outsider"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_sad"/>
-
         <TextView
-            android:id="@+id/outsider"
+            android:id="@+id/not_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="20dp"
-            android:inputType="textMultiLine"
-            android:text="가입한 그룹이 없으시군요.."
-            android:textAlignment="center"
-            />
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textColor="@color/blue_grey_900"
+            android:text="그룹을 만들거나 가입해보세요!"/>
+
+        <Button
+            android:id="@+id/not_group_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/not_notification"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/blue_grey_900"
+            android:textColor="@android:color/white"
+            android:text="그룹 만들기"/>
 
     </RelativeLayout>
 

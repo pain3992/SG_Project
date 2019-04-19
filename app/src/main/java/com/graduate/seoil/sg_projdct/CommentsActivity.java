@@ -94,10 +94,12 @@ public class CommentsActivity extends AppCompatActivity {
 
     private void addComment() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(group_title).child(postid);
-
         HashMap<String, Object> hashMap = new HashMap<>();
+
+        long cur_time = System.currentTimeMillis();
         hashMap.put("comment", add_comment.getText().toString());
         hashMap.put("publisher", fuser.getUid());
+        hashMap.put("registDate", cur_time);
 
         reference.push().setValue(hashMap);
         add_comment.setText("");

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GroupNotificationInnerActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/group_notification_inner_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue_grey_900"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+            app:popupTheme="@style/MenuStyle">
+
+            <ImageView
+                android:id="@+id/gruop_notification_inner_backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_button"/>
+
+            <TextView
+                android:id="@+id/group_notification_inner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_gravity="center"
+                android:text="그룹 타이틀"
+                android:textSize="15sp"
+                android:textColor="#fff"
+                android:textStyle="bold"/>
+
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/group_notification_inner_rel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bar_layout"
+        android:padding="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/group_notification_inner_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/group_notification_inner_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/group_notification_inner_profile"
+            android:layout_marginStart="10dp"
+            android:text="작성자 명"
+            android:textColor="@color/blue_grey_900"
+            android:textStyle="bold"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/group_notification_inner_noty"
+            android:layout_below="@id/group_notification_inner_writer"
+            android:layout_toEndOf="@id/group_notification_inner_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/blue_grey_500"
+            android:textSize="12sp"
+            android:text="공지사항 ·" />
+
+        <TextView
+            android:id="@+id/group_notification_inner_date"
+            android:layout_below="@id/group_notification_inner_writer"
+            android:layout_toEndOf="@id/group_notification_inner_noty"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_grey_500"
+            android:textSize="12sp"
+            android:text="2019/04/01" />
+
+        <TextView
+            android:id="@+id/group_notification_inner_content"
+            android:layout_below="@id/group_notification_inner_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="공지사항 내용\n오늘의 주번"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/blue_grey_900"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_noti_comment"
+        android:layout_below="@+id/group_notification_inner_rel1"
+        android:layout_above="@id/group_notification_inner_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/group_notification_inner_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="4dp"
+        android:layout_alignParentBottom="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/group_notification_inner_commentProfile"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <EditText
+            android:id="@+id/group_notification_inner_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/comments_post"
+            android:layout_toEndOf="@id/comments_image_profile"
+            android:hint="댓글을 남겨보세요"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/group_notification_inner_comment_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/blue_grey_900"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
