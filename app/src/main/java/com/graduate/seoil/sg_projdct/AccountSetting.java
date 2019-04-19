@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class AccountSetting extends AppCompatActivity {
     CircleImageView profile_image;
     TextView userName, userName2, userEmail;
     RelativeLayout rel_logout;
+    ImageView back_button;
 
     DatabaseReference reference;
     FirebaseUser fuser;
@@ -70,16 +72,14 @@ public class AccountSetting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setting);
 
-        Toolbar toolbar = findViewById(R.id.account_setting_toolbar);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("");
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
 
         profile_image = findViewById(R.id.setting_account_profile_image);
         userName = findViewById(R.id.setting_account_userName);
         userName2 = findViewById(R.id.tv_userName);
         userEmail = findViewById(R.id.tv_userEmail);
         rel_logout = findViewById(R.id.rel3);
+        back_button = findViewById(R.id.account_setting_backButton);
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -110,7 +110,12 @@ public class AccountSetting extends AppCompatActivity {
             }
         });
 
-
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override

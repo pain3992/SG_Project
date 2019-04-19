@@ -3,6 +3,7 @@ package com.graduate.seoil.sg_projdct.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -57,9 +59,9 @@ public class GroupListFragment extends Fragment {
     private FirebaseUser fuser;
     private DatabaseReference reference;
 
-    private RecyclerView recyclerView, recyclerView_search;
+    public static RecyclerView recyclerView, recyclerView_search;
     private RecyclerView recyclerView_groupInfo, recyclerView_groupFeed;
-    private RelativeLayout outsider_view;
+    public static RelativeLayout outsider_view;
     private GroupAdapter groupAdapter;
     private ImageButton btn_join_list, btn_search_list;
 
@@ -69,6 +71,7 @@ public class GroupListFragment extends Fragment {
     private String str_userImageURL;
     private List<Group> mGroup, sGroup, iGroup;
     private List<String> invite_title;
+    private Button btn_create_group;
 
     @Nullable
     @Override
@@ -102,19 +105,39 @@ public class GroupListFragment extends Fragment {
 
         iGroup = new ArrayList<>();
         outsider_view = view.findViewById(R.id.outsider_layout);
+        btn_create_group = view.findViewById(R.id.not_group_add);
 
         invite_title = new ArrayList<>();
 
         readGroupList();
         readSearchList();
+        group_count();
 
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView_search.setVisibility(View.GONE);
-        et_search_group.setVisibility(View.GONE);
-        outsider_view.setVisibility(View.GONE);
+        if (IndexActivity.GROUP_COUNT > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView_search.setVisibility(View.GONE);
+            et_search_group.setVisibility(View.GONE);
+            outsider_view.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            recyclerView_search.setVisibility(View.GONE);
+            et_search_group.setVisibility(View.GONE);
+            outsider_view.setVisibility(View.VISIBLE);
+        }
+
 
         // 그룹 만들기
         create_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), GroupRegistActivity.class);
+                intent.putExtra("str_userName", str_userName);
+                intent.putExtra("str_userImageURL", str_userImageURL);
+                startActivity(intent);
+            }
+        });
+
+        btn_create_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), GroupRegistActivity.class);
@@ -147,10 +170,17 @@ public class GroupListFragment extends Fragment {
         btn_join_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.setVisibility(View.VISIBLE);
-                recyclerView_search.setVisibility(View.GONE);
-                et_search_group.setVisibility(View.GONE);
-                outsider_view.setVisibility(View.GONE);
+                if (IndexActivity.GROUP_COUNT > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView_search.setVisibility(View.GONE);
+                    et_search_group.setVisibility(View.GONE);
+                    outsider_view.setVisibility(View.GONE);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    recyclerView_search.setVisibility(View.GONE);
+                    et_search_group.setVisibility(View.GONE);
+                    outsider_view.setVisibility(View.VISIBLE);
+                }
                 toolbar_title.setText("가입한 그룹");
             }
         });
@@ -227,6 +257,21 @@ public class GroupListFragment extends Fragment {
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void group_count() {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                IndexActivity.GROUP_COUNT = (int) dataSnapshot.getChildrenCount();
             }
 
             @Override

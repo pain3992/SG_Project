@@ -70,14 +70,16 @@ public class GroupInformationInner extends AppCompatActivity {
     DatabaseReference reference;
 
     ImageView group_profile, backButton;
-    TextView title, usercount, registDate, time, days;
-    String group_title;
+    TextView title, usercount, registDate, category, time, days, notification_more;
+    String group_title, admin_id;
     RecyclerView notifications, recyclerView_userList;
 
     List<GroupNotification> mNotifications;
     List<GroupUserList> mUser;
     NotificationAdapter notiAdapter;
     GroupInformationInnerAdapter groupInformationAdapter;
+
+    int noty_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,14 +97,16 @@ public class GroupInformationInner extends AppCompatActivity {
         usercount = findViewById(R.id.groupInner_usercount);
         registDate = findViewById(R.id.groupInner_registDate);
         backButton = findViewById(R.id.groupInner_backButton);
+        category = findViewById(R.id.groupInner_category);
         time = findViewById(R.id.groupInner_times);
         days = findViewById(R.id.groupInner_days);
+        notification_more = findViewById(R.id.groupInner_notification_more);
 
         notifications = findViewById(R.id.groupInner_notification);
         notifications.setHasFixedSize(true);
         notifications.setLayoutManager(new LinearLayoutManager(GroupInformationInner.this));
         mNotifications = new ArrayList<>();
-        notiAdapter = new NotificationAdapter(getApplicationContext(), mNotifications);
+        notiAdapter = new NotificationAdapter(getApplicationContext(), mNotifications, group_title);
         notifications.setAdapter(notiAdapter);
 
         recyclerView_userList = findViewById(R.id.groupInner_rv_userList);
@@ -125,8 +129,10 @@ public class GroupInformationInner extends AppCompatActivity {
                 title.setText(group.getTitle());
                 usercount.setText("그룹 인원 " + String.valueOf(group.getcurrent_user()) + "명");
                 registDate.setText("|  개설일 " + group.getRegistDate());
+                category.setText("#" + group.getGoal());
                 time.setText("#" + String.valueOf(group.getPlanTime() / 60) + "시간");
                 days.setText("#" + group.getDayCycle());
+                admin_id = group.getAdminName();
             }
 
             @Override
@@ -136,10 +142,14 @@ public class GroupInformationInner extends AppCompatActivity {
         });
 
         // 공지사항 긁어오기.
-        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications");
-        reference.addValueEventListener(new ValueEventListener() {
+//        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications");
+        Query query = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications").orderByChild("registDate")
+                .limitToLast(2);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                noty_count = (int) dataSnapshot.getChildrenCount();
+                mNotifications.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     GroupNotification group = snapshot.getValue(GroupNotification.class);
                     mNotifications.add(group);
@@ -173,13 +183,25 @@ public class GroupInformationInner extends AppCompatActivity {
             }
         });
 
+        // 전체 공지사항 보기
+        notification_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInformationInner.this, GroupNotificationActivity.class);
+                intent.putExtra("group_title", group_title);
+                intent.putExtra("noty_count", noty_count);
+                startActivity(intent);
+            }
+        });
 
         group_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CropImage.activity()
-                        .setAspectRatio(2, 1)
-                        .start(GroupInformationInner.this);
+                if(fuser.getUid().equals(admin_id)) {
+                    CropImage.activity()
+                            .setAspectRatio(2, 1)
+                            .start(GroupInformationInner.this);
+                }
             }
         });
 
@@ -190,9 +212,6 @@ public class GroupInformationInner extends AppCompatActivity {
             }
         });
     }
-
-
-
 
     private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
@@ -255,7 +274,6 @@ public class GroupInformationInner extends AppCompatActivity {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$여기시점$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$은?");
             imageUri = result.getUri();
 
 //            group_profile.setImageURI(imageUri);

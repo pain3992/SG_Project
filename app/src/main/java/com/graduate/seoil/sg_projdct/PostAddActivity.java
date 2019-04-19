@@ -39,6 +39,8 @@ public class PostAddActivity extends AppCompatActivity {
     StorageTask uploadTask;
     StorageReference storageReference;
 
+    private static final int IMAGE_REQUEST = 1;
+
     ImageView close, image_added;
     TextView post;
     EditText description;
@@ -92,6 +94,16 @@ public class PostAddActivity extends AppCompatActivity {
 
     }
 
+    private void openImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+//        CropImage.activity()
+//                .setAspectRatio(1, 1)
+//                .start(AccountSetting.this);
+    }
+
     private String getfileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
@@ -127,17 +139,12 @@ public class PostAddActivity extends AppCompatActivity {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
                         String postid = reference.push().getKey();
 
-                        long now = System.currentTimeMillis();
-                        Date date = new Date(now);
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        String getTime = sdf.format(date);
-
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("postid", postid);
                         hashMap.put("postimage", myUri);
                         hashMap.put("description", description.getText().toString());
                         hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        hashMap.put("registDate", getTime);
+                        hashMap.put("registDate", System.currentTimeMillis());
 
 //                        reference.child(group_title).child(fuser.getUid()).child(postid).setValue(hashMap);
                         reference.child(group_title).child(postid).setValue(hashMap);

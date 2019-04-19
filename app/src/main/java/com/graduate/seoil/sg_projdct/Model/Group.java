@@ -19,7 +19,6 @@ public class Group {
     private String adminName;
     private String dayCycle;
 
-
     private int planTime;
 
     private int current_user;

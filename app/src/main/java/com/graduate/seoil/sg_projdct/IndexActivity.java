@@ -55,10 +55,13 @@ public class IndexActivity extends AppCompatActivity {
 
     public static String str_userName;
     public static String str_userImageURL;
+    int join_group_cnt;
     private String toss_selectFragment;
 
     public static final int GROUP_ACTIVITY = 1;
     public static boolean IS_TRUN;
+
+    public static int GROUP_COUNT;
 
     Intent intent;
 
@@ -79,6 +82,18 @@ public class IndexActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 str_userName = user.getUsername();
                 str_userImageURL = user.getImageURL();
+
+                reference.child("groupList").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        GROUP_COUNT = (int) dataSnapshot.getChildrenCount();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

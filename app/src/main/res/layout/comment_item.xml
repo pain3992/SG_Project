@@ -8,7 +8,9 @@
         android:id="@+id/comment_item_image_profile"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="8dp"/>
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="8dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,13 +25,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:text="유저네임"
             android:textColor="@color/blue_grey_900" />
 
         <TextView
             android:id="@+id/comment_item_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="유저코멘트"
             android:maxLines="5"/>
+
+        <TextView
+            android:id="@+id/comment_item_registerDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1분전"/>
 
     </LinearLayout>
 

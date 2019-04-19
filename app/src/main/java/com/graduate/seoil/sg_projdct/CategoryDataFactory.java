@@ -16,21 +16,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CategoryDataFactory {
-
-  public static List<Category> makeGenres(String title, List<CategoryJSON> list) {
-    System.out.println("title --> " + title + ", list --> " + list);
+  static List<Category> makeGenres(String category, List<CategoryJSON> subcategory) {
     return Arrays.asList(
-        makeRockGenre(),
+        makeRockGenre(category, subcategory),
             makeJazzGenre(),
             makeClassicGenre(),
             makeBluegrassGenre());
   }
 
-  public static Category makeRockGenre() {
-    return new Category("Rock", makeRockArtists(), R.drawable.ic_under_arrow);
+  public static Category makeRockGenre(String category, List<CategoryJSON> subcategory) {
+    return new Category(category, makeRockArtists(subcategory), R.drawable.ic_under_arrow);
   }
 
-  public static List<CategoryChild> makeRockArtists() {
+  public static List<CategoryChild> makeRockArtists(List<CategoryJSON> clist) {
     CategoryChild queen = new CategoryChild("Queen", true);
     CategoryChild styx = new CategoryChild("Styx", false);
     CategoryChild reoSpeedwagon = new CategoryChild("REO Speedwagon", false);

@@ -129,6 +129,7 @@ public class    GroupInformation extends AppCompatActivity {
                     intent.putExtra("userImageURL", userImageURL);
 
                     startActivity(intent);
+                    IndexActivity.GROUP_COUNT += 1;
                     finish();
                 } else {
                     Toast.makeText(GroupInformation.this, "그룹 정원이 가득 찼습니다.", Toast.LENGTH_SHORT).show();

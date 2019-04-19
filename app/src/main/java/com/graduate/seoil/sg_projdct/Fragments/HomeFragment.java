@@ -76,8 +76,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
         recyclerView = view.findViewById(R.id.goal_list);
 
-        System.out.println("몇번찍히냐? ");
-
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
