@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,7 +32,6 @@ import java.util.Locale;
 public class PlanInformationActivity extends AppCompatActivity {
     int i=0;
     ProgressBar progressBar;
-    private static final long START_TIME_IN_MILLIS = 120000;
     private TextView mTextCount;
     private Button mStart;
     private Button mReset;
@@ -41,13 +41,14 @@ public class PlanInformationActivity extends AppCompatActivity {
     FirebaseUser fuser;
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
-    TextView text,percent,toolbar1,solute,delete;
+    TextView text,percent,toolbar1,solute,delete,toggle_titlte,toggle_start,toggle_end;
     String str_title;
     RecyclerView recyclerView;
     ImageButton openExpand;
     ExpandableRelativeLayout plancontent;
     private Context mContext;
     private int goaltime;
+    ImageView back;
 
 
     @Override
@@ -66,6 +67,8 @@ public class PlanInformationActivity extends AppCompatActivity {
         goaltime = intent.getIntExtra("goal_time",0);
         final String title = intent.getStringExtra("goal_title");
         mTimeLeft = goaltime*60000;
+        String date = intent.getStringExtra("date");
+        String enddate = intent.getStringExtra("enddate");
 
 
 
@@ -104,6 +107,12 @@ public class PlanInformationActivity extends AppCompatActivity {
         toolbar1 = findViewById(R.id.goalList_toolbar_title);
         toolbar1.setText(intent.getStringExtra("goal_title"));
 
+        toggle_titlte=findViewById(R.id.text);
+        toggle_titlte.setText(title);
+        toggle_start=findViewById(R.id.start_text);
+        toggle_start.setText(date);
+        toggle_end=findViewById(R.id.end_text);
+        toggle_end.setText(enddate);
         openExpand = findViewById(R.id.imageButton);
         openExpand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,24 +123,34 @@ public class PlanInformationActivity extends AppCompatActivity {
             }
         });
 
+        back = findViewById(R.id.goal_backButton);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         solute = findViewById(R.id.goal_solute);
         solute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm  = getSupportFragmentManager();
-                HomeFragment fragment = new HomeFragment();
-                fm.beginTransaction().replace(R.id.container,fragment).commit();
+//                FragmentManager fm  = getSupportFragmentManager();
+//                HomeFragment fragment = new HomeFragment();
+//                fm.beginTransaction().replace(R.id.container,fragment).commit();
+                finish();
             }
         });
-        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(title);
+        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date).child(title);
         delete = findViewById(R.id.goal_delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm  = getSupportFragmentManager();
-                HomeFragment fragment = new HomeFragment();
-                fm.beginTransaction().replace(R.id.container,fragment).commit();
+//                FragmentManager fm  = getSupportFragmentManager();
+//                HomeFragment fragment = new HomeFragment();
+//                fm.beginTransaction().replace(R.id.container,fragment).commit();
                 reference.removeValue();
+                finish();
 
             }
         });
@@ -174,7 +193,7 @@ public class PlanInformationActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        mTimeLeft = START_TIME_IN_MILLIS;
+        mTimeLeft = goaltime*60000;
         updateCountDownText();
         progressBar.setProgress(0);
         i=0;

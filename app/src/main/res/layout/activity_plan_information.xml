@@ -20,16 +20,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/MenuStyle">
 
+        <ImageView
+            android:id="@+id/goal_backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_button"/>
+
+        <TextView
+            android:id="@+id/goal_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="삭제"
+            android:textColor="@color/blue_grey_500"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat" />
+
         <TextView
             android:id="@+id/goal_solute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             android:layout_marginEnd="15dp"
             android:clickable="true"
             android:focusable="true"
             android:text="조기 달성"
-            android:textAlignment="textEnd"
             android:textColor="@color/blue_grey_500"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -45,20 +64,6 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/goal_delete"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="삭제"
-            android:textAlignment="textEnd"
-            android:textColor="@color/blue_grey_500"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:ignore="RtlCompat" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -251,13 +256,64 @@
             app:ael_interpolator="accelerate"
             app:ael_orientation="vertical">
 
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="목표 제목 : "
+                android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="sample is a good thing really man qwejioqwejiwqojeioqwjeioqj iojeiqowj eioqwjeio qjwioe jqoiwj eiowqj eiojq oiwje ioqwjieo jqwoi "
+                android:layout_toRightOf="@id/title_text"
+                android:text="내용"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/strat_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_below="@id/title_text"
+                android:text="시작일자 : "
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/start_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/strat_date"
+                android:layout_below="@id/text"
+                android:text="내용"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_below="@id/strat_date"
+                android:text="마지막일자 : "
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/end_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/end_date"
+                android:layout_below="@id/start_text"
+                android:text="내용"
+                android:textSize="22sp" />
 
 
         </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
