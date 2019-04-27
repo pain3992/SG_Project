@@ -247,17 +247,6 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 groupList.put("registDate", getTime);
                 reference.child(title).setValue(groupList);
 
-                // 공지사항 넣기
-//                reference = FirebaseDatabase.getInstance().getReference("Group").child(title).child("notifications");
-//                String notyid = reference.push().getKey();
-//
-//                HashMap<String, Object> notifications = new HashMap<>();
-//                notifications.put("notyid", notyid);
-//                notifications.put("content", "공지사항을 작성해보세요.");
-//                notifications.put("registDate", getTime);
-//                notifications.put("writer", "작심성공 운영자");
-//                reference.child(notyid).setValue(notifications);
-
                 // 그룹 가입시 기본 포스트 하나 들어가기
                 reference = FirebaseDatabase.getInstance().getReference("Posts");
                 String postid = reference.push().getKey();

@@ -18,17 +18,19 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.graduate.seoil.sg_projdct.AccountSetting;
 import com.graduate.seoil.sg_projdct.R;
+import com.graduate.seoil.sg_projdct.SimplePieActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingFragment extends Fragment {
     RelativeLayout rel_setting_account;
+    RelativeLayout rel_notification;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        rel_setting_account =view.findViewById(R.id.relative_setting_account);
+        rel_setting_account = view.findViewById(R.id.relative_setting_account);
         rel_setting_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +38,17 @@ public class SettingFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        rel_notification = view.findViewById(R.id.relative_setting_notification);
+        rel_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SimplePieActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
         return view;
     }

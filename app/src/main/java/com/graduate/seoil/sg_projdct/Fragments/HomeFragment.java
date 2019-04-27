@@ -183,7 +183,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         timestamp = Long.parseLong(str) * 1000;
         timestamp2 = Long.parseLong(str2) * 1000;
 
-        readGoalList();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                readGoalList();
+            }
+        }).start();
 
         return  view;
     }
