@@ -1,6 +1,7 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.icu.util.Calendar;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.GoalAdapter;
 import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
@@ -68,11 +70,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String str_year, str_day;
     int str_month;
 
+    ProgressDialog dialog;
+
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //로딩중 다이아로그 띄움
+        dialog = new ProgressDialog(getContext());
+
+        dialog.setTitle("데이터 로딩중");
+        dialog.setMessage("잠시만 기다려주세요");
+
+        dialog.show();
+
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
         recyclerView = view.findViewById(R.id.goal_list);
 
@@ -183,53 +196,65 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         timestamp = Long.parseLong(str) * 1000;
         timestamp2 = Long.parseLong(str2) * 1000;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                readGoalList();
-            }
-        }).start();
+        readGoalList();
 
         return  view;
     }
 
 
+
     private void readGoalList() {
-        System.out.println("t1, t2 --> " + timestamp + "/" + timestamp2);
-        Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp")
-                .endAt(timestamp2);
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-        query.addValueEventListener(new ValueEventListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listItems.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String date = snapshot.getKey();
-                    int index_one = date.indexOf("-", 1);
-                    int index_two = date.indexOf("-", index_one + 1);
-                    int year = Integer.parseInt(date.substring(0, index_one));
-                    int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
-                    int day = Integer.parseInt(date.substring(index_two + 1));
+            public int hashCode() {
+                return super.hashCode();
+            }
 
-                    // 색깔 칠하기.
-                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-                    if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
-                        for (DataSnapshot postshot : snapshot.getChildren()) {
-                            Goal goal = postshot.getValue(Goal.class);
-                            listItems.add(goal);
+            @Override
+            public void run() {
+                Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp")
+                        .startAt(System.currentTimeMillis())
+                        .endAt(timestamp2);
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        listItems.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String date = snapshot.getKey();
+                            int index_one = date.indexOf("-", 1);
+                            int index_two = date.indexOf("-", index_one + 1);
+                            int year = Integer.parseInt(date.substring(0, index_one));
+                            int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
+                            int day = Integer.parseInt(date.substring(index_two + 1));
+
+                            // 색깔 칠하기.
+                            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                            if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                                for (DataSnapshot postshot : snapshot.getChildren()) {
+                                    Goal goal = postshot.getValue(Goal.class);
+                                    listItems.add(goal);
+                                }
+                            }
                         }
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter = new GoalAdapter(getContext(), listItems);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        });
+                        dialog.dismiss();
                     }
-                }
-                adapter = new GoalAdapter(getContext(), listItems);
-                recyclerView.setAdapter(adapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                    }
+                });
             }
-        });
+        }).start();
     }
 
 

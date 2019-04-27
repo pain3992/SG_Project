@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.mikephil.charting.charts.Chart;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
 import com.graduate.seoil.sg_projdct.Fragments.SettingFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
+import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.User;
 
 import java.util.ArrayList;
@@ -62,6 +64,8 @@ public class IndexActivity extends AppCompatActivity {
     public static boolean IS_TRUN;
 
     public static int GROUP_COUNT;
+
+    private Fragment GroupListFragment, StatisticsFragment, HomeFragment, NotificationFragment, SettingFragment;
 
     Intent intent;
 
@@ -144,32 +148,68 @@ public class IndexActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_group:
+                    if (GroupListFragment == null) {
+                        GroupListFragment = new GroupListFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, GroupListFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().show(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     selectedFragment = new GroupListFragment();
                     selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_chart:
+                    if (StatisticsFragment == null) {
+                        StatisticsFragment = new StatisticsFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, StatisticsFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().show(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     selectedFragment = new StatisticsFragment();
                     selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_home:
+                    if (HomeFragment == null) {
+                        HomeFragment = new HomeFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, HomeFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().show(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     selectedFragment = new HomeFragment();
                     selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_setting:
-//                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
-//                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                    editor.apply();
+                    if (SettingFragment == null) {
+                        SettingFragment = new SettingFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, SettingFragment).commit();
+                    }
 
-//                     SharedPreference prefs = getContext().getSharedPreference("PREFS", Context.MODE_PRIVATE);
-//                     profileId = prefs.getString("profileid", "none");
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().show(SettingFragment).commit();
+
                     selectedFragment = new SettingFragment();
                     selectedFragment.setArguments(bundle);
                     break;
             }
 
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
+
+
+//            if (selectedFragment != null)
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
 
 
 
