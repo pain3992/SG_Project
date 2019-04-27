@@ -53,24 +53,25 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         final Comment comment = mComment.get(i);
-        long regTime = comment.getRegisterDate();
+        long regTime = comment.getRegistDate();
         long curTime = System.currentTimeMillis();
         long diffTime = (curTime - regTime) / 1000;
 
         viewHolder.comment.setText(comment.getComment());
+
         getUserInfo(viewHolder.image_profile, viewHolder.username, comment.getPublisher());
         if (diffTime < TIME_MAXIMUM.SEC) {
-            viewHolder.regisreDate.setText("방금 전");
+            viewHolder.registDate.setText("방금 전");
         } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
-            viewHolder.regisreDate.setText(diffTime + "분 전");
+            viewHolder.registDate.setText(diffTime + "분 전");
         } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
-            viewHolder.regisreDate.setText(diffTime + "시간 전");
+            viewHolder.registDate.setText(diffTime + "시간 전");
         } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
-            viewHolder.regisreDate.setText(diffTime + "일 전");
+            viewHolder.registDate.setText(diffTime + "일 전");
         } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
-            viewHolder.regisreDate.setText(diffTime + "달 전");
+            viewHolder.registDate.setText(diffTime + "달 전");
         } else {
-            viewHolder.regisreDate.setText(diffTime + "년 전");
+            viewHolder.registDate.setText(diffTime + "년 전");
         }
 
 //        viewHolder.comment.setOnClickListener(new View.OnClickListener() {
@@ -97,18 +98,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         public ImageView image_profile;
 
-        public TextView username, comment, regisreDate;
+        public TextView username, comment, registDate;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image_profile = itemView.findViewById(R.id.comment_item_image_profile);
             username = itemView.findViewById(R.id.comment_item_username);
             comment = itemView.findViewById(R.id.comment_item_comment);
-            regisreDate = itemView.findViewById(R.id.comment_item_registerDate);
+            registDate = itemView.findViewById(R.id.comment_item_registerDate);
         }
 
     }
-    private void getUserInfo(final ImageView imageView, final TextView username, String publisherid) {
+    private void getUserInfo(final ImageView imageView, final TextView username, final String publisherid) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(publisherid);
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -120,6 +121,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 User user = dataSnapshot.getValue(User.class);
                 assert user != null;
                 Glide.with(mContext).load(user.getImageURL()).into(imageView);
+                username.setText(user.getUsername());
             }
 
             @Override

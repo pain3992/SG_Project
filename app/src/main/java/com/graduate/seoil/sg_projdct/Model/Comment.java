@@ -6,15 +6,15 @@ package com.graduate.seoil.sg_projdct.Model;
 public class Comment {
     private String comment;
     private String publisher;
-    private long registerDate;
+    private long registDate;
 
     public Comment() {
     }
 
-    public Comment(String comment, String publisher, long registerDate) {
+    public Comment(String comment, String publisher, long registDate) {
         this.comment = comment;
         this.publisher = publisher;
-        this.registerDate = registerDate;
+        this.registDate = registDate;
     }
 
     public String getComment() {
@@ -33,11 +33,11 @@ public class Comment {
         this.publisher = publisher;
     }
 
-    public long getRegisterDate() {
-        return registerDate;
+    public long getRegistDate() {
+        return registDate;
     }
 
-    public void setRegisterDate(long registerDate) {
-        this.registerDate = registerDate;
+    public void setRegistDate(long registDate) {
+        this.registDate = registDate;
     }
 }

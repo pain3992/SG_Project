@@ -165,7 +165,7 @@ public class GroupNotificationInnerActivity extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("comment", comment.getText().toString());
         hashMap.put("publisher", fuser.getUid());
-        hashMap.put("registerDate", curTime);
+        hashMap.put("registDate", curTime);
 
         reference.child("Comments").push().setValue(hashMap);
         comment.setText("");

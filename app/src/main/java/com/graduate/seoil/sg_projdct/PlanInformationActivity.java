@@ -107,21 +107,22 @@ public class PlanInformationActivity extends AppCompatActivity {
         toolbar1 = findViewById(R.id.goalList_toolbar_title);
         toolbar1.setText(intent.getStringExtra("goal_title"));
 
-        toggle_titlte=findViewById(R.id.text);
-        toggle_titlte.setText(title);
-        toggle_start=findViewById(R.id.start_text);
-        toggle_start.setText(date);
-        toggle_end=findViewById(R.id.end_text);
-        toggle_end.setText(enddate);
+//        toggle_titlte=findViewById(R.id.text);
+//        toggle_titlte.setText(title);
+//        toggle_start=findViewById(R.id.start_text);
+//        toggle_end=findViewById(R.id.end_text);
+//        toggle_start.setText(date);
+//        toggle_end.setText(enddate);
         openExpand = findViewById(R.id.imageButton);
-        openExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                plancontent = (ExpandableRelativeLayout) findViewById(R.id.plancontent);
-                plancontent.toggle();
-                openExpand.setImageResource(R.drawable.arrow_greyup);
-            }
-        });
+
+//        openExpand.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                plancontent = (ExpandableRelativeLayout) findViewById(R.id.plancontent);
+//                plancontent.toggle();
+//                openExpand.setImageResource(R.drawable.arrow_greyup);
+//            }
+//        });
 
         back = findViewById(R.id.goal_backButton);
         back.setOnClickListener(new View.OnClickListener() {

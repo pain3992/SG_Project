@@ -140,13 +140,13 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 String end_date = tv_end_date.getText().toString();
                 String checked_days = "";
 
-                int from_idx_first = start_date.indexOf("/", 1);
-                int from_idx_second = start_date.indexOf("/", from_idx_first + 1);
+                int from_idx_first = start_date.indexOf("-", 1);
+                int from_idx_second = start_date.indexOf("-", from_idx_first + 1);
                 int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
                 int from_month  = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
                 int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
-                int to_idx_first = end_date.indexOf("/", 1);
-                int to_idx_second = end_date.indexOf("/", to_idx_first + 1);
+                int to_idx_first = end_date.indexOf("-", 1);
+                int to_idx_second = end_date.indexOf("-", to_idx_first + 1);
                 int to_year = Integer.parseInt(end_date.substring(0, to_idx_first));
                 int to_month  = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
                 int to_day = Integer.parseInt(end_date.substring(to_idx_second + 1));
@@ -201,42 +201,54 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                         }
                     }
                 }
+                String[] int_checkDays = new String[checked_days.length()];
+                for (int i = 0; i < checked_days.length(); i++) {
+                    if (checked_days.substring(i, i + 1).equals("일"))
+                        int_checkDays[i] = "1";
+                    else if (checked_days.substring(i, i + 1).equals("월"))
+                        int_checkDays[i] = "2";
+                    else if (checked_days.substring(i, i + 1).equals("화"))
+                        int_checkDays[i] = "3";
+                    else if (checked_days.substring(i, i + 1).equals("수"))
+                        int_checkDays[i] = "4";
+                    else if (checked_days.substring(i, i + 1).equals("목"))
+                        int_checkDays[i] = "5";
+                    else if (checked_days.substring(i, i + 1).equals("금"))
+                        int_checkDays[i] = "6";
+                    else if (checked_days.substring(i, i + 1).equals("토"))
+                        int_checkDays[i] = "7";
+                }
 
 
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
                 cal = Calendar.getInstance();
                 cal.set(from_year, from_month - 1, from_day); // 시작 요일 Calendar에 세팅
 
-
-//                jData.put("title", title);
-//                jData.put("start_date", start_date);
-//                jData.put("end_date", end_date);
-//                jData.put("check_days", checked_days);
-//                jData.put("time", time);
-//                jData.put("start_time", 0);
-//                jData.put("time_status", 0);
-//                jData.put("percent_status", 0);
-//                jTitle.put(title, jData);
-
                 if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
                     if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
                         for (int d = from_day; d <= to_day; d++) {
-                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
-                            str_date = to_month + "-" + d + "-" + from_year;
-                            formatter = new SimpleDateFormat("MM-dd-yyyy");
-                            dateun = null;
-                            try {
-                                dateun = (Date)formatter.parse(str_date);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            cal.set(from_year, from_month - 1, d);
+                            int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                            for (String int_checkDay : int_checkDays) {
+                                if (dayNum == Integer.parseInt(int_checkDay)) {
+                                    date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    str_date = to_month + "-" + d + "-" + from_year;
+                                    formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                    dateun = null;
+                                    try {
+                                        dateun = (Date)formatter.parse(str_date);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    output = dateun.getTime()/1000L;
+                                    str = Long.toString(output);
+                                    timestamp = Long.parseLong(str) * 1000; // timestamp
+                                    String goal_id = reference.child(date).push().getKey();
+                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
+                                    assert goal_id != null;
+                                    reference.child(date).child(title).setValue(goal);
+                                }
                             }
-                            output = dateun.getTime()/1000L;
-                            str = Long.toString(output);
-                            timestamp = Long.parseLong(str) * 1000; // timestamp
-                            String goal_id = reference.child(date).push().getKey();
-                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                            assert goal_id != null;
-                            reference.child(date).child(title).setValue(goal);
                         }
 //                            jDays.put(String.valueOf(d), jTitle);
 //                        reference.child(String.valueOf(from_year) + "/" + String.valueOf(from_month)).updateChildren(jDays);
@@ -244,65 +256,83 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                         for (int m = from_month; m <= to_month; m++) {
                             if (m == from_month) {   // 4/14 ~ 9/28 인경우 4월 처리
                                 for (int d = from_day; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                    str_date = m + "-" + d + "-" + from_year;
-                                    formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                    dateun = null;
-                                    try {
-                                        dateun = (Date)formatter.parse(str_date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                    cal.set(from_year, m - 1, d);
+                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                    for (String int_checkDay : int_checkDays) {
+                                        if (dayNum == Integer.parseInt(int_checkDay)) {
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            str_date = m + "-" + d + "-" + from_year;
+                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                            dateun = null;
+                                            try {
+                                                dateun = (Date)formatter.parse(str_date);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            output = dateun.getTime()/1000L;
+                                            str = Long.toString(output);
+                                            timestamp = Long.parseLong(str) * 1000; // timestamp
+                                            String goal_id = reference.child(date).push().getKey();
+                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
+                                            assert goal_id != null;
+                                            reference.child(date).child(title).setValue(goal); // TODO : 목ㅍ제목에 ., #, $, [ , ] 들어 가면 안됌.
+                                        }
                                     }
-                                    output = dateun.getTime()/1000L;
-                                    str = Long.toString(output);
-                                    timestamp = Long.parseLong(str) * 1000; // timestamp
-                                    String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    assert goal_id != null;
-                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);
                             } else if (m < to_month) { // 4/14 ~ 9/28 인경우 5,6,7,8월 처리
                                 cal.set(from_year, m - 1, 1); // Calendar 2019/5/1 세팅
-                                for (int d = 1; d < cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                    str_date = m + "-" + d + "-" + from_year;
-                                    formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                    dateun = null;
-                                    try {
-                                        dateun = (Date)formatter.parse(str_date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                for (int d = 1; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
+                                    cal.set(from_year, m - 1, d);
+                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                    for (String int_checkDay : int_checkDays) {
+                                        if (dayNum == Integer.parseInt(int_checkDay)) {
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            str_date = m + "-" + d + "-" + from_year;
+                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                            dateun = null;
+                                            try {
+                                                dateun = (Date)formatter.parse(str_date);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            output = dateun.getTime()/1000L;
+                                            str = Long.toString(output);
+                                            timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
+                                            String goal_id = reference.child(date).push().getKey();
+                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
+                                            assert goal_id != null;
+                                            reference.child(date).child(title).setValue(goal);
+                                        }
                                     }
-                                    output = dateun.getTime()/1000L;
-                                    str = Long.toString(output);
-                                    timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
-                                    String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    assert goal_id != null;
-                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);
                             } else { // 4/14 ~ 9/28 인경우 9월 처리
                                 for (int d = 1; d <= to_day; d++) {
-                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                    str_date = m + "-" + d + "-" + from_year;
-                                    formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                    dateun = null;
-                                    try {
-                                        dateun = (Date)formatter.parse(str_date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                    cal.set(from_year, m - 1, d);
+                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                    for (String int_checkDay : int_checkDays) {
+                                        if (dayNum == Integer.parseInt(int_checkDay)) {
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            str_date = m + "-" + d + "-" + from_year;
+                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                            dateun = null;
+                                            try {
+                                                dateun = (Date)formatter.parse(str_date);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            output = dateun.getTime()/1000L;
+                                            str = Long.toString(output);
+                                            timestamp = Long.parseLong(str) * 1000; // timestamp
+                                            String goal_id = reference.child(date).push().getKey();
+                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
+                                            assert goal_id != null;
+                                            reference.child(date).child(title).setValue(goal);
+                                        }
                                     }
-                                    output = dateun.getTime()/1000L;
-                                    str = Long.toString(output);
-                                    timestamp = Long.parseLong(str) * 1000; // timestamp
-                                    String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
-                                    assert goal_id != null;
-                                    reference.child(date).child(title).setValue(goal);
                                 }
 //                                    jDays.put(String.valueOf(d), jTitle);
 //                                jMonth.put(String.valueOf(m), jDays);
@@ -321,8 +351,8 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         dateDisplay.setText(
                 new StringBuilder()
                         // Month is 0 based so add 1
-                        .append(date.get(Calendar.YEAR)).append("/")
-                        .append(date.get(Calendar.MONTH) + 1).append("/")
+                        .append(date.get(Calendar.YEAR)).append("-")
+                        .append(date.get(Calendar.MONTH) + 1).append("-")
                         .append(date.get(Calendar.DAY_OF_MONTH)).append(""));
 
     }
