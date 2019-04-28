@@ -56,8 +56,9 @@ public class PostAddActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         group_title = intent.getStringExtra("group_title");
-        userName = intent.getStringExtra("userName");
-        userImageURL = intent.getStringExtra("userImageURL");
+
+        userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
+        userName =  IndexActivity.spref.getString("str_userName", "default");
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 

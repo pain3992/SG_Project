@@ -73,6 +73,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ProgressDialog dialog;
 
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        dialog.show();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,6 +90,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         dialog.setTitle("데이터 로딩중");
         dialog.setMessage("잠시만 기다려주세요");
+
+
 
         dialog.show();
 

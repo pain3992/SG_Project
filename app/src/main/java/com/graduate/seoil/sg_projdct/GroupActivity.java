@@ -45,12 +45,12 @@ public class GroupActivity extends AppCompatActivity {
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
+        str_userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
+        str_userName =  IndexActivity.spref.getString("str_userName", "default");
+
         Intent intent = getIntent();
         if (intent != null) {
             str_title = intent.getStringExtra("group_title");
-            str_userName = intent.getStringExtra("userName");
-            str_userImageURL = intent.getStringExtra("userImageURL");
-
         }
 
         Bundle bundles = Objects.requireNonNull(getIntent()).getExtras();

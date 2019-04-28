@@ -1,5 +1,6 @@
 package com.graduate.seoil.sg_projdct;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -67,6 +68,9 @@ public class IndexActivity extends AppCompatActivity {
 
     private Fragment GroupListFragment, StatisticsFragment, HomeFragment, NotificationFragment, SettingFragment;
 
+    public static SharedPreferences spref;
+    public static SharedPreferences.Editor editor;
+
     Intent intent;
 
     @Override
@@ -81,11 +85,18 @@ public class IndexActivity extends AppCompatActivity {
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("CommitPrefEdits")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 str_userName = user.getUsername();
                 str_userImageURL = user.getImageURL();
+
+                spref = getSharedPreferences("gpref", MODE_PRIVATE);
+                editor = spref.edit();
+                editor.putString("str_userImageURL", str_userImageURL);
+                editor.putString("str_userName", str_userName);
+                editor.apply();
 
                 reference.child("groupList").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -124,11 +135,18 @@ public class IndexActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String result = data.getExtras().getString(GroupActivity.RESULT_DATA);
 
+                GroupListFragment = null;
+                StatisticsFragment = null;
+                SettingFragment = null;
+                HomeFragment = null;
+
+                System.out.println("여기 거침?");
+
                 BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
                 if (result.equals("GroupListFragment")) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GroupListFragment()).commit();
                     navigation.setSelectedItemId(R.id.navigation_group);
                 }
+
             }
         }
 
@@ -139,12 +157,6 @@ public class IndexActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-
-            // Session 역할 : 유저이름과 프로필사진 담기.
-            Bundle bundle = new Bundle();
-            bundle.putString("str_userName", str_userName);
-            bundle.putString("str_userImageURL", str_userImageURL);
 
             switch (item.getItemId()) {
                 case R.id.navigation_group:
@@ -158,8 +170,6 @@ public class IndexActivity extends AppCompatActivity {
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
-                    selectedFragment = new GroupListFragment();
-                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_chart:
                     if (StatisticsFragment == null) {
@@ -172,22 +182,17 @@ public class IndexActivity extends AppCompatActivity {
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
-                    selectedFragment = new StatisticsFragment();
-                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_home:
                     if (HomeFragment == null) {
                         HomeFragment = new HomeFragment();
                         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, HomeFragment).commit();
                     }
-
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().show(HomeFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
-                    selectedFragment = new HomeFragment();
-                    selectedFragment.setArguments(bundle);
                     break;
                 case R.id.navigation_setting:
                     if (SettingFragment == null) {
@@ -200,8 +205,6 @@ public class IndexActivity extends AppCompatActivity {
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().show(SettingFragment).commit();
 
-                    selectedFragment = new SettingFragment();
-                    selectedFragment.setArguments(bundle);
                     break;
             }
 
