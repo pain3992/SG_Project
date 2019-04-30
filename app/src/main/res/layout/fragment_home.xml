@@ -32,7 +32,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-
     <in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar
         android:background="@drawable/gradient_routtime_worker"
         android:layout_width="match_parent"
