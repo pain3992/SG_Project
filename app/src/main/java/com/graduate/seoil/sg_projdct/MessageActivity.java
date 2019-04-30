@@ -106,8 +106,8 @@ public class MessageActivity extends AppCompatActivity {
         text_send= findViewById(R.id.text_send);
 
         intent = getIntent();
-        userid = intent.getStringExtra("userid");
         group_title = intent.getStringExtra("group_title");
+        userid = intent.getStringExtra("userid");
         userImageURL = intent.getStringExtra("userImageURL");
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();

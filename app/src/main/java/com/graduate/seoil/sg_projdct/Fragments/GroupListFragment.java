@@ -78,10 +78,8 @@ public class GroupListFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
 
-        if (getArguments() != null) {
-            str_userName = getArguments().getString("str_userName");
-            str_userImageURL = getArguments().getString("str_userImageURL");
-        }
+        str_userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
+        str_userName =  IndexActivity.spref.getString("str_userName", "default");
 
         btn_join_list = view.findViewById(R.id.groupList_join_list);
         btn_search_list = view.findViewById(R.id.groupList_search_list);

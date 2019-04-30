@@ -1,6 +1,7 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.icu.util.Calendar;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.GoalAdapter;
 import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
@@ -68,11 +70,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String str_year, str_day;
     int str_month;
 
+    ProgressDialog dialog;
+
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        dialog.show();
+    }
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //로딩중 다이아로그 띄움
+        dialog = new ProgressDialog(getContext());
+
+        dialog.setTitle("데이터 로딩중");
+        dialog.setMessage("잠시만 기다려주세요");
+
+
+
+        dialog.show();
+
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
         recyclerView = view.findViewById(R.id.goal_list);
 
@@ -160,79 +184,133 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         str_month = Integer.parseInt(getTime.substring(from_idx_first + 1, from_idx_second));
         str_day = getTime.substring(from_idx_second + 1);
 
-        Calendar cal = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-        cal.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
-        cal2.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        cal2.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-        System.out.println("그주 일욜, 토욜 : " + sdf.format(cal.getTime()) + ", " + sdf.format(cal2.getTime()));
-        Date dateun = null;
-        Date dateun2 = null;
+//        Calendar cal = Calendar.getInstance();
+//        Calendar cal2 = Calendar.getInstance();
+//        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+//        cal.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
+//        cal2.set(Integer.parseInt(str_year), str_month, Integer.parseInt(str_day));
+//        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//        cal2.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+//        System.out.println("그주 일욜, 토욜 : " + sdf.format(cal.getTime()) + ", " + sdf.format(cal2.getTime()));
+//        Date dateun = null;
+//        Date dateun2 = null;
+//        try {
+//            dateun = formatter.parse(formatter.format(cal.getTime()));
+//            dateun2 = formatter.parse(formatter.format(cal2.getTime()));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        long output = Objects.requireNonNull(dateun).getTime() / 1000L;
+//        long output2 = Objects.requireNonNull(dateun2).getTime() / 1000L;
+//        String str = Long.toString(output);
+//        String str2 = Long.toString(output2);
+//        timestamp = Long.parseLong(str) * 1000;
+//        timestamp2 = Long.parseLong(str2) * 1000;
+
+        readGoalThread thread_1 = new readGoalThread();
+        readGoalAfterThread thread_2 = new readGoalAfterThread();
+        thread_1.run();
         try {
-            dateun = formatter.parse(formatter.format(cal.getTime()));
-            dateun2 = formatter.parse(formatter.format(cal2.getTime()));
-        } catch (ParseException e) {
+            thread_1.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        long output = Objects.requireNonNull(dateun).getTime() / 1000L;
-        long output2 = Objects.requireNonNull(dateun2).getTime() / 1000L;
-        String str = Long.toString(output);
-        String str2 = Long.toString(output2);
-        timestamp = Long.parseLong(str) * 1000;
-        timestamp2 = Long.parseLong(str2) * 1000;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                readGoalList();
-            }
-        }).start();
 
         return  view;
     }
 
+    private class readGoalThread extends Thread {
+        public readGoalThread() {
+            super();
+        }
 
-    private void readGoalList() {
-        System.out.println("t1, t2 --> " + timestamp + "/" + timestamp2);
-        Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp")
-                .endAt(timestamp2);
+        @Override
+        public void run() {
+            super.run();
+            Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp")
+                    .limitToFirst(7);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listItems.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String date = snapshot.getKey();
-                    int index_one = date.indexOf("-", 1);
-                    int index_two = date.indexOf("-", index_one + 1);
-                    int year = Integer.parseInt(date.substring(0, index_one));
-                    int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
-                    int day = Integer.parseInt(date.substring(index_two + 1));
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    listItems.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        System.out.println("snapshot --> " + snapshot.getValue());
+                        String date = snapshot.getKey();
+                        int index_one = date.indexOf("-", 1);
+                        int index_two = date.indexOf("-", index_one + 1);
+                        int year = Integer.parseInt(date.substring(0, index_one));
+                        int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
+                        int day = Integer.parseInt(date.substring(index_two + 1));
 
-                    // 색깔 칠하기.
-                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-                    if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
-                        for (DataSnapshot postshot : snapshot.getChildren()) {
-                            Goal goal = postshot.getValue(Goal.class);
-                            listItems.add(goal);
+                        // 색깔 칠하기.
+                        collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                        if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                            for (DataSnapshot postshot : snapshot.getChildren()) {
+                                Goal goal = postshot.getValue(Goal.class);
+                                listItems.add(goal);
+                            }
                         }
                     }
+                    adapter = new GoalAdapter(getContext(), listItems);
+                    recyclerView.setAdapter(adapter);
+                    dialog.dismiss();
                 }
-                adapter = new GoalAdapter(getContext(), listItems);
-                recyclerView.setAdapter(adapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
+    private class readGoalAfterThread extends Thread {
+        public readGoalAfterThread() {
+            super();
+        }
 
+        @Override
+        public void run() {
+            super.run();
+            Query query = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).orderByChild("timestamp");
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    listItems.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        System.out.println("snapshot --> " + snapshot.getValue());
+                        String date = snapshot.getKey();
+                        int index_one = date.indexOf("-", 1);
+                        int index_two = date.indexOf("-", index_one + 1);
+                        int year = Integer.parseInt(date.substring(0, index_one));
+                        int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
+                        int day = Integer.parseInt(date.substring(index_two + 1));
+
+                        // 색깔 칠하기.
+                        collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                        if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                            for (DataSnapshot postshot : snapshot.getChildren()) {
+                                Goal goal = postshot.getValue(Goal.class);
+                                listItems.add(goal);
+                            }
+                        }
+                    }
+
+                    adapter = new GoalAdapter(getContext(), listItems);
+                    recyclerView.setAdapter(adapter);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
 
     public void onClick(View v) {
         int id = v.getId();

@@ -1,5 +1,6 @@
 package com.graduate.seoil.sg_projdct;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.mikephil.charting.charts.Chart;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +40,7 @@ import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
 import com.graduate.seoil.sg_projdct.Fragments.SettingFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
+import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.User;
 
 import java.util.ArrayList;
@@ -63,6 +66,11 @@ public class IndexActivity extends AppCompatActivity {
 
     public static int GROUP_COUNT;
 
+    private Fragment GroupListFragment, StatisticsFragment, HomeFragment, NotificationFragment, SettingFragment;
+
+    public static SharedPreferences spref;
+    public static SharedPreferences.Editor editor;
+
     Intent intent;
 
     @Override
@@ -77,11 +85,18 @@ public class IndexActivity extends AppCompatActivity {
 
         // 유저네임, 프로필URL 불러오기.
         reference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("CommitPrefEdits")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 str_userName = user.getUsername();
                 str_userImageURL = user.getImageURL();
+
+                spref = getSharedPreferences("gpref", MODE_PRIVATE);
+                editor = spref.edit();
+                editor.putString("str_userImageURL", str_userImageURL);
+                editor.putString("str_userName", str_userName);
+                editor.apply();
 
                 reference.child("groupList").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -120,11 +135,18 @@ public class IndexActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String result = data.getExtras().getString(GroupActivity.RESULT_DATA);
 
+                GroupListFragment = null;
+                StatisticsFragment = null;
+                SettingFragment = null;
+                HomeFragment = null;
+
+                System.out.println("여기 거침?");
+
                 BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
                 if (result.equals("GroupListFragment")) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GroupListFragment()).commit();
                     navigation.setSelectedItemId(R.id.navigation_group);
                 }
+
             }
         }
 
@@ -135,41 +157,62 @@ public class IndexActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-
-            // Session 역할 : 유저이름과 프로필사진 담기.
-            Bundle bundle = new Bundle();
-            bundle.putString("str_userName", str_userName);
-            bundle.putString("str_userImageURL", str_userImageURL);
 
             switch (item.getItemId()) {
                 case R.id.navigation_group:
-                    selectedFragment = new GroupListFragment();
-                    selectedFragment.setArguments(bundle);
+                    if (GroupListFragment == null) {
+                        GroupListFragment = new GroupListFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, GroupListFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().show(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     break;
                 case R.id.navigation_chart:
-                    selectedFragment = new StatisticsFragment();
-                    selectedFragment.setArguments(bundle);
+                    if (StatisticsFragment == null) {
+                        StatisticsFragment = new StatisticsFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, StatisticsFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().show(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     break;
                 case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
-                    selectedFragment.setArguments(bundle);
+                    if (HomeFragment == null) {
+                        HomeFragment = new HomeFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, HomeFragment).commit();
+                    }
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().show(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
                     break;
                 case R.id.navigation_setting:
-//                    SharedPreferences.Editor editor = (SharedPreferences.Editor) getSharedPreferences("PREFS", MODE_PRIVATE);
-//                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                    editor.apply();
+                    if (SettingFragment == null) {
+                        SettingFragment = new SettingFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, SettingFragment).commit();
+                    }
 
-//                     SharedPreference prefs = getContext().getSharedPreference("PREFS", Context.MODE_PRIVATE);
-//                     profileId = prefs.getString("profileid", "none");
-                    selectedFragment = new SettingFragment();
-                    selectedFragment.setArguments(bundle);
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().show(SettingFragment).commit();
+
                     break;
             }
 
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
+
+
+//            if (selectedFragment != null)
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
 
 
 

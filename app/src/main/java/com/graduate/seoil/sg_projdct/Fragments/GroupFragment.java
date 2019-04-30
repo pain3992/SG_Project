@@ -1,8 +1,10 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -72,6 +74,7 @@ public class GroupFragment extends Fragment  {
 
     FirebaseUser fuser;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_group, container, false);
@@ -94,7 +97,7 @@ public class GroupFragment extends Fragment  {
         back_button = view.findViewById(R.id.group_backButton);
         title = view.findViewById(R.id.group_toolbar_title);
 
-        Glide.with(view).load(str_userImageURL).into(userImageURL);
+        Glide.with(view).load(IndexActivity.spref.getString("str_userImageURL", "default")).into(userImageURL);
         title.setText(group_title);
 
 
@@ -153,22 +156,7 @@ public class GroupFragment extends Fragment  {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                String result = "GroupListFragment";
-                intent.putExtra(GroupActivity.RESULT_DATA, result);
-                Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
                 Objects.requireNonNull(getActivity()).onBackPressed();
-
-//                if (!receive.equals("")) {
-//                    Intent intent = new Intent();
-//                    intent.putExtra(RESULT_DATA, receive);
-//
-//                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, intent);
-//                } else {
-//                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_CANCELED);
-//                }
-//                getActivity().finish();
-//                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 

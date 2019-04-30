@@ -123,8 +123,9 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
 
         chkBoxs = new CheckBox[chkBoxIds.length];
 
-        username = intent.getStringExtra("str_userName");
-        userImageURL = intent.getStringExtra("str_userImageURL");
+
+        username = IndexActivity.spref.getString("str_userName", "default");
+        userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
 
         Log.d("이미지URL 못불러옴", userImageURL); // TODO : Error -> username, userimageURL 읽기전에 프래그먼트 이동시에.
 
