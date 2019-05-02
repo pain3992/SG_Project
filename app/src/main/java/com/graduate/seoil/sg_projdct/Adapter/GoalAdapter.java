@@ -68,6 +68,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
                     bundle.putInt("percent_status", goal.getPercent_status());
                     bundle.putString("date",goal.getStart_date());
                     bundle.putString("enddate",goal.getEnd_date());
+                    bundle.putInt("time_status",goal.getTime_status());
 
                     intent.putExtras(bundle);
 
