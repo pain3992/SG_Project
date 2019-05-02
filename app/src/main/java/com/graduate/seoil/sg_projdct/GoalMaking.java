@@ -244,7 +244,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp
                                     String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, 0, 0, timestamp);
+                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, 0, timestamp);
                                     assert goal_id != null;
                                     reference.child(date).child(title).setValue(goal);
                                 }
