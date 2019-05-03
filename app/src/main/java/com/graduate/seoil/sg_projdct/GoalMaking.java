@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ import com.graduate.seoil.sg_projdct.Fragments.DatePickerFragment;
 import com.graduate.seoil.sg_projdct.Fragments.TimePickerFragment;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,8 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+
+import androidx.annotation.RequiresApi;
 
 public class GoalMaking extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
     FirebaseUser fuser;
@@ -102,8 +106,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
             @Override
             public void onClick(View v) {
                 showDateDialog(tv_calendar_start, startDate);
-//                DialogFragment datePicker = new DatePickerFragment();
-//                datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
 
@@ -112,14 +114,11 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
             @Override
             public void onClick(View v) {
                 showDateDialog(tv_calender_end, endDate);
-//                DialogFragment datePicker = new DatePickerFragment();
-//                datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
 
         updateDisplay(tv_calendar_start, startDate);
         updateDisplay(tv_calender_end, endDate);
-
 
         tv_plan_hour = findViewById(R.id.tv_plan_hour);
         tv_plan_hour.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +130,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         });
 
         plan_make.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String title = etTitle.getText().toString();
@@ -138,6 +138,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 String start_hour = tv_start_hour.getText().toString();
                 String start_date = tv_start_date.getText().toString();
                 String end_date = tv_end_date.getText().toString();
+                System.out.println("end_date : " + end_date);
                 String checked_days = "";
 
                 int from_idx_first = start_date.indexOf("-", 1);
@@ -151,9 +152,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 int to_month  = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
                 int to_day = Integer.parseInt(end_date.substring(to_idx_second + 1));
 
-//                String ts = String.valueOf(Instant.now().getEpochSecond());
-//                System.out.println("timestamp : " + ts);
-
                 String str_date = 6 + "-" + 3 + "-" + 2019;
                 DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
                 Date dateun = null;
@@ -165,8 +163,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 long output=dateun.getTime()/1000L;
                 String str=Long.toString(output);
                 long timestamp = Long.parseLong(str) * 1000;
-
-                System.out.println("timestamp --> " + timestamp);
 
                 int index = str_time.indexOf(":");
                 int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
@@ -223,7 +219,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
                 cal = Calendar.getInstance();
                 cal.set(from_year, from_month - 1, from_day); // 시작 요일 Calendar에 세팅
-
                 if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
                     if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
                         for (int d = from_day; d <= to_day; d++) {
@@ -231,7 +226,31 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                             int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                             for (String int_checkDay : int_checkDays) {
                                 if (dayNum == Integer.parseInt(int_checkDay)) {
-                                    date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    System.out.println("from_month : " + from_month);
+                                    if (from_month < 10) {
+                                        if (d < 10)
+                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                        else
+                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    } else {
+                                        if (d < 10)
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                        else
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    }
+
+                                    if (to_month < 10) {
+                                        if (to_day < 10)
+                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                        else
+                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                    } else {
+                                        if (to_day < 10)
+                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                        else
+                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                    }
+
                                     str_date = to_month + "-" + d + "-" + from_year;
                                     formatter = new SimpleDateFormat("MM-dd-yyyy");
                                     dateun = null;
@@ -243,6 +262,8 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     output = dateun.getTime()/1000L;
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp
+
+
                                     String goal_id = reference.child(date).push().getKey();
                                     Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, 0, timestamp);
                                     assert goal_id != null;
@@ -250,8 +271,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                 }
                             }
                         }
-//                            jDays.put(String.valueOf(d), jTitle);
-//                        reference.child(String.valueOf(from_year) + "/" + String.valueOf(from_month)).updateChildren(jDays);
                     } else {                      // 같은 년도 다른 월 (2019/4/14 ~ 2019/7/29)
                         for (int m = from_month; m <= to_month; m++) {
                             if (m == from_month) {   // 4/14 ~ 9/28 인경우 4월 처리
@@ -260,7 +279,30 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (from_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
@@ -279,8 +321,6 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                         }
                                     }
                                 }
-//                                    jDays.put(String.valueOf(d), jTitle);
-//                                jMonth.put(String.valueOf(m), jDays);
                             } else if (m < to_month) { // 4/14 ~ 9/28 인경우 5,6,7,8월 처리
                                 cal.set(from_year, m - 1, 1); // Calendar 2019/5/1 세팅
                                 for (int d = 1; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
@@ -288,7 +328,30 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (from_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
@@ -307,15 +370,36 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                         }
                                     }
                                 }
-//                                    jDays.put(String.valueOf(d), jTitle);
-//                                jMonth.put(String.valueOf(m), jDays);
                             } else { // 4/14 ~ 9/28 인경우 9월 처리
                                 for (int d = 1; d <= to_day; d++) {
                                     cal.set(from_year, m - 1, d);
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (to_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
@@ -334,14 +418,11 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                         }
                                     }
                                 }
-//                                    jDays.put(String.valueOf(d), jTitle);
-//                                jMonth.put(String.valueOf(m), jDays);
                             }
                         }
-//                        reference.child(String.valueOf(from_year)).updateChildren(jMonth);
                     }
-                } else { // 다른 년도 일 때(2019/12/18 ~ 2020/02/12)
                 }
+                System.out.println("it's end game now");
                 finish();
             }
         });

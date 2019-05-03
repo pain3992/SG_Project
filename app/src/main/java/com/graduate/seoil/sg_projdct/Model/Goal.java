@@ -11,9 +11,6 @@ public class Goal {
     private int percent_status;
     private long timestamp;
 
-    public Goal() {
-    }
-
     public Goal(String title, String start_date, String end_date, String day_cycle, int plan_time, int start_time, int time_status, int percent_status, long timestamp) {
         this.title = title;
         this.start_date = start_date;
@@ -24,6 +21,9 @@ public class Goal {
         this.time_status = time_status;
         this.percent_status = percent_status;
         this.timestamp = timestamp;
+    }
+
+    public Goal() {
     }
 
     public String getTitle() {

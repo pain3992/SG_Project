@@ -43,6 +43,8 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         return new GoalAdapter.ViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull GoalAdapter.ViewHolder viewHolder, int i) {
         final Goal goal = mGoals.get(i);

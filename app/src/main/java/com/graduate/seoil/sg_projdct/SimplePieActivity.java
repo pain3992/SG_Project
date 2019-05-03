@@ -30,7 +30,7 @@ public class SimplePieActivity extends AppCompatActivity {
 
         pieChart.setDragDecelerationFrictionCoef(0.99f);
 
-        pieChart.setDrawHoleEnabled(true); // true : 파이차트 가운데 홀 만듬.
+        pieChart.setDrawHoleEnabled(false); // true : 파이차트 가운데 홀 만듬.
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setTransparentCircleRadius(61f); // 가운데 투명 원
 
@@ -43,10 +43,10 @@ public class SimplePieActivity extends AppCompatActivity {
         yValues.add(new PieEntry(40, "Russa"));
         yValues.add(new PieEntry(23, "Japan"));
 
-        Description description = new Description();
-        description.setText("This is KgpTalkie\n Subscribe this channel for more videos");
-        description.setTextSize(9);
-        pieChart.setDescription(description);
+//        Description description = new Description();
+//        description.setText("This is KgpTalkie\n Subscribe this channel for more videos");
+//        description.setTextSize(9);
+//        pieChart.setDescription(description);
 
         pieChart.animateY(1000, Easing.EaseInOutCubic);
 
