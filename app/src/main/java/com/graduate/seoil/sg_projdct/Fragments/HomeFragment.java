@@ -67,9 +67,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     String str_userName, str_userImageURL;
     String key, getTime;
-    String goalname, goaltext, str_year, str_day;
+    String goalname, goaltext, str_year, str_month, str_day;
 
-    int str_month;
 
     ProgressDialog dialog;
 
@@ -115,8 +114,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Day day = collapsibleCalendar.getSelectedDay();
                 Log.e("onDaySelect:--> ", "Selected Day: " + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
 
+                String click_month = "";
+                String click_day = "";
+                int year = day.getYear();
+
+                int month = day.getMonth();
+                if (month < 9)
+                    click_month = "0" + String.valueOf(month + 1);
+                else
+                    click_month = String.valueOf(month + 1);
+
+                int yoil = day.getDay();
+                if (yoil < 10)
+                    click_day = "0" + String.valueOf(yoil);
+                else
+                    click_day = String.valueOf(yoil);
+
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal")
-                        .child(fuser.getUid()).child(day.getYear() + "-" + (day.getMonth() + 1) + "-" + day.getDay());
+                        .child(fuser.getUid()).child(day.getYear() + "-" + click_month + "-" + click_day);
 
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -155,12 +170,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
 
         Date date = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         getTime = sdf.format(date);
         final int from_idx_first = getTime.indexOf("-", 1);
         final int from_idx_second = getTime.indexOf("-", from_idx_first + 1);
         str_year = getTime.substring(0, from_idx_first);
-        str_month = Integer.parseInt(getTime.substring(from_idx_first + 1, from_idx_second));
+        str_month = getTime.substring(from_idx_first + 1, from_idx_second);
         str_day = getTime.substring(from_idx_second + 1);
 
         fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
@@ -203,10 +218,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         int index_one = date.indexOf("-", 1);
                         int index_two = date.indexOf("-", index_one + 1);
                         final int year = Integer.parseInt(date.substring(0, index_one));
-                        final int month = Integer.parseInt(date.substring(index_one+ 1, index_two));
+                        final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
                         final int day = Integer.parseInt(date.substring(index_two + 1));
 
                         onProgressUpdate(date);
+
+                        System.out.println("date : " + date + ", year,month,day : " + str_year + "-" + str_month + "-" + str_day);
 
                         if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
                             for (DataSnapshot postshot : snapshot.getChildren()) {
@@ -215,7 +232,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             }
                         }
                     }
-                    adapter.notifyDataSetChanged();
+                    adapter = new GoalAdapter(getContext(), listItems);
+                    recyclerView.setAdapter(adapter);
                     dialog.dismiss();
 
                 }
@@ -240,7 +258,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             int month = Integer.parseInt(Arrays.toString(dates).substring(index_one+ 1, index_two));
             int day = Integer.parseInt(Arrays.toString(dates).substring(index_two + 1, index_three));
 //            System.out.println("year : " + year + ", month : " + month + ", day : " + day);
-            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+//            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
         }
 
         @Override

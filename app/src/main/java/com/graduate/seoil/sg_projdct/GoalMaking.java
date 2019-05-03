@@ -138,6 +138,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 String start_hour = tv_start_hour.getText().toString();
                 String start_date = tv_start_date.getText().toString();
                 String end_date = tv_end_date.getText().toString();
+                System.out.println("end_date : " + end_date);
                 String checked_days = "";
 
                 int from_idx_first = start_date.indexOf("-", 1);
@@ -221,13 +222,35 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
                     if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
                         for (int d = from_day; d <= to_day; d++) {
-                            System.out.println("첫번째 for문");
                             cal.set(from_year, from_month - 1, d);
                             int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                             for (String int_checkDay : int_checkDays) {
-                                System.out.println("두번째 for문");
                                 if (dayNum == Integer.parseInt(int_checkDay)) {
-                                    date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    System.out.println("from_month : " + from_month);
+                                    if (from_month < 10) {
+                                        if (d < 10)
+                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                        else
+                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    } else {
+                                        if (d < 10)
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                        else
+                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                    }
+
+                                    if (to_month < 10) {
+                                        if (to_day < 10)
+                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                        else
+                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                    } else {
+                                        if (to_day < 10)
+                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                        else
+                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                    }
+
                                     str_date = to_month + "-" + d + "-" + from_year;
                                     formatter = new SimpleDateFormat("MM-dd-yyyy");
                                     dateun = null;
@@ -252,13 +275,34 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                         for (int m = from_month; m <= to_month; m++) {
                             if (m == from_month) {   // 4/14 ~ 9/28 인경우 4월 처리
                                 for (int d = from_day; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    System.out.println("세번째 for문");
                                     cal.set(from_year, m - 1, d);
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
-                                        System.out.println("네번째 for문");
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (from_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
@@ -280,13 +324,34 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                             } else if (m < to_month) { // 4/14 ~ 9/28 인경우 5,6,7,8월 처리
                                 cal.set(from_year, m - 1, 1); // Calendar 2019/5/1 세팅
                                 for (int d = 1; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    System.out.println("다섯번째 for문");
                                     cal.set(from_year, m - 1, d);
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
-                                        System.out.println("여섯번째 for문");
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (from_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
@@ -310,9 +375,31 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     cal.set(from_year, m - 1, d);
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
-                                        System.out.println("일곱번째 for문");
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            if (to_month < 10) {
+                                                if (d < 10)
+                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            } else {
+                                                if (d < 10)
+                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                else
+                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                            }
+
+                                            if (to_month < 10) {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            } else {
+                                                if (to_day < 10)
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                else
+                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                            }
+
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
