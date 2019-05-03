@@ -190,7 +190,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
 
-        new addEventTag().execute();
+//        asyncEventTag = new addEventTag();
+//        asyncEventTag.execute();
+        fetchGoalList();
 
         String[] this_week = new String[7];
         try {
@@ -203,78 +205,112 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return  view;
     }
 
+    private void fetchGoalList() {
+        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listItems.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final String date = snapshot.getKey();
+                    int index_one = date.indexOf("-", 1);
+                    int index_two = date.indexOf("-", index_one + 1);
+                    final int year = Integer.parseInt(date.substring(0, index_one));
+                    final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
+                    final int day = Integer.parseInt(date.substring(index_two + 1));
 
-    private class addEventTag extends AsyncTask<Void, String, List<String>> {
-        @Override
-        protected List<String> doInBackground(Void... voids) {
-            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    listItems.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String date = snapshot.getKey();
-                        int index_one = date.indexOf("-", 1);
-                        int index_two = date.indexOf("-", index_one + 1);
-                        final int year = Integer.parseInt(date.substring(0, index_one));
-                        final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
-                        final int day = Integer.parseInt(date.substring(index_two + 1));
-
-                        onProgressUpdate(date);
-
-                        System.out.println("date : " + date + ", year,month,day : " + str_year + "-" + str_month + "-" + str_day);
-
-                        if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
-                            for (DataSnapshot postshot : snapshot.getChildren()) {
-                                Goal goal = postshot.getValue(Goal.class);
-                                listItems.add(goal);
-                            }
+//                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                    if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                        for (DataSnapshot postshot : snapshot.getChildren()) {
+                            Goal goal = postshot.getValue(Goal.class);
+                            listItems.add(goal);
                         }
                     }
-                    adapter = new GoalAdapter(getContext(), listItems);
-                    recyclerView.setAdapter(adapter);
-                    dialog.dismiss();
-
                 }
+                adapter = new GoalAdapter(getContext(), listItems);
+                recyclerView.setAdapter(adapter);
+                dialog.dismiss();
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
 
-                }
-            });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... dates) {
-//            System.out.println("dates :: " + Arrays.toString(dates));
-            int index_one = Arrays.toString(dates).indexOf("-", 1);
-            int index_two = Arrays.toString(dates).indexOf("-", index_one + 1);
-            int index_three = Arrays.toString(dates).indexOf("]", 1);
-//            System.out.println("index_one : " + index_one + ", index_two : " + index_two);
-            int year = Integer.parseInt(Arrays.toString(dates).substring(1, index_one));
-            int month = Integer.parseInt(Arrays.toString(dates).substring(index_one+ 1, index_two));
-            int day = Integer.parseInt(Arrays.toString(dates).substring(index_two + 1, index_three));
-//            System.out.println("year : " + year + ", month : " + month + ", day : " + day);
-//            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-        }
-
-        @Override
-        protected void onPostExecute(List<String> dates) {
-//            for (int i = 0; i < eventDayList.size(); i++) {
-//                int index_one = eventDayList.get(i).indexOf("-", 1);
-//                int index_two = eventDayList.get(i).indexOf("-", index_one + 1);
-//                int year = Integer.parseInt(eventDayList.get(i).substring(0, index_one));
-//                int month = Integer.parseInt(eventDayList.get(i).substring(index_one+ 1, index_two));
-//                int day = Integer.parseInt(eventDayList.get(i).substring(index_two + 1));
-//                collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-//
-//            }
-
-        }
+            }
+        });
     }
+
+
+//    private class addEventTag extends AsyncTask<Void, String, List<String>> {
+//        @Override
+//        protected List<String> doInBackground(Void... voids) {
+//            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+//            reference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    listItems.clear();
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        final String date = snapshot.getKey();
+//                        int index_one = date.indexOf("-", 1);
+//                        int index_two = date.indexOf("-", index_one + 1);
+//                        final int year = Integer.parseInt(date.substring(0, index_one));
+//                        final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
+//                        final int day = Integer.parseInt(date.substring(index_two + 1));
+//
+//                        onProgressUpdate(date);
+//
+//                        if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
+//                            for (DataSnapshot postshot : snapshot.getChildren()) {
+//                                Goal goal = postshot.getValue(Goal.class);
+//                                listItems.add(goal);
+//                            }
+//                        }
+//                    }
+//                    adapter = new GoalAdapter(getContext(), listItems);
+//                    recyclerView.setAdapter(adapter);
+//                    dialog.dismiss();
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... dates) {
+////            System.out.println("dates :: " + Arrays.toString(dates));
+//            int index_one = Arrays.toString(dates).indexOf("-", 1);
+//            int index_two = Arrays.toString(dates).indexOf("-", index_one + 1);
+//            int index_three = Arrays.toString(dates).indexOf("]", 1);
+////            System.out.println("index_one : " + index_one + ", index_two : " + index_two);
+//            int year = Integer.parseInt(Arrays.toString(dates).substring(1, index_one));
+//            int month = Integer.parseInt(Arrays.toString(dates).substring(index_one+ 1, index_two));
+//            int day = Integer.parseInt(Arrays.toString(dates).substring(index_two + 1, index_three));
+////            System.out.println("year : " + year + ", month : " + month + ", day : " + day);
+//            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<String> dates) {
+////            for (int i = 0; i < eventDayList.size(); i++) {
+////                int index_one = eventDayList.get(i).indexOf("-", 1);
+////                int index_two = eventDayList.get(i).indexOf("-", index_one + 1);
+////                int year = Integer.parseInt(eventDayList.get(i).substring(0, index_one));
+////                int month = Integer.parseInt(eventDayList.get(i).substring(index_one+ 1, index_two));
+////                int day = Integer.parseInt(eventDayList.get(i).substring(index_two + 1));
+////                collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+////
+////            }
+//
+//        }
+//    }
 
     public String[] weekCalendar(String yyyymmdd) throws Exception{
 
