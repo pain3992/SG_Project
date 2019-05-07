@@ -3,18 +3,30 @@ package com.graduate.seoil.sg_projdct.Fragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +46,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +56,7 @@ import java.util.TimeZone;
  * Created by baejanghun on 28/03/2019.
  */
 public class StatisticsFragment extends Fragment {
-    TextView tv_week;
+    TextView tv_week, average_success, total_timeStatus;
     ImageView prev_week, next_week;
     String nowTime, getTime, str_date, end_date, str_start, str_end;
     String[] this_week;
@@ -55,9 +68,13 @@ public class StatisticsFragment extends Fragment {
     ProgressDialog dialog;
 
     List<Goal> mGoals;
+    PieChart pieChart;
+    PieChart pieChart2;
 
     DateFormat formatter;
     SimpleDateFormat sdf;
+
+    AsyncFetchGoal asyncFetchGoal;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -76,15 +93,40 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
+        asyncFetchGoal = new AsyncFetchGoal();
         tv_week = view.findViewById(R.id.statistics_week);
         prev_week = view.findViewById(R.id.prev_week);
         next_week = view.findViewById(R.id.next_week);
-        mGoals = new ArrayList<>();
+        average_success = view.findViewById(R.id.tv_average_success_val);
+        total_timeStatus = view.findViewById(R.id.tv_total_timeStatus_val);
 
+        pieChart = view.findViewById(R.id.pieChart);
+        pieChart2 = view.findViewById(R.id.pieChart2);
+
+        pieChart.setUsePercentValues(true);  // true : 퍼센테이지로 보임
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setExtraOffsets(5, 10, 5, 5);  // 간격인듯? 일단 모름
+        pieChart2.setUsePercentValues(true);  // true : 퍼센테이지로 보임
+        pieChart2.getDescription().setEnabled(false);
+        pieChart2.setExtraOffsets(5, 10, 5, 5);  // 간격인듯? 일단 모름
+
+        pieChart.setDragDecelerationFrictionCoef(0.99f);
+        pieChart2.setDragDecelerationFrictionCoef(0.99f);
+
+        pieChart.setDrawHoleEnabled(false); // true : 파이차트 가운데 홀 만듬.
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleRadius(61f); // 가운데 투명 원
+        pieChart2.setDrawHoleEnabled(false); // true : 파이차트 가운데 홀 만듬.
+        pieChart2.setHoleColor(Color.WHITE);
+        pieChart2.setTransparentCircleRadius(61f); // 가운데 투명 원
+
+        mGoals = new ArrayList<>();
 
         this_week = new String[7];
         try { this_week = weekCalendar(getTime); } catch (Exception e) { e.printStackTrace(); }
         tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+        setTimeStamp(this_week[0], this_week[6]);
+        fetchStatistics(timestamp_start, timestamp_end);
 
         // 저번 주
         prev_week.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +195,6 @@ public class StatisticsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot goalSnapshot) {
                             for (DataSnapshot goalShot : goalSnapshot.getChildren()) {
-                                System.out.println("snapshot --> " + goalShot.getValue());
                                 Goal goal = goalShot.getValue(Goal.class);
                                 mGoals.add(goal);
                             }
@@ -164,7 +205,8 @@ public class StatisticsFragment extends Fragment {
                         }
                     });
                 }
-                new AsyncFetchGoal(mGoals).execute();
+                new AsyncFetchGoal().execute(mGoals);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -173,12 +215,15 @@ public class StatisticsFragment extends Fragment {
         });
     }
 
-    private class AsyncFetchGoal extends AsyncTask<Void, Void, List<Goal>> {
-        List<Goal> mGoals;
+    @Override
+    public void onPause() {
+        super.onPause();
+        asyncFetchGoal.cancel(true);
+    }
 
-        private AsyncFetchGoal(List<Goal> mGoals) {
-            this.mGoals = mGoals;
-        }
+    private class AsyncFetchGoal extends AsyncTask<List<Goal>, Void, List<Goal>> {
+        ArrayList<PieEntry> yValues;
+        ArrayList<PieEntry> xValues;
 
         @Override
         protected void onPreExecute() {
@@ -191,21 +236,116 @@ public class StatisticsFragment extends Fragment {
         }
 
         @Override
-        protected List<Goal> doInBackground(Void... voids) {
-            System.out.println("doInBackground size --> " + mGoals.size());
-            return mGoals;
+        protected List<Goal> doInBackground(List<Goal>... lists) {
+            return lists[0];
         }
 
         @Override
         protected void onPostExecute(List<Goal> goals) {
             super.onPostExecute(goals);
-            System.out.println("onPostExecute size --> " + mGoals.size());
-            for (int i = 0; i < mGoals.size(); i++) {
-//                Arrays.sort()
-                System.out.println("timestamp --> " + mGoals.get(i).getTimestamp());
+
+            if (goals.size() != 0) {
+                yValues = new ArrayList<>();
+                xValues = new ArrayList<>();
+
+                int[] plan_time = new int[goals.size()];
+                int total_processed = 0;
+                int total_time = 0;
+                for (int i = 0; i < goals.size(); i++) {
+                    plan_time[i] = goals.get(i).getPlan_time() - goals.get(i).getTime_status() / 60000;
+                    total_processed += goals.get(i).getPercent_status();
+                    total_time += plan_time[i];
+
+                    yValues.add(new PieEntry((float)mGoals.get(i).getTime_status() / 60000, goals.get(i).getTitle()));
+                    xValues.add(new PieEntry((float)mGoals.get(i).getPercent_status() * 100, goals.get(i).getTitle()));
+                }
+
+//                for (int i = 0; i < goals.size() - 1; i++) {
+//                    int tmp = i;
+//                    for (int j = i + 1; j < goals.size(); j++) {
+//                        if (goals.get(tmp).getPlan_time() - goals.get(tmp).getTime_status() / 60000 >= goals.get(j).getPlan_time() - goals.get(j).getTime_status() / 60000) {
+//                            tmp = j;
+//                        }
+//                        if (tmp != i) {
+//
+//                        }
+//
+//                    }
+//                }
+
+                pieChart.animateY(1000, Easing.EaseInOutCubic);
+                pieChart2.animateY(1000, Easing.EaseInOutCubic);
+
+                PieDataSet dataSet = new PieDataSet(yValues, "");
+                PieDataSet dataSet_x = new PieDataSet(xValues, "");
+                dataSet.setSliceSpace(3f);  // 슬라이스 간격
+                dataSet.setSelectionShift(5f); // 커질수록 원 크기가 작아짐.
+                dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+                dataSet_x.setSliceSpace(3f);  // 슬라이스 간격
+                dataSet_x.setSelectionShift(5f); // 커질수록 원 크기가 작아짐.
+                dataSet_x.setColors(ColorTemplate.JOYFUL_COLORS);
+
+                PieData data = new PieData((dataSet));
+                PieData data_x = new PieData((dataSet_x));
+                data.setValueTextSize(10f); // 데이터 글씨 크기
+                data.setValueTextColor(Color.YELLOW); // 데이터 색상.
+                data_x.setValueTextSize(10f); // 데이터 글씨 크기
+                data_x.setValueTextColor(Color.YELLOW); // 데이터 색상.
+
+                pieChart.setData(data);
+                pieChart2.setData(data_x);
+
+                average_success.setText(String.valueOf(total_processed / mGoals.size()) + "%");
+                total_timeStatus.setText(String.valueOf(total_time) + "분");
+            } else {
+                yValues = new ArrayList<>();
+                xValues = new ArrayList<>();
+
+                yValues.add(new PieEntry(1, "no data"));
+                xValues.add(new PieEntry(1, "no data"));
+
+                pieChart.animateY(1000, Easing.EaseInOutCubic);
+                pieChart2.animateY(1000, Easing.EaseInOutCubic);
+
+                PieDataSet dataSet = new PieDataSet(yValues, "");
+                PieDataSet dataSet_x = new PieDataSet(xValues, "");
+                dataSet.setSliceSpace(3f);  // 슬라이스 간격
+                dataSet.setSelectionShift(5f); // 커질수록 원 크기가 작아짐.
+                dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+                dataSet_x.setSliceSpace(3f);  // 슬라이스 간격
+                dataSet_x.setSelectionShift(5f); // 커질수록 원 크기가 작아짐.
+                dataSet_x.setColors(ColorTemplate.JOYFUL_COLORS);
+
+                PieData data = new PieData((dataSet));
+                PieData data_x = new PieData((dataSet_x));
+                data.setValueTextSize(10f); // 데이터 글씨 크기
+                data.setValueTextColor(Color.YELLOW); // 데이터 색상.
+                data_x.setValueTextSize(10f); // 데이터 글씨 크기
+                data_x.setValueTextColor(Color.YELLOW); // 데이터 색상.
+
+                pieChart.setData(data);
+                pieChart2.setData(data_x);
+
+                average_success.setText("0%");
+                total_timeStatus.setText("0분");
             }
+
+
 //            dialog.dismiss();
         }
+    }
+
+    private SpannableString generateCenterSpannableText() {
+
+        SpannableString s = new SpannableString("MPAndroidChart\ndeveloped by Philipp Jahoda");
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
+        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
+        return s;
     }
 
     private void setTimeStamp(String start_week, String end_week) {

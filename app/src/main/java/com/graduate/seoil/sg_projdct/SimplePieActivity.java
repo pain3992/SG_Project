@@ -36,16 +36,16 @@ public class SimplePieActivity extends AppCompatActivity {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        yValues.add(new PieEntry(34f, "Korea"));
-        yValues.add(new PieEntry(23f, "USA"));
-        yValues.add(new PieEntry(14f, "UK"));
+        yValues.add(new PieEntry(34, "Korea"));
+        yValues.add(new PieEntry(23, "USA"));
+        yValues.add(new PieEntry(14, "UK"));
         yValues.add(new PieEntry(35, "India"));
         yValues.add(new PieEntry(40, "Russa"));
         yValues.add(new PieEntry(23, "Japan"));
 
 //        Description description = new Description();
 //        description.setText("This is KgpTalkie\n Subscribe this channel for more videos");
-//        description.setTextSize(9);
+//        description.setTextSize(5);
 //        pieChart.setDescription(description);
 
         pieChart.animateY(1000, Easing.EaseInOutCubic);
