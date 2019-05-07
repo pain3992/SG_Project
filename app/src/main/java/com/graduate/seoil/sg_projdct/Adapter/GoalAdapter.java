@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.PlanInformationActivity;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 import com.graduate.seoil.sg_projdct.R;
@@ -29,11 +32,14 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     private JSONArray jsonArray;
     private JSONObject jsonObject;
 
+    private Fragment HomeFragment;
+
     FirebaseUser fuser;
 
     public GoalAdapter(Context mContext, List<Goal> mGoals) {
         this.mGoals = mGoals;
         this.mContext = mContext;
+        HomeFragment = new HomeFragment();
     }
 
     @NonNull
@@ -67,12 +73,14 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
                     bundle.putString("goal_title", goal.getTitle());
                     bundle.putInt("goal_time", goal.getPlan_time());
-                    bundle.putInt("percent_status", goal.getPercent_status());
-                    bundle.putString("date",goal.getStart_date());
-                    bundle.putString("enddate",goal.getEnd_date());
+                    bundle.putString("start_date",goal.getStart_date());
+                    bundle.putString("end_date",goal.getEnd_date());
                     bundle.putInt("time_status",goal.getTime_status());
-
+                    bundle.putInt("percent", goal.getPercent_status());
+                    bundle.putInt("processed_time_status", goal.getProcessed_time_status());
                     intent.putExtras(bundle);
+
+                    ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().remove(HomeFragment).commit();
 
                     mContext.startActivity(intent);
                 }

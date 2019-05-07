@@ -25,6 +25,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.GoalAdapter;
 import com.graduate.seoil.sg_projdct.IndexActivity;
+import com.graduate.seoil.sg_projdct.Model.EventDay;
 import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
 import com.graduate.seoil.sg_projdct.Model.Goal;
@@ -49,11 +52,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 import in.co.ashclan.ashclanzcalendar.data.Day;
+import in.co.ashclan.ashclanzcalendar.data.Event;
 import in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar;
+
+import com.google.android.gms.tasks.Tasks;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -62,6 +70,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private FloatingActionButton fab, fab1, fab2;
     private RecyclerView recyclerView;
     private List<Goal> listItems;
+    private List<EventDay> eventDays;
     protected List<String> eventDayList;
     private GoalAdapter adapter;
 
@@ -69,8 +78,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String key, getTime;
     String goalname, goaltext, str_year, str_month, str_day;
 
-
     ProgressDialog dialog;
+    TaskCompletionSource<List<Goal>> tcs;
+
+    DatabaseReference reference;
+    ValueEventListener listener;
+
 
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
 
@@ -99,12 +112,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
 
         eventDayList = new ArrayList<>();
+        eventDays = new ArrayList<>();
         recyclerView = view.findViewById(R.id.goal_list);
         recyclerView.setHasFixedSize(true); // item이 추가되거나 삭제될 때 RecyclerView의 크기가 변경될 수도 있고, 그렇게 되면 다른 View크기가 변경될 가능성이 있기 때문에 고정시켜버린다.
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         listItems = new ArrayList<>();
         adapter = new GoalAdapter(getContext(), listItems);
         recyclerView.setAdapter(adapter);
+
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        getTime = sdf.format(date);
+        final int from_idx_first = getTime.indexOf("-", 1);
+        final int from_idx_second = getTime.indexOf("-", from_idx_first + 1);
+        str_year = getTime.substring(0, from_idx_first);
+        str_month = getTime.substring(from_idx_first + 1, from_idx_second);
+        str_day = getTime.substring(from_idx_second + 1);
+
+
+        fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
+
+        fab =  view.findViewById(R.id.fab);
+        fab1 = view.findViewById(R.id.fab1);
+        fab2 = view.findViewById(R.id.fab2);
+
+        fab.setOnClickListener(this);
+        fab.setBackgroundColor(Color.parseColor("#386385"));
+        fab1.setOnClickListener(this);
+        fab2.setOnClickListener(this);
 
         collapsibleCalendar.setCalendarListener(new in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar.CalendarListener() {
             @Override
@@ -169,46 +205,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onWeekChange(int i) { }
         });
 
-        Date date = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        getTime = sdf.format(date);
-        final int from_idx_first = getTime.indexOf("-", 1);
-        final int from_idx_second = getTime.indexOf("-", from_idx_first + 1);
-        str_year = getTime.substring(0, from_idx_first);
-        str_month = getTime.substring(from_idx_first + 1, from_idx_second);
-        str_day = getTime.substring(from_idx_second + 1);
-
-        fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
-
-        fab =  view.findViewById(R.id.fab);
-        fab1 = view.findViewById(R.id.fab1);
-        fab2 = view.findViewById(R.id.fab2);
-
-        fab.setOnClickListener(this);
-        fab.setBackgroundColor(Color.parseColor("#386385"));
-        fab1.setOnClickListener(this);
-        fab2.setOnClickListener(this);
-
-//        asyncEventTag = new addEventTag();
-//        asyncEventTag.execute();
-        fetchGoalList();
-
-        String[] this_week = new String[7];
-        try {
-            this_week = weekCalendar("20190502");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("this_week -> " + Arrays.toString(this_week));
-
         return  view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchGoalList();
+    }
+
+
+
     private void fetchGoalList() {
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
+        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+        listener = reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
@@ -219,8 +230,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     final int year = Integer.parseInt(date.substring(0, index_one));
                     final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
                     final int day = Integer.parseInt(date.substring(index_two + 1));
+//                    EventDay eventDay = new EventDay();
+//                    eventDay.setYear(year);
+//                    eventDay.setMonth(month);
+//                    eventDay.setDay(day);
+//                    eventDays.add(eventDay);
+                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
 
-//                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
                     if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
                         for (DataSnapshot postshot : snapshot.getChildren()) {
                             Goal goal = postshot.getValue(Goal.class);
@@ -231,7 +247,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 adapter = new GoalAdapter(getContext(), listItems);
                 recyclerView.setAdapter(adapter);
                 dialog.dismiss();
-
             }
 
             @Override
@@ -241,8 +256,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        System.out.println("onPaused");
+        reference.removeEventListener(listener);
+    }
 
-//    private class addEventTag extends AsyncTask<Void, String, List<String>> {
+    //    private class addEventTag extends AsyncTask<Void, String, List<String>> {
 //        @Override
 //        protected List<String> doInBackground(Void... voids) {
 //            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -358,7 +379,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             if(d.length() == 1) d = "0" + d;
 
             arrYMD[i] = y+m +d;
-            System.out.println("ymd ="+ y+m+d);
 
         }
 

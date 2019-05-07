@@ -52,8 +52,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
-import in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar;
-
 /**
  * Created by baejanghun on 28/03/2019.
  */
@@ -76,6 +74,8 @@ public class StatisticsFragment extends Fragment {
     DateFormat formatter;
     SimpleDateFormat sdf;
 
+    AsyncFetchGoal asyncFetchGoal;
+
     @SuppressLint("SimpleDateFormat")
     @Override
     public void onAttach(Context context) {
@@ -93,6 +93,7 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
+        asyncFetchGoal = new AsyncFetchGoal();
         tv_week = view.findViewById(R.id.statistics_week);
         prev_week = view.findViewById(R.id.prev_week);
         next_week = view.findViewById(R.id.next_week);
@@ -194,7 +195,6 @@ public class StatisticsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot goalSnapshot) {
                             for (DataSnapshot goalShot : goalSnapshot.getChildren()) {
-                                System.out.println("snapshot --> " + goalShot.getValue());
                                 Goal goal = goalShot.getValue(Goal.class);
                                 mGoals.add(goal);
                             }
@@ -205,7 +205,8 @@ public class StatisticsFragment extends Fragment {
                         }
                     });
                 }
-                new AsyncFetchGoal(mGoals).execute();
+                new AsyncFetchGoal().execute(mGoals);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -214,14 +215,15 @@ public class StatisticsFragment extends Fragment {
         });
     }
 
-    private class AsyncFetchGoal extends AsyncTask<Void, Void, List<Goal>> {
-        List<Goal> mGoals;
+    @Override
+    public void onPause() {
+        super.onPause();
+        asyncFetchGoal.cancel(true);
+    }
+
+    private class AsyncFetchGoal extends AsyncTask<List<Goal>, Void, List<Goal>> {
         ArrayList<PieEntry> yValues;
         ArrayList<PieEntry> xValues;
-
-        private AsyncFetchGoal(List<Goal> mGoals) {
-            this.mGoals = mGoals;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -234,9 +236,8 @@ public class StatisticsFragment extends Fragment {
         }
 
         @Override
-        protected List<Goal> doInBackground(Void... voids) {
-            System.out.println("doInBackground size --> " + mGoals.size());
-            return mGoals;
+        protected List<Goal> doInBackground(List<Goal>... lists) {
+            return lists[0];
         }
 
         @Override

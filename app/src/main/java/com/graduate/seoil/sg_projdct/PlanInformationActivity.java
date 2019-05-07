@@ -5,7 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,33 +29,34 @@ import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 public class PlanInformationActivity extends AppCompatActivity {
     int i=0;
     ProgressBar progressBar;
-    private TextView mTextCount;
-    private Button mStart;
-    private Button mReset;
+    Button btn_start, btn_reset;
     CountDownTimer mCoutDown;
-    private boolean mTimerRunning = false;
-    private long mTimeLeft;
     FirebaseUser fuser;
-    DatabaseReference reference,reference2,reference3;
-    FirebaseDatabase firebaseDatabase;
-    TextView text,percent,toolbar1,solute,delete,toggle_titlte,toggle_start,toggle_end;
-    String str_title;
-    RecyclerView recyclerView;
-    ImageButton openExpand;
+    boolean mTimerRunning = false;
+    long mTimeLeft;
+    TextView toggle_titlte,toggle_start,toggle_end;
+    TextView tv_title, tv_count_time, tv_early_accomplish, tv_delete;
+    TextView tv_goaltime, tv_accomplish_rate;
+    ImageButton btn_expand;
     ExpandableRelativeLayout plancontent;
-    private Context mContext;
-    private int goaltime,time_status;
-    ImageView back;
+    private int goaltime,time_status, percent, processed_time_status;
+    ImageView iv_back;
+
+    String start_date, end_date, title;
 
 
     @Override
@@ -58,85 +64,86 @@ public class PlanInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_information);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+
         Intent intent = getIntent();
-        mTextCount = findViewById(R.id.tvTimer);
-        mStart = findViewById(R.id.btStart);
-        mReset = findViewById(R.id.btReset);
-        progressBar = (ProgressBar)findViewById(R.id.bar_Timer);
-        progressBar.setProgress(i);
-        progressBar.setMax(100);
-        int percentage2 = intent.getIntExtra("percent_status",0);
+        title = intent.getStringExtra("goal_title");
         goaltime = intent.getIntExtra("goal_time",0);
         time_status = intent.getIntExtra("time_status",0);
-        final String title = intent.getStringExtra("goal_title");
+        start_date = intent.getStringExtra("start_date");
+        end_date = intent.getStringExtra("end_date");
+        percent = intent.getIntExtra("percent", 0);
+        processed_time_status = intent.getIntExtra("processed_time_status", 0);
+
         mTimeLeft = time_status;
-        String date = intent.getStringExtra("date");
-        String enddate = intent.getStringExtra("enddate");
 
+        tv_goaltime = findViewById(R.id.pi_goalTime);
+        tv_accomplish_rate = findViewById(R.id.pi_accomplish_rate);
+        tv_count_time = findViewById(R.id.pi_count_time);
+        iv_back = findViewById(R.id.pi_backButton);
+        tv_early_accomplish = findViewById(R.id.pi_early_accomplish);
+        tv_delete = findViewById(R.id.pi_delete);
+        tv_title = findViewById(R.id.pi_title);
+        progressBar = findViewById(R.id.bar_Timer);
+        btn_start = findViewById(R.id.pi_start);
+        btn_reset = findViewById(R.id.pi_reset);
 
+        toggle_titlte = findViewById(R.id.text);
+        toggle_start = findViewById(R.id.start_text);
+        toggle_end = findViewById(R.id.end_text);
+        btn_expand = findViewById(R.id.pi_expand_button);
+        plancontent = findViewById(R.id.plancontent);
 
-        mStart.setOnClickListener(new View.OnClickListener() {
+        String ratefor = String.format(Locale.getDefault(), "%01d", percent);
+        tv_accomplish_rate.setText(ratefor+"%");
+        tv_goaltime.setTextColor(Color.parseColor("#313F47"));
+        tv_goaltime.setText((Integer.toString(intent.getIntExtra("goal_time",0)/60)+"시간  " +(Integer.toString(intent.getIntExtra("goal_time",0)%60))+"분"));
+        tv_title.setText(intent.getStringExtra("goal_title"));
+        updateCountDownText();
+
+        toggle_titlte.setText(title);
+        toggle_start.setText(start_date);
+        toggle_end.setText(end_date);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                percent = (int) (long)dataSnapshot.child("percent_status").getValue();
+                progressBar.setProgress(percent);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        plancontent.collapse();
+        btn_expand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                plancontent.toggle();
+                btn_expand.setImageResource(R.drawable.arrow_greyup);
+            }
+        });
+
+        // 시작 버튼
+        btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTimerRunning) {
                     pauseTimer();
                 } else {
-                    startTimer();
-                    mReset.setVisibility(View.VISIBLE);
+                    new AsyncTimer().execute(mTimeLeft);
+                    btn_reset.setVisibility(View.VISIBLE);
                     i++;
-                    progressBar.setProgress(100);
-                };
+                }
             }
         });
 
-        mReset.setOnClickListener(new View.OnClickListener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetTimer();
-            }
-        });
-
-        updateCountDownText();
-
-        text = findViewById(R.id.goal_content);
-        percent = findViewById(R.id.goal_rate);
-        reference2 = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date).child(title).child("percent_status");
-        reference3 = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date).child(title).child("time_status");
-
-
-        rate();
-
-        text.setTextColor(Color.parseColor("#313F47"));
-        text.setText((Integer.toString(intent.getIntExtra("goal_time",0)/60)+"시간  "
-                +(Integer.toString(intent.getIntExtra("goal_time",0)%60))+"분"));
-
-
-        toolbar1 = findViewById(R.id.goalList_toolbar_title);
-        toolbar1.setText(intent.getStringExtra("goal_title"));
-
-        toggle_titlte=findViewById(R.id.text);
-        toggle_titlte.setText(title);
-        toggle_start=findViewById(R.id.start_text);
-        toggle_end=findViewById(R.id.end_text);
-        toggle_start.setText(date);
-        toggle_end.setText(enddate);
-        openExpand = findViewById(R.id.imageButton);
-        plancontent = (ExpandableRelativeLayout) findViewById(R.id.plancontent);
-
-        plancontent.collapse();
-        openExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                plancontent.toggle();
-                openExpand.setImageResource(R.drawable.arrow_greyup);
-            }
-        });
-
-        back = findViewById(R.id.goal_backButton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mTimerRunning==true){
+                if (mTimerRunning) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(PlanInformationActivity.this);
                     builder.setTitle(R.string.app_name);
                     builder.setIcon(R.mipmap.ic_launcher);
@@ -156,87 +163,150 @@ public class PlanInformationActivity extends AppCompatActivity {
                     AlertDialog alert = builder.create();
                     alert.show();
                 }
-                else{
+                else
                     finish();
-                }
             }
         });
 
-        solute = findViewById(R.id.goal_solute);
-        solute.setOnClickListener(new View.OnClickListener() {
+
+        // 라셋 버튼
+        btn_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                resetTimer();
+            }
+        });
+
+        // 조기 달성
+        tv_early_accomplish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { //
 //                FragmentManager fm  = getSupportFragmentManager();
 //                HomeFragment fragment = new HomeFragment();
 //                fm.beginTransaction().replace(R.id.container,fragment).commit();
-                reference2.setValue(100);
-                reference3.setValue(0);
+//                reference2.setValue(100);
+//                reference3.setValue(0);
                 progressBar.setProgress(100);
                 finish();
             }
         });
-        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date).child(title);
 
-        delete = findViewById(R.id.goal_delete);
-        delete.setOnClickListener(new View.OnClickListener() {
+        // 삭제
+        tv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reference.removeValue();
+//                reference.removeValue();
                 finish();
-
             }
         });
 
     }
 
-    private void startTimer() {
-        mCoutDown = new CountDownTimer(mTimeLeft, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                time_status();
-                i++;
-                progressBar.setProgress((int)i*100/((goaltime*60000)/1000));
-                mTimeLeft = millisUntilFinished;
-                updateCountDownText();
-                rate();
+    private class AsyncTimer extends AsyncTask<Long, Long, String> {
+        @Override
+        protected void onPreExecute() {
+            i = percent;
+            progressBar.setMax(100);
+        }
 
-            }
+        @Override
+        protected String doInBackground(final Long... longs) {
+            Handler mHandler = new Handler(Looper.getMainLooper());
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mCoutDown = new CountDownTimer(longs[0], 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            i++;
+                            publishProgress(millisUntilFinished);
+                        }
 
-            @Override
-            public void onFinish() {
-                time_status();
-                mTimerRunning = false;
-                mStart.setText("Start");
-                mStart.setVisibility(View.INVISIBLE);
-                mReset.setVisibility(View.VISIBLE);
-                i++;
-                progressBar.setProgress(100);
+                        @Override
+                        public void onFinish() {
+                            time_status();
+                            mTimerRunning = false;
+                            btn_start.setText("Start");
+                            btn_start.setVisibility(View.INVISIBLE);
+                            btn_reset.setVisibility(View.VISIBLE);
+                            i++;
+                            progressBar.setProgress(100);
+                        }
+                    }.start();
+                }
+            }, 0);
 
-            }
-        }.start();
+            btn_reset.setVisibility(View.INVISIBLE);
+            return "Start";
+        }
 
-        mTimerRunning = true;
-        mStart.setText("Pause");
-        mReset.setVisibility(View.INVISIBLE);
+        @Override
+        protected void onProgressUpdate(Long... values) {
+            mTimerRunning = true;
+            btn_start.setText("Pause");
+
+            mTimeLeft = values[0];
+            int percentage = 100-(int)((mTimeLeft*100/(goaltime*60000)));
+            progressBar.setProgress(percentage);
+
+            int hours = (int) (mTimeLeft/(1000*60*60))%24;
+            int minutes = (int) (mTimeLeft / (1000*60)) % 60;
+            int seconds = (int) (mTimeLeft / 1000) % 60;
+
+            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours,minutes, seconds);
+
+            tv_count_time.setText(timeLeftFormatted);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
     }
 
     private void pauseTimer() {
-        time_status();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
+
+        int percentage = 100-(int)((mTimeLeft*100/(goaltime*60000)));
+        progressBar.setProgress(percentage);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("time_status", mTimeLeft);
+        hashMap.put("percent_status", percentage);
+
+        String ratefor = String.format(Locale.getDefault(), "%01d", percentage);
+        tv_accomplish_rate.setText(ratefor+"%");
+
+        reference.updateChildren(hashMap);
+
+        i-=2;
         mCoutDown.cancel();
         mTimerRunning = false;
-        mStart.setText("Start");
-        mReset.setVisibility(View.VISIBLE);
+        btn_start.setText("Start");
+        btn_reset.setVisibility(View.VISIBLE);
     }
 
     private void resetTimer() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
         mTimeLeft = goaltime*60000;
-        updateCountDownText();
-        rate();
-        progressBar.setProgress(0);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("time_status", mTimeLeft);
+        hashMap.put("processed_time_status", mTimeLeft);
+        hashMap.put("percent_status", 0);
+
+        String ratefor = String.format(Locale.getDefault(), "%01d", 0);
+        tv_accomplish_rate.setText(ratefor+"%");
+
+        reference.updateChildren(hashMap);
+
+        percent = 0;
         i=0;
+        updateCountDownText();
+        progressBar.setProgress(0);
         mTimerRunning = false;
-        mReset.setVisibility(View.INVISIBLE);
-        mStart.setVisibility(View.VISIBLE);
+        btn_reset.setVisibility(View.INVISIBLE);
+        btn_start.setVisibility(View.VISIBLE);
     }
 
     public void updateCountDownText() {
@@ -246,20 +316,20 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours,minutes, seconds);
 
-        mTextCount.setText(timeLeftFormatted);
+        tv_count_time.setText(timeLeftFormatted);
     }
+
     @Override
     public void onBackPressed() {
-        if(mTimerRunning==true){
+        if(mTimerRunning){
             AlertDialog.Builder builder = new AlertDialog.Builder(PlanInformationActivity.this);
-            builder.setTitle(R.string.app_name);
-            builder.setIcon(R.mipmap.ic_launcher);
+            builder.setTitle("이이이");
             builder.setMessage("기록이 중지 됩니다. 정말 종료하시겠습니까?")
                     .setCancelable(false)
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            pauseTimer();
-                            finish();
+                        goalUpdate();
+                        finish();
                         }
                     })
                     .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -271,26 +341,29 @@ public class PlanInformationActivity extends AppCompatActivity {
             alert.show();
         }
         else{
+            goalUpdate();
             finish();
         }
 
     }
-    public void rate(){
-//        Intent intent = getIntent();
-//        int percentage = intent.getIntExtra("percent_status",0);
-        int percentage = 100-(int)((mTimeLeft*100/(goaltime*60000)));
-        String ratefor = String.format(Locale.getDefault(), "%01d", percentage);
-        percent.setText(ratefor+"%");
-        System.out.println(percentage);
-        reference2.setValue(percentage);
-    }
-    public void time_status(){
-        reference3.setValue(mTimeLeft);
-    }
-    public void firsttime_status(){
-        if(time_status==0){
-            reference3.setValue(goaltime);
-        }
+    private void goalUpdate() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
 
+        processed_time_status = (int)mTimeLeft;
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("processed_time_status", processed_time_status);
+
+        reference.updateChildren(hashMap);
+    }
+    public void rate(){
+
+
+
+//        reference2.setValue(percentage);
+    }
+
+    public void time_status() { // 남은 시간.
+//        reference3.setValue(mTimeLeft);
     }
 }
