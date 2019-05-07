@@ -95,7 +95,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75"/>
 
-
     <ProgressBar
         android:id="@+id/bar_Timer"
         style="@android:style/Widget.ProgressBar.Horizontal"

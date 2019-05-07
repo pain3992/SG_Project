@@ -58,6 +58,8 @@ public class PlanInformationActivity extends AppCompatActivity {
 
     String start_date, end_date, title;
 
+    DatabaseReference reference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,7 @@ public class PlanInformationActivity extends AppCompatActivity {
         percent = intent.getIntExtra("percent", 0);
         processed_time_status = intent.getIntExtra("processed_time_status", 0);
 
-        mTimeLeft = time_status;
+        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
 
         tv_goaltime = findViewById(R.id.pi_goalTime);
         tv_accomplish_rate = findViewById(R.id.pi_accomplish_rate);
@@ -95,6 +97,7 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         String ratefor = String.format(Locale.getDefault(), "%01d", percent);
         tv_accomplish_rate.setText(ratefor+"%");
+        mTimeLeft = time_status;
         tv_goaltime.setTextColor(Color.parseColor("#313F47"));
         tv_goaltime.setText((Integer.toString(intent.getIntExtra("goal_time",0)/60)+"시간  " +(Integer.toString(intent.getIntExtra("goal_time",0)%60))+"분"));
         tv_title.setText(intent.getStringExtra("goal_title"));
@@ -104,8 +107,7 @@ public class PlanInformationActivity extends AppCompatActivity {
         toggle_start.setText(start_date);
         toggle_end.setText(end_date);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 percent = (int) (long)dataSnapshot.child("percent_status").getValue();
@@ -145,14 +147,12 @@ public class PlanInformationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mTimerRunning) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(PlanInformationActivity.this);
-                    builder.setTitle(R.string.app_name);
-                    builder.setIcon(R.mipmap.ic_launcher);
                     builder.setMessage("기록이 중지 됩니다. 정말 종료하시겠습니까?")
                             .setCancelable(false)
                             .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     pauseTimer();
-                                    finish();
+                                    onBackPressed();
                                 }
                             })
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -164,7 +164,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                     alert.show();
                 }
                 else
-                    finish();
+                    onBackPressed();
             }
         });
 
@@ -181,11 +181,11 @@ public class PlanInformationActivity extends AppCompatActivity {
         tv_early_accomplish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //
-//                FragmentManager fm  = getSupportFragmentManager();
-//                HomeFragment fragment = new HomeFragment();
-//                fm.beginTransaction().replace(R.id.container,fragment).commit();
-//                reference2.setValue(100);
-//                reference3.setValue(0);
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("percent_status", 100);
+                hashMap.put("processed_time_status", 0);
+                hashMap.put("time_status", 0);
+                reference.updateChildren(hashMap);
                 progressBar.setProgress(100);
                 finish();
             }
@@ -195,7 +195,7 @@ public class PlanInformationActivity extends AppCompatActivity {
         tv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                reference.removeValue();
+                reference.removeValue();
                 finish();
             }
         });
@@ -223,8 +223,13 @@ public class PlanInformationActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFinish() {
-                            time_status();
+                        public void onFinish() { // TODO
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("percent_status", 100);
+                            hashMap.put("processed_time_status", 0);
+                            hashMap.put("time_status", 0);
+                            reference.updateChildren(hashMap);
+
                             mTimerRunning = false;
                             btn_start.setText("Start");
                             btn_start.setVisibility(View.INVISIBLE);
@@ -265,8 +270,6 @@ public class PlanInformationActivity extends AppCompatActivity {
     }
 
     private void pauseTimer() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
-
         int percentage = 100-(int)((mTimeLeft*100/(goaltime*60000)));
         progressBar.setProgress(percentage);
 
@@ -287,7 +290,6 @@ public class PlanInformationActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
         mTimeLeft = goaltime*60000;
 
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -347,23 +349,11 @@ public class PlanInformationActivity extends AppCompatActivity {
 
     }
     private void goalUpdate() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
-
         processed_time_status = (int)mTimeLeft;
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("processed_time_status", processed_time_status);
 
         reference.updateChildren(hashMap);
-    }
-    public void rate(){
-
-
-
-//        reference2.setValue(percentage);
-    }
-
-    public void time_status() { // 남은 시간.
-//        reference3.setValue(mTimeLeft);
     }
 }
