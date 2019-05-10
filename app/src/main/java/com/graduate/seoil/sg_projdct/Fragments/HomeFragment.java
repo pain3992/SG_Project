@@ -235,7 +235,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                    eventDay.setMonth(month);
 //                    eventDay.setDay(day);
 //                    eventDays.add(eventDay);
-                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
+                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.RED);
 
                     if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
                         for (DataSnapshot postshot : snapshot.getChildren()) {

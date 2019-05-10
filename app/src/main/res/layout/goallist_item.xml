@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:layout_marginBottom="10dp"
     android:background="@drawable/rounded">
 
@@ -21,50 +21,20 @@
 
     <TextView
         android:id="@+id/plan_percentage"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/slash"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
         android:textColor="@color/blue_grey_900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"/>
 
     <TextView
-        android:id="@+id/slash"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/goalList_maxCount"
-        android:text="/"/>
-
-    <TextView
-        android:id="@+id/goalList_maxCount"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/percent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/blue_grey_900"
-        android:text="100"/>
-
-    <TextView
-        android:id="@+id/percent"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/blue_grey_900"
-        android:text="%"/>
-
-    <TextView
         android:id="@+id/plan_now_time"
         android:clickable="true"
         android:layout_below="@id/plan_percentage"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="15dp"
         android:textColor="@color/blue_grey_900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
