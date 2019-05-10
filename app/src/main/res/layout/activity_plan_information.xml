@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground"
+    android:background="#1A2A47"
     android:id="@+id/container">
 
 
@@ -35,7 +35,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="삭제"
-            android:textColor="@color/colorYellow"
+            android:textColor="#FCFCFC"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:ignore="RtlCompat" />
@@ -140,7 +140,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="00:01:00"
-        android:textColor="@color/colorYellow"
+        android:textColor="#767877"
         android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"

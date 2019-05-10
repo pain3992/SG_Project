@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.icu.text.DecimalFormat;
 import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,11 +78,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String str_userName, str_userImageURL;
     String key, getTime;
     String goalname, goaltext, str_year, str_month, str_day;
+    long timestamp_start, timestamp_end;
 
     ProgressDialog dialog;
     TaskCompletionSource<List<Goal>> tcs;
 
     DatabaseReference reference;
+    Query query;
     ValueEventListener listener;
 
 
@@ -199,7 +202,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onDataUpdate() { }
 
             @Override
-            public void onMonthChange() { }
+            public void onMonthChange() {
+                Day day = collapsibleCalendar.getSelectedDay();
+                getIntervalTimeStamp(day.getYear(), day.getMonth() + 1);
+                fetchGoalList(timestamp_start, timestamp_end);
+            }
 
             @Override
             public void onWeekChange(int i) { }
@@ -211,38 +218,53 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        fetchGoalList();
+
+        getIntervalTimeStamp();
+        fetchGoalList(timestamp_start, timestamp_end);
     }
 
+    private void fetchGoalList(final long start_timestamp, final long ended_timestamp) {
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        System.out.println("start_timestamp : " + start_timestamp + ", ended_timestamp : " + ended_timestamp);
+        query = FirebaseDatabase.getInstance().getReference("Goal")
+                .child(fuser.getUid())
+                .orderByChild("timestamp");
 
-
-    private void fetchGoalList() {
-        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-        listener = reference.addValueEventListener(new ValueEventListener() {
+//        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+        listener = query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final String date = snapshot.getKey();
-                    int index_one = date.indexOf("-", 1);
-                    int index_two = date.indexOf("-", index_one + 1);
-                    final int year = Integer.parseInt(date.substring(0, index_one));
-                    final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
-                    final int day = Integer.parseInt(date.substring(index_two + 1));
-//                    EventDay eventDay = new EventDay();
-//                    eventDay.setYear(year);
-//                    eventDay.setMonth(month);
-//                    eventDay.setDay(day);
-//                    eventDays.add(eventDay);
-                    collapsibleCalendar.addEventTag(year, month - 1, day, Color.RED);
 
-                    if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
-                        for (DataSnapshot postshot : snapshot.getChildren()) {
-                            Goal goal = postshot.getValue(Goal.class);
-                            listItems.add(goal);
+                    final DatabaseReference goals = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date);
+                    Query goal_query = goals.orderByChild("timestamp").startAt(start_timestamp).endAt(ended_timestamp);
+
+                    goal_query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String child_date = dataSnapshot.getKey();
+                            for (DataSnapshot child_snapshot : dataSnapshot.getChildren()) {
+                                int index_one = child_date.indexOf("-", 1);
+                                int index_two = child_date.indexOf("-", index_one + 1);
+                                final int year = Integer.parseInt(child_date.substring(0, index_one));
+                                final int month = Integer.parseInt(child_date.substring(index_one + 1, index_two));
+                                final int day = Integer.parseInt(child_date.substring(index_two + 1));
+                                collapsibleCalendar.addEventTag(year, month - 1, day, Color.RED);
+
+                                if (child_date.equals(str_year + "-" + str_month + "-" + str_day)) {
+                                    Goal goal = child_snapshot.getValue(Goal.class);
+                                    listItems.add(goal);
+                                }
+                            }
+
                         }
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 adapter = new GoalAdapter(getContext(), listItems);
                 recyclerView.setAdapter(adapter);
@@ -260,7 +282,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onPause() {
         super.onPause();
         System.out.println("onPaused");
-        reference.removeEventListener(listener);
+        query.removeEventListener(listener);
     }
 
     //    private class addEventTag extends AsyncTask<Void, String, List<String>> {
@@ -405,6 +427,62 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
+    }
+
+    private void getIntervalTimeStamp() {
+        DecimalFormat df = new DecimalFormat("00");
+        Calendar currentCalendar = Calendar.getInstance();
+        String year = df.format(currentCalendar.get(Calendar.YEAR));
+        String month  = df.format(currentCalendar.get(Calendar.MONTH) + 1);
+        String lastDay =  df.format(currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH ));
+
+        String str_date = month + "-01-" + year;
+        String end_date = month + "-" + lastDay + "-" + year;
+
+        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        Date start_date = null;
+        Date ended_date = null;
+        try {
+            start_date = formatter.parse(str_date);
+            ended_date = formatter.parse(end_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long output_start = start_date.getTime() / 1000L;
+        long output_end = ended_date.getTime() / 1000L;
+        String str_start = Long.toString(output_start);
+        String str_end = Long.toString(output_end);
+
+        timestamp_start = Long.parseLong(str_start) * 1000;
+        timestamp_end = Long.parseLong(str_end) * 1000;
+    }
+
+    private void getIntervalTimeStamp(int y, int m) {
+        DecimalFormat df = new DecimalFormat("00");
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.set(y, m, 1);
+
+        String lastDay =  df.format(currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH ));
+
+        String str_date = m + "-01-" + y;
+        String end_date = m + "-" + lastDay + "-" + y;
+
+        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        Date start_date = null;
+        Date ended_date = null;
+        try {
+            start_date = formatter.parse(str_date);
+            ended_date = formatter.parse(end_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long output_start = start_date.getTime() / 1000L;
+        long output_end = ended_date.getTime() / 1000L;
+        String str_start = Long.toString(output_start);
+        String str_end = Long.toString(output_end);
+
+        timestamp_start = Long.parseLong(str_start) * 1000;
+        timestamp_end = Long.parseLong(str_end) * 1000;
     }
 
     public void anim() {

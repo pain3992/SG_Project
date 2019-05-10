@@ -265,7 +265,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
 
 
                                     String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000,0, timestamp);
+                                    Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0,0, time*60000, time*60000,0, timestamp);
                                     assert goal_id != null;
                                     reference.child(date).child(title).setValue(goal);
                                 }
@@ -315,7 +315,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time*60000, time*60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal); // TODO : 목ㅍ제목에 ., #, $, [ , ] 들어 가면 안됌.
                                         }
@@ -364,7 +364,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time,0,0, time*60000, time*60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal);
                                         }
@@ -412,7 +412,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?",time, 0,0, time*60000, time*60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal);
                                         }

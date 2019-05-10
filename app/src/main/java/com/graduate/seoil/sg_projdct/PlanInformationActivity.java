@@ -56,7 +56,7 @@ public class PlanInformationActivity extends AppCompatActivity {
     private int plan_time, time_status, percent, rest_count, processed_time_status, i = 0;
     ImageView iv_StartStop, iv_Reset, iv_back;
 
-    String start_date, end_date, title;
+    private String start_date, end_date, title, grade;
 
     DatabaseReference reference;
     // Timer
@@ -146,7 +146,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 tv_remain_time.setText(hmsTimeFormatter(mTimeLeft));
                 tv_count_time.setText(hmsTimeFormatter(progress_time));
                 tv_rest_count.setText(String.valueOf(rest_count) + "회 휴식");
-                setConcentrate();
+                setConcentrate(rest_count - 1);
 
                 setProgressBarValues();
             }
@@ -248,6 +248,8 @@ public class PlanInformationActivity extends AppCompatActivity {
             hashMap.put("time_status", mTimeLeft);
             hashMap.put("percent_status", percentage);
             hashMap.put("rest_count", rest_count + 1);
+            setConcentrate(rest_count);
+            hashMap.put("grade", grade);
 
             reference.updateChildren(hashMap);
 
@@ -256,7 +258,7 @@ public class PlanInformationActivity extends AppCompatActivity {
             tv_rest_count.setText(String.valueOf(rest_count) + "회 휴식");
             tv_accomplish_rate.setText(ratefor+"%");
             timeCountInMilliSeconds = mTimeLeft;
-            setConcentrate();
+
 
 
             iv_Reset.setVisibility(View.GONE);
@@ -266,27 +268,27 @@ public class PlanInformationActivity extends AppCompatActivity {
         }
     }
 
-    private void setConcentrate() {
-        switch (rest_count) {
+    private void setConcentrate(int cnt) {
+        System.out.println("cnt : " + cnt);
+        switch (cnt) {
+            case -1:
             case 0:
-                tv_concentrate.setText("S");
+                grade = "A";
                 break;
             case 1:
-                tv_concentrate.setText("A");
+                grade = "B";
                 break;
             case 2:
-                tv_concentrate.setText("B");
+                grade = "C";
                 break;
             case 3:
-                tv_concentrate.setText("C");
-                break;
-            case 4:
-                tv_concentrate.setText("D");
+                grade = "D";
                 break;
             default:
-                tv_concentrate.setText("F");
+                grade = "F";
                 break;
         }
+        tv_concentrate.setText(grade);
     }
 
     private void startCountDownTimer() {
@@ -309,6 +311,16 @@ public class PlanInformationActivity extends AppCompatActivity {
                 iv_Reset.setVisibility(View.GONE);
                 iv_StartStop.setImageResource(R.drawable.icon_start);
                 timerStatus = TimerStatus.STOPPED;
+
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("percent_status", 100);
+                hashMap.put("processed_time_status", plan_time * 60 * 1000);
+                hashMap.put("time_status", 0);
+                hashMap.put("grade", grade);
+                reference.updateChildren(hashMap);
+                finish();
+
+
             }
         }.start();
         countDownTimer.start();
