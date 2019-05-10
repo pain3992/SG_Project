@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/blue_grey_800"
+    android:background="@color/colorBackground"
     android:id="@+id/container">
 
 
@@ -13,7 +13,7 @@
         android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue_grey_900"
+        android:background="@color/exersior_dark_blue"
         android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="삭제"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/colorYellow"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:ignore="RtlCompat" />
@@ -49,7 +49,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="조기 달성"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/colorYellow"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:ignore="RtlCompat" />
@@ -97,21 +97,39 @@
 
     <ProgressBar
         android:id="@+id/bar_Timer"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/drawable_circle_dark_blue"
         android:indeterminate="false"
         android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/circle_progressbar"
+        android:progress="100"
+        android:progressDrawable="@drawable/drawable_circle_yellow"
+        android:rotation="-90"
         app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/index_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/index_toolbar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/pi_remain_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:text="00:01:00"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/pi_count_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/pi_count_time"
@@ -121,8 +139,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="00:00"
-        android:textColor="#ffffff"
+        android:text="00:01:00"
+        android:textColor="@color/colorYellow"
         android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
@@ -130,43 +148,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/index_toolbar" />
 
-
-    <Button
-        android:id="@+id/pi_start"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="90dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Start"
-        app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/pi_progressbar_guideline_vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar_Timer" />
-
-
-    <Button
-        android:id="@+id/pi_reset"
-        style="@style/Widget.AppCompat.Button.Colored"
+    <TextView
+        android:id="@+id/pi_rest_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btPause"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Reset"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
+        android:text="0회"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/pi_progressbar_guideline_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/bar_Timer"
-        tools:visibility="visible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pi_count_time" />
 
+    <ImageView
+        android:id="@+id/pi_reset"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/icon_reset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pi_rest_count"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/pi_StartStop"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/icon_start"
+        app:layout_constraintBottom_toTopOf="@+id/RelativeLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar_Timer" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout2"
@@ -175,20 +197,19 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_grey"
+        android:background="@color/colorBackground"
         android:orientation="horizontal"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pi_start">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/pi_expand_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@color/blue_grey_300"
+            android:background="@color/colorYellow"
             android:onClick="show"
             android:src="@drawable/arrow_greyup" />
 
@@ -201,7 +222,7 @@
             android:layout_marginEnd="55dp"
             android:paddingTop="3dp"
             android:text="목표시간"
-            android:textColor="@color/blue_grey_500" />
+            android:textColor="@color/colorYellow" />
 
         <TextView
             android:id="@+id/goal_concentrates"
@@ -211,7 +232,7 @@
             android:layout_centerHorizontal="true"
             android:paddingTop="3dp"
             android:text="집중도"
-            android:textColor="@color/blue_grey_500" />
+            android:textColor="@color/colorYellow" />
 
         <TextView
             android:id="@+id/goal_achieves"
@@ -222,7 +243,7 @@
             android:layout_marginStart="55dp"
             android:paddingTop="3dp"
             android:text="달성률"
-            android:textColor="@color/blue_grey_500" />
+            android:textColor="@color/colorYellow" />
 
         <TextView
             android:id="@+id/goal_name"
@@ -233,8 +254,7 @@
             android:text="A"
             android:textSize="15sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/blue_grey_900"
-            android:textStyle="bold" />
+            android:textColor="@android:color/white" />
 
 
         <TextView
@@ -246,9 +266,8 @@
             android:layout_marginEnd="60dp"
             android:text="1시간 20분"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/blue_grey_900"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
 
         <TextView
@@ -259,10 +278,9 @@
             android:layout_toEndOf="@id/goal_name"
             android:layout_marginStart="75dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@android:color/white"
             android:text="50%"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
 
 
         <com.github.aakira.expandablelayout.ExpandableRelativeLayout
@@ -271,7 +289,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/goal_name"
             android:layout_centerInParent="true"
-            android:background="@color/blue_grey_300"
+            android:background="@color/colorBackground"
             app:ael_duration="500"
             app:ael_expanded="false"
             app:ael_interpolator="accelerate"
@@ -283,6 +301,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/colorYellow"
                 android:text="목표 제목 : " />
 
             <TextView
@@ -292,6 +311,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/title_text"
+                android:textColor="@android:color/white"
                 android:text="내용" />
 
             <TextView
@@ -301,6 +321,7 @@
                 android:layout_below="@id/title_text"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/colorYellow"
                 android:text="시작 일자 : " />
 
             <TextView
@@ -312,6 +333,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/strat_date"
+                android:textColor="@android:color/white"
                 android:text="내용" />
 
             <TextView
@@ -321,6 +343,7 @@
                 android:layout_below="@id/strat_date"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/colorYellow"
                 android:text="종료 일자 : " />
 
             <TextView
@@ -333,6 +356,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_toRightOf="@id/end_date"
+                android:textColor="@android:color/white"
                 android:text="내용" />
 
 
@@ -340,7 +364,6 @@
 
 
     </RelativeLayout>
-
 
 
 </android.support.constraint.ConstraintLayout>

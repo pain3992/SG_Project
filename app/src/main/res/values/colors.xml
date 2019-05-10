@@ -22,4 +22,7 @@
     <color name="exersior_red">#EE001E</color>
 
     <color name="jaksim_blue_900">#386385</color>
+
+    <color name="colorBackground">#151B29</color>
+    <color name="colorYellow">#F5FA55</color>
 </resources>

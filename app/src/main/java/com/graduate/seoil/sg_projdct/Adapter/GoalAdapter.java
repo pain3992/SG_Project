@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
@@ -55,12 +56,14 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull GoalAdapter.ViewHolder viewHolder, int i) {
         final Goal goal = mGoals.get(i);
         viewHolder.goal_title.setText(goal.getTitle());
-        viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()));
-        if (goal.getTime_status() == 0) {
-            viewHolder.goal_percentage.setText("00:00");
-        } else {
-            viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()));
-        }
+        viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()) + "%");
+        if (goal.getPercent_status() == 0)
+            viewHolder.goal_play_time.setText("00:00");
+        else if (goal.getPercent_status() != 100)
+            viewHolder.goal_play_time.setText(hmsTimeFormatter(goal.getTime_status()));
+        else
+            viewHolder.goal_play_time.setText(hmsTimeFormatter(goal.getPlan_time() * 60 * 1000));
+
 
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -73,7 +76,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
                     bundle.putString("goal_title", goal.getTitle());
                     bundle.putInt("goal_time", goal.getPlan_time());
-                    bundle.putString("start_date",goal.getStart_date());
+                    bundle.putString("start_date", goal.getStart_date());
                     bundle.putString("end_date",goal.getEnd_date());
                     bundle.putInt("time_status",goal.getTime_status());
                     bundle.putInt("percent", goal.getPercent_status());
@@ -87,7 +90,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         });
     }
 
-@Override
+    @Override
     public int getItemCount() {
         return mGoals.size();
     }
@@ -108,4 +111,13 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         }
     }
 
+    private String hmsTimeFormatter(long milliSeconds) {
+
+        String hms = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(milliSeconds),
+                TimeUnit.MILLISECONDS.toMinutes(milliSeconds) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)),
+                TimeUnit.MILLISECONDS.toSeconds(milliSeconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
+
+        return hms;
+    }
 }
