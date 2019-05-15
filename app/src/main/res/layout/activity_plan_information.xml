@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground"
+    android:background="@android:color/white"
     android:id="@+id/container">
 
 
@@ -13,7 +13,7 @@
         android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/exersior_dark_blue"
+        android:background="@color/exersior_dark"
         android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="삭제"
-            android:textColor="@color/colorYellow"
+            android:textColor="#FCFCFC"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:ignore="RtlCompat" />
@@ -49,7 +49,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="조기 달성"
-            android:textColor="@color/colorYellow"
+            android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:ignore="RtlCompat" />
@@ -115,7 +115,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/index_toolbar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/pi_remain_time"
@@ -125,7 +125,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:text="00:01:00"
-        android:textColor="@android:color/white"
+        android:textColor="@color/exersior_dark_blue"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/pi_count_time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +140,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="00:01:00"
-        android:textColor="@color/colorYellow"
+        android:textColor="@color/exersior_dark"
         android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
@@ -156,7 +156,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:text="0회"
-        android:textColor="@android:color/white"
+        android:textColor="@color/exersior_dark"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -178,13 +178,13 @@
 
     <ImageView
         android:id="@+id/pi_StartStop"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/icon_start"
+        android:src="@drawable/play_circle"
         app:layout_constraintBottom_toTopOf="@+id/RelativeLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -197,7 +197,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/colorBackground"
+        android:background="@android:color/white"
         android:orientation="horizontal"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -209,7 +209,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorYellow"
+            android:background="@color/exersior_dark_blue"
             android:onClick="show"
             android:src="@drawable/arrow_greyup" />
 
@@ -222,7 +222,7 @@
             android:layout_marginEnd="55dp"
             android:paddingTop="3dp"
             android:text="목표시간"
-            android:textColor="@color/colorYellow" />
+            android:textColor="@color/exersior_dark" />
 
         <TextView
             android:id="@+id/goal_concentrates"
@@ -232,7 +232,7 @@
             android:layout_centerHorizontal="true"
             android:paddingTop="3dp"
             android:text="집중도"
-            android:textColor="@color/colorYellow" />
+            android:textColor="@color/exersior_dark" />
 
         <TextView
             android:id="@+id/goal_achieves"
@@ -243,7 +243,7 @@
             android:layout_marginStart="55dp"
             android:paddingTop="3dp"
             android:text="달성률"
-            android:textColor="@color/colorYellow" />
+            android:textColor="@color/exersior_dark" />
 
         <TextView
             android:id="@+id/goal_name"
@@ -254,7 +254,7 @@
             android:text="A"
             android:textSize="15sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/exersior_dark_blue" />
 
 
         <TextView
@@ -266,7 +266,7 @@
             android:layout_marginEnd="60dp"
             android:text="1시간 20분"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white"
+            android:textColor="@color/exersior_dark_blue"
             android:textSize="15sp" />
 
 
@@ -278,7 +278,7 @@
             android:layout_toEndOf="@id/goal_name"
             android:layout_marginStart="75dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white"
+            android:textColor="@color/exersior_dark_blue"
             android:text="50%"
             android:textSize="15sp" />
 
@@ -289,7 +289,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/goal_name"
             android:layout_centerInParent="true"
-            android:background="@color/colorBackground"
+            android:background="@android:color/white"
             app:ael_duration="500"
             app:ael_expanded="false"
             app:ael_interpolator="accelerate"
@@ -301,7 +301,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/exersior_dark"
                 android:text="목표 제목 : " />
 
             <TextView
@@ -311,7 +311,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/title_text"
-                android:textColor="@android:color/white"
+                android:textColor="@color/exersior_dark_blue"
                 android:text="내용" />
 
             <TextView
@@ -321,7 +321,7 @@
                 android:layout_below="@id/title_text"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/exersior_dark"
                 android:text="시작 일자 : " />
 
             <TextView
@@ -333,7 +333,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/strat_date"
-                android:textColor="@android:color/white"
+                android:textColor="@color/exersior_dark_blue"
                 android:text="내용" />
 
             <TextView
@@ -343,7 +343,7 @@
                 android:layout_below="@id/strat_date"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/exersior_dark"
                 android:text="종료 일자 : " />
 
             <TextView
@@ -356,7 +356,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_toRightOf="@id/end_date"
-                android:textColor="@android:color/white"
+                android:textColor="@color/exersior_dark_blue"
                 android:text="내용" />
 
 

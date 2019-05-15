@@ -42,7 +42,8 @@
         <activity
             android:name=".ResetPasswordActivity"
             android:parentActivityName=".LoginActivity" />
-        <activity android:name=".IndexActivity" />
+        <activity android:name=".IndexActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".HomeActivity" />
         <activity android:name=".GoalMaking" />
         <activity android:name=".AccountSetting" />

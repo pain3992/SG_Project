@@ -15,7 +15,7 @@
             android:id="@+id/notification_register_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 

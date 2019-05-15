@@ -16,7 +16,7 @@
             android:id="@+id/groupSearch_index_toolbar"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
                 android:textAlignment="textEnd"
-                android:textColor="@color/blue_grey_500"
+                android:textColor="@android:color/white"
                 android:text="만들기"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -51,8 +51,8 @@
             android:id="@+id/groupSearch_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue_grey_900"
-            app:tabIndicatorColor="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
+            app:tabIndicatorColor="@color/exersior_dark"
             app:tabSelectedTextColor="#fff"
             app:tabTextAppearance="@style/MyCustomTabText"
             app:tabTextColor="#aabbcc">

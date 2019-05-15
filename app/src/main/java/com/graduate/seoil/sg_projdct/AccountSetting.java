@@ -2,10 +2,12 @@ package com.graduate.seoil.sg_projdct;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountSetting extends AppCompatActivity {
     CircleImageView profile_image;
     TextView userName, userName2, userEmail;
-    RelativeLayout rel_logout;
+    RelativeLayout rel_logout, rel_deleteMember;
     ImageView back_button;
 
     DatabaseReference reference;
@@ -68,7 +71,7 @@ public class AccountSetting extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setting);
 
@@ -79,13 +82,14 @@ public class AccountSetting extends AppCompatActivity {
         userName2 = findViewById(R.id.tv_userName);
         userEmail = findViewById(R.id.tv_userEmail);
         rel_logout = findViewById(R.id.rel3);
+        rel_deleteMember = findViewById(R.id.rel4);
         back_button = findViewById(R.id.account_setting_backButton);
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (getApplicationContext() == null) { // CHECK
@@ -130,6 +134,41 @@ public class AccountSetting extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(AccountSetting.this, GStartActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                 finish();
+            }
+        });
+
+        rel_deleteMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AccountSetting.this);
+                builder.setMessage("회원 탈퇴하시겠습니까?")
+                        .setCancelable(false)
+                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                Objects.requireNonNull(user).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            FirebaseAuth.getInstance().signOut();
+                                            reference.child(fuser.getUid()).removeValue();
+                                            startActivity(new Intent(AccountSetting.this, GStartActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(AccountSetting.this, "회원삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -204,21 +243,6 @@ public class AccountSetting extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-//            imageUri = result.getUri();
-//
-//            profile_image.setImageURI(imageUri);
-//
-//            if (uploadTask != null && uploadTask.isInProgress()) {
-//                Toast.makeText(getApplicationContext(), "Upload in progess", Toast.LENGTH_SHORT).show();
-//            } else {
-//                uploadImage();
-//            }
-//        } else {
-//            Toast.makeText(this, "이미지 안올림.", Toast.LENGTH_SHORT).show();
-//            finish();
-//        }
 
         if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
@@ -232,18 +256,18 @@ public class AccountSetting extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        status("offline");
-    }
-
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        status("offline");
+//    }
+//
+//    private void status(String status) {
+//        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+//
+//        HashMap<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("status", status);
+//
+//        reference.updateChildren(hashMap);
+//    }
 }

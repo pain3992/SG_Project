@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/myTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10"
     android:screenOrientation="portrait"
     android:divider="?android:dividerHorizontal"
     android:showDividers="middle"
     tools:context=".MainActivity"
-    android:background="#313F47">
+    android:background="@android:color/white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@color/blue_grey_900"
+        android:background="@color/exersior_dark"
         android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
         app:popupTheme="@style/MenuStyle">
 
@@ -36,7 +35,8 @@
         android:background="@drawable/gradient_routtime_worker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:primaryColor="@color/blue_grey_900"
+        android:layout_below="@id/index_toolbar"
+        app:primaryColor="@color/exersior_dark"
         app:textColor="@android:color/white"
         app:selectedItem_textColor="@color/blue_grey_900"
         android:id="@+id/collapseCalendar"
@@ -48,34 +48,49 @@
         app:expandIconColor="@android:color/white"
         app:eventColor="@android:color/white" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:layout_marginTop="5dp">
+        <TextView
+            android:id="@+id/textHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/collapseCalendar"
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/exersior_dark"
+            android:visibility="invisible"
+            android:text="요일을 선택해주세요!"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textHintTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/collapseCalendar"
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/exersior_dark"
+            android:visibility="invisible"
+            android:text="계획이 없어요!"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/goal_list"
+            android:layout_below="@id/collapseCalendar"
+            android:name="com.ringsterz.picmemo.fragment.ItemFragment"
+            tools:context="com.ringsterz.picmemo.fragment.NotificationFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/goal_list"
-                android:name="com.ringsterz.picmemo.fragment.ItemFragment"
-                tools:context="com.ringsterz.picmemo.fragment.NotificationFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_rv"/>
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="160dp"
-            android:layout_marginRight="15sp"
+            android:layout_above="@id/fab1"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
             android:src="@drawable/baseline_event_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -86,9 +101,9 @@
             android:id="@+id/fab1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="90dp"
-            android:layout_marginRight="15sp"
+            android:layout_above="@id/fab"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
             android:src="@drawable/baseline_alarm_on_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -99,12 +114,12 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="15sp"
             android:src="@drawable/ic_add_black_24dp"
-            android:backgroundTint="#386385"
+            android:backgroundTint="@color/exersior_dark"
             app:borderWidth="0dp"/>
-    </FrameLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

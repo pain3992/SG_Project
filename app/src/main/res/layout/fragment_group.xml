@@ -15,7 +15,7 @@
             android:id="@+id/group_toolbar"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/blue_grey_900">
+            android:background="@color/exersior_dark">
 
             <ImageView
                 android:id="@+id/group_backButton"
@@ -42,7 +42,7 @@
             android:layout_below="@id/appBarLayout"
             android:layout_marginLeft="-5dp"
             android:layout_marginRight="-5dp"
-            android:background="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
             android:orientation="horizontal">
 
             <ImageButton

@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.graduate.seoil.sg_projdct.Fragments.DatePickerFragment;
+import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Fragments.TimePickerFragment;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 
@@ -88,6 +89,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         tv_end_date = findViewById(R.id.tv_calendar_end);
         chkBoxs = new CheckBox[chkBoxIds.length];
         plan_make = findViewById(R.id.plan_make);
+        plan_cancel = findViewById(R.id.plan_cancel);
 
         tv_calendar_start = findViewById(R.id.tv_calendar_start);
         tv_calender_end = findViewById(R.id.tv_calendar_end);
@@ -144,24 +146,24 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 int from_idx_first = start_date.indexOf("-", 1);
                 int from_idx_second = start_date.indexOf("-", from_idx_first + 1);
                 int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
-                int from_month  = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
+                int from_month = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
                 int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
                 int to_idx_first = end_date.indexOf("-", 1);
                 int to_idx_second = end_date.indexOf("-", to_idx_first + 1);
                 int to_year = Integer.parseInt(end_date.substring(0, to_idx_first));
-                int to_month  = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
+                int to_month = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
                 int to_day = Integer.parseInt(end_date.substring(to_idx_second + 1));
 
                 String str_date = 6 + "-" + 3 + "-" + 2019;
                 DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
                 Date dateun = null;
                 try {
-                    dateun = (Date)formatter.parse(str_date);
+                    dateun = (Date) formatter.parse(str_date);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                long output=dateun.getTime()/1000L;
-                String str=Long.toString(output);
+                long output = dateun.getTime() / 1000L;
+                String str = Long.toString(output);
                 long timestamp = Long.parseLong(str) * 1000;
 
                 int index = str_time.indexOf(":");
@@ -219,6 +221,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
                 cal = Calendar.getInstance();
                 cal.set(from_year, from_month - 1, from_day); // 시작 요일 Calendar에 세팅
+                System.out.println("from_month : " + from_month);
                 if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
                     if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
                         for (int d = from_day; d <= to_day; d++) {
@@ -255,17 +258,17 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     formatter = new SimpleDateFormat("MM-dd-yyyy");
                                     dateun = null;
                                     try {
-                                        dateun = (Date)formatter.parse(str_date);
+                                        dateun = (Date) formatter.parse(str_date);
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                    output = dateun.getTime()/1000L;
+                                    output = dateun.getTime() / 1000L;
                                     str = Long.toString(output);
                                     timestamp = Long.parseLong(str) * 1000; // timestamp
 
 
                                     String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000,0, timestamp);
+                                    Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
                                     assert goal_id != null;
                                     reference.child(date).child(title).setValue(goal);
                                 }
@@ -307,15 +310,15 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
                                             try {
-                                                dateun = (Date)formatter.parse(str_date);
+                                                dateun = (Date) formatter.parse(str_date);
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }
-                                            output = dateun.getTime()/1000L;
+                                            output = dateun.getTime() / 1000L;
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal); // TODO : 목ㅍ제목에 ., #, $, [ , ] 들어 가면 안됌.
                                         }
@@ -328,7 +331,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            if (from_month < 10) {
+                                            if (m < 10) {
                                                 if (d < 10)
                                                     date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
                                                 else
@@ -340,31 +343,31 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                                     date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
                                             }
 
-                                            if (to_month < 10) {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            } else {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            }
+//                                            if (to_month < 10) {
+//                                                if (to_day < 10)
+//                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+//                                                else
+//                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+//                                            } else {
+//                                                if (to_day < 10)
+//                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+//                                                else
+//                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+//                                            }
 
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
                                             try {
-                                                dateun = (Date)formatter.parse(str_date);
+                                                dateun = (Date) formatter.parse(str_date);
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }
-                                            output = dateun.getTime()/1000L;
+                                            output = dateun.getTime() / 1000L;
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal);
                                         }
@@ -376,7 +379,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                     int dayNum = cal.get(Calendar.DAY_OF_WEEK);
                                     for (String int_checkDay : int_checkDays) {
                                         if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            if (to_month < 10) {
+                                            if (m < 10) {
                                                 if (d < 10)
                                                     date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
                                                 else
@@ -388,31 +391,31 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                                                     date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
                                             }
 
-                                            if (to_month < 10) {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            } else {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            }
+//                                            if (to_month < 10) {
+//                                                if (to_day < 10)
+//                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+//                                                else
+//                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+//                                            } else {
+//                                                if (to_day < 10)
+//                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+//                                                else
+//                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+//                                            }
 
                                             str_date = m + "-" + d + "-" + from_year;
                                             formatter = new SimpleDateFormat("MM-dd-yyyy");
                                             dateun = null;
                                             try {
-                                                dateun = (Date)formatter.parse(str_date);
+                                                dateun = (Date) formatter.parse(str_date);
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }
-                                            output = dateun.getTime()/1000L;
+                                            output = dateun.getTime() / 1000L;
                                             str = Long.toString(output);
                                             timestamp = Long.parseLong(str) * 1000; // timestamp
                                             String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, time, 0, time*60000, time*60000, 0, timestamp);
+                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
                                             assert goal_id != null;
                                             reference.child(date).child(title).setValue(goal);
                                         }
@@ -422,8 +425,14 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                         }
                     }
                 }
-                System.out.println("it's end game now");
                 finish();
+            }
+        });
+
+        plan_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }

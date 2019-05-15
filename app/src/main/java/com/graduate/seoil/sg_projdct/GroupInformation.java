@@ -39,6 +39,8 @@ public class    GroupInformation extends AppCompatActivity {
     String str_title, userName, userImageURL;
     int user_count;
 
+    GroupInformationAdapter groupInformationAdapter;
+
     RecyclerView recyclerView;
     @SuppressLint("SetTextI18n")
     @Override
@@ -71,8 +73,8 @@ public class    GroupInformation extends AppCompatActivity {
         dayCycle.setText(intent.getStringExtra("group_dayCycle"));
         announce.setText(intent.getStringExtra("group_announce"));
 
-        userName = intent.getStringExtra("userName");
-        userImageURL = intent.getStringExtra("userImageURL");
+        userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
+        userName =  IndexActivity.spref.getString("str_userName", "default");
         // ~ 그룹 리스트에서 던져준 그룹 정보 데이터 받기.
 
         long now = System.currentTimeMillis();
@@ -83,7 +85,7 @@ public class    GroupInformation extends AppCompatActivity {
         readGroupList();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        GroupInformationAdapter groupInformationAdapter = new GroupInformationAdapter(this, mGroupUserList);
+        groupInformationAdapter = new GroupInformationAdapter(this, mGroupUserList);
 
         recyclerView = findViewById(R.id.rv_groupListProfileImage);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -104,7 +106,7 @@ public class    GroupInformation extends AppCompatActivity {
                     userList_under.put("imageURL", userImageURL);
                     userList_under.put("level", "user");
                     userList_under.put("username", userName);
-                    userList_under.put("registDate", getTime);
+                    userList_under.put("registDate", System.currentTimeMillis());
                     userList.put(fuser.getUid(), userList_under);
 
                     System.out.println("userList : " + userList);
@@ -152,6 +154,7 @@ public class    GroupInformation extends AppCompatActivity {
                     GroupUserList groupUserList = snapshot.getValue(GroupUserList.class);
                     mGroupUserList.add(groupUserList);
                 }
+                groupInformationAdapter.notifyDataSetChanged();
             }
 
             @Override

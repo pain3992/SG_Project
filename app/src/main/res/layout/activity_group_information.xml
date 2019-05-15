@@ -11,7 +11,7 @@
         android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@color/blue_grey_900"
+        android:background="@color/exersior_dark"
         android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
         app:popupTheme="@style/MenuStyle">
 
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@android:color/white"
             android:text="입장"
             android:textSize="15sp"
             android:textStyle="bold"/>
@@ -51,7 +51,7 @@
             android:layout_margin="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:text="그룹 타이틀"/>
 
         <View
@@ -71,7 +71,7 @@
             android:text="그룹 생성일  :  "
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_500"/>
+            android:textColor="@color/exersior_dark_blue"/>
 
         <TextView
             android:id="@+id/tv_groupInformation_registDate"
@@ -80,7 +80,7 @@
             android:layout_marginTop="11dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:text="2019/03/21"/>
 
         <TextView
@@ -93,7 +93,7 @@
             android:text="현재 그룹원  :  "
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_500"/>
+            android:textColor="@color/exersior_dark_blue"/>
 
         <TextView
             android:id="@+id/tv_groupInformation_currentUser"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:textColor="@color/blue_grey_500"/>
+            android:textColor="@color/exersior_dark_blue"/>
 
         <TextView
             android:id="@+id/slash"
@@ -124,7 +124,7 @@
             android:layout_marginTop="11dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:text="7"/>
 
     </RelativeLayout>
@@ -150,7 +150,7 @@
             android:text="월화수목금"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_900"/>
+            android:textColor="@color/exersior_dark"/>
 
         <TextView
             android:id="@+id/middle_spot"
@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:text="4시간"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textSize="15sp"/>
 
         <TextView
@@ -196,7 +196,7 @@
             android:text="6"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@color/blue_grey_900"/>
+            android:textColor="@color/exersior_dark"/>
 
         <TextView
             android:id="@+id/tv_groupInformation_currentUser_after"
@@ -206,7 +206,7 @@
             android:layout_height="wrap_content"
             android:text="명 참여중"
             android:textStyle="bold"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textSize="15sp"/>
 
         <android.support.v7.widget.RecyclerView
@@ -238,7 +238,8 @@
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="그룹소개"/>
+            android:text="그룹소개"
+            android:textColor="@color/exersior_dark"/>
 
     </RelativeLayout>
 

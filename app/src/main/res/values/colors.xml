@@ -17,12 +17,18 @@
     <color name="blue_grey_400">#78909c</color>
     <color name="blue_grey_300">#90a4ae</color>
 
-    <color name="exersior_dark_blue">#121529</color>
+    <color name="exersior_toolbar">#070A16</color>
+    <color name="exersior_dark">#121529</color>
+    <color name="exersior_dark_blue">#181F44</color>
     <color name="exersior_blue">#1039D7</color>
     <color name="exersior_red">#EE001E</color>
+    <color name="exersior_yellow">#F5FA55</color>
+    <color name="exersior_pink">#FBCDCF</color>
+    <color name="exersior_green">#BDEBE2</color>
+    <color name="exersior_slim_green">#CEE392</color>
 
     <color name="jaksim_blue_900">#386385</color>
 
-    <color name="colorBackground">#151B29</color>
-    <color name="colorYellow">#F5FA55</color>
+
+
 </resources>

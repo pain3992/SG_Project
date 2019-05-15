@@ -5,19 +5,23 @@ public class Goal {
     private String start_date;
     private String end_date;
     private String day_cycle;
+    private String grade;
     private int plan_time;
+    private int notify_time;
     private int rest_count;
     private int time_status;
     private int processed_time_status;
     private int percent_status;
     private long timestamp;
 
-    public Goal(String title, String start_date, String end_date, String day_cycle, int plan_time, int rest_count, int time_status, int processed_time_status, int percent_status, long timestamp) {
+    public Goal(String title, String start_date, String end_date, String day_cycle, String grade ,int plan_time, int notify_time, int rest_count, int time_status, int processed_time_status, int percent_status, long timestamp) {
         this.title = title;
         this.start_date = start_date;
         this.end_date = end_date;
         this.day_cycle = day_cycle;
+        this.grade = grade;
         this.plan_time = plan_time;
+        this.notify_time = notify_time;
         this.rest_count = rest_count;
         this.time_status = time_status;
         this.processed_time_status = processed_time_status;
@@ -60,12 +64,28 @@ public class Goal {
         this.day_cycle = day_cycle;
     }
 
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     public int getPlan_time() {
         return plan_time;
     }
 
     public void setPlan_time(int plan_time) {
         this.plan_time = plan_time;
+    }
+
+    public int getNotify_time() {
+        return notify_time;
+    }
+
+    public void setNotify_time(int notify_time) {
+        this.notify_time = notify_time;
     }
 
     public int getRest_count() {
