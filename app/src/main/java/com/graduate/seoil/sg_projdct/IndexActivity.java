@@ -84,11 +84,12 @@ public class IndexActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         // 유저네임, 프로필URL 불러오기.
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("CommitPrefEdits")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                assert user != null;
                 str_userName = user.getUsername();
                 str_userImageURL = user.getImageURL();
 

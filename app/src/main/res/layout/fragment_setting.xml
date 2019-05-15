@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.SettingFragment"
-    android:background="#313F47"
+    android:background="@color/exersior_dark"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -33,7 +32,7 @@
             android:text="계정"
             android:textSize="20sp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textStyle="bold"
             />
 
@@ -46,7 +45,7 @@
             android:layout_height="wrap_content"
             android:text="사용자 계정을 확인 및 수정이 가능합니다."
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:textStyle="normal"/>
    </RelativeLayout>
 
@@ -75,7 +74,7 @@
             android:text="알림 설정"
             android:textSize="20sp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textStyle="bold"
             />
 
@@ -88,7 +87,7 @@
             android:layout_height="wrap_content"
             android:text="푸쉬알림 설정 확인 및 변경이 가능합니다."
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:textStyle="normal"/>
 
     </RelativeLayout>
@@ -118,7 +117,7 @@
             android:text="일반 설정"
             android:textSize="20sp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textStyle="bold"
             />
 
@@ -131,7 +130,7 @@
             android:layout_toRightOf="@+id/img_setting_normalnotification"
             android:text="기본설정 확인 및 수정이 가능합니다."
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:textStyle="normal" />
 
     </RelativeLayout>
@@ -161,7 +160,7 @@
             android:text="문의하기"
             android:textSize="20sp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_900"
+            android:textColor="@color/exersior_dark"
             android:textStyle="bold"
             />
 
@@ -174,7 +173,7 @@
             android:layout_toRightOf="@+id/img_setting_question"
             android:text="궁금한점이 있으면 문의해주시기 바랍니다."
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/blue_grey_500"
+            android:textColor="@color/exersior_dark_blue"
             android:textStyle="normal" />
 
     </RelativeLayout>

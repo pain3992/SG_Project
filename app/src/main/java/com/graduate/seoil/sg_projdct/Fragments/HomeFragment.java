@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -78,27 +79,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String str_userName, str_userImageURL;
     String key, getTime;
     String goalname, goaltext, str_year, str_month, str_day;
-    long timestamp_start, timestamp_end;
+    long timestamp_start, timestamp_end, itemCnt;
+
+    private TextView hint, dayHint;
 
     ProgressDialog dialog;
     TaskCompletionSource<List<Goal>> tcs;
 
     DatabaseReference reference;
-    Query query;
-    ValueEventListener listener;
+    public Query query;
+    public ValueEventListener listener;
 
 
     public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         if (getArguments() != null) {
             str_userName = getArguments().getString("str_Username");
@@ -113,6 +111,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         dialog.show();
 
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
+        hint = view.findViewById(R.id.textHint);
+        dayHint = view.findViewById(R.id.textHintTwo);
 
         eventDayList = new ArrayList<>();
         eventDays = new ArrayList<>();
@@ -149,6 +149,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDaySelect() {
                 FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+                hint.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 Day day = collapsibleCalendar.getSelectedDay();
                 Log.e("onDaySelect:--> ", "Selected Day: " + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
@@ -175,13 +177,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        itemCnt = dataSnapshot.getChildrenCount();
+                        System.out.println("itemCnt : " + itemCnt);
                         listItems.clear();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Goal goal = snapshot.getValue(Goal.class);
                             listItems.add(goal);
                         }
-                        adapter = new GoalAdapter(getContext(), listItems);
-                        recyclerView.setAdapter(adapter);
+                        if (itemCnt == 0) {
+                            recyclerView.setVisibility(View.INVISIBLE);
+                            hint.setVisibility(View.INVISIBLE);
+                            dayHint.setVisibility(View.VISIBLE);
+                        }
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -203,9 +211,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onMonthChange() {
-                Day day = collapsibleCalendar.getSelectedDay();
-                getIntervalTimeStamp(day.getYear(), day.getMonth() + 1);
+                getIntervalTimeStamp(collapsibleCalendar.getYear(), collapsibleCalendar.getMonth() + 1);
                 fetchGoalList(timestamp_start, timestamp_end);
+                recyclerView.setVisibility(View.INVISIBLE);
+                hint.setVisibility(View.VISIBLE);
+                dayHint.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -218,9 +228,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-
-        getIntervalTimeStamp();
+        System.out.println("onResume");
+        getIntervalTimeStamp(collapsibleCalendar.getYear(), collapsibleCalendar.getMonth() + 1);
         fetchGoalList(timestamp_start, timestamp_end);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        query.removeEventListener(listener);
+        System.out.println("onPaused");
     }
 
     private void fetchGoalList(final long start_timestamp, final long ended_timestamp) {
@@ -251,13 +268,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 final int year = Integer.parseInt(child_date.substring(0, index_one));
                                 final int month = Integer.parseInt(child_date.substring(index_one + 1, index_two));
                                 final int day = Integer.parseInt(child_date.substring(index_two + 1));
-                                collapsibleCalendar.addEventTag(year, month - 1, day, Color.RED);
+                                collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#1039D7"));
 
                                 if (child_date.equals(str_year + "-" + str_month + "-" + str_day)) {
                                     Goal goal = child_snapshot.getValue(Goal.class);
                                     listItems.add(goal);
                                 }
                             }
+                            adapter = new GoalAdapter(getContext(), listItems);
+                            recyclerView.setAdapter(adapter);
+                            dialog.dismiss();
 
                         }
                         @Override
@@ -266,9 +286,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }
                     });
                 }
-                adapter = new GoalAdapter(getContext(), listItems);
-                recyclerView.setAdapter(adapter);
-                dialog.dismiss();
+                adapter.notifyDataSetChanged();
+                if (dialog.isShowing())
+                    dialog.dismiss();
             }
 
             @Override
@@ -276,13 +296,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        System.out.println("onPaused");
-        query.removeEventListener(listener);
     }
 
     //    private class addEventTag extends AsyncTask<Void, String, List<String>> {

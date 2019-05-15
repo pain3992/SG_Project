@@ -15,7 +15,7 @@
             android:id="@+id/index_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
@@ -78,7 +78,7 @@
             android:layout_marginEnd="5dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/blue_grey_900"/>
+            android:textColor="@color/exersior_dark"/>
 
     </RelativeLayout>
 

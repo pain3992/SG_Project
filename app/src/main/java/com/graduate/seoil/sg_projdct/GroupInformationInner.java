@@ -165,8 +165,8 @@ public class GroupInformationInner extends AppCompatActivity {
         });
 
         // 유저 긁어오기
-        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList"); // TODO : 4/2 방금에러 패스스트링
-        reference.addValueEventListener(new ValueEventListener() {
+        query = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList").orderByChild("registDate");
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUser.clear();
@@ -174,7 +174,7 @@ public class GroupInformationInner extends AppCompatActivity {
                     GroupUserList userList = snapshot.getValue(GroupUserList.class);
                     mUser.add(userList);
                 }
-                notiAdapter.notifyDataSetChanged();
+                groupInformationAdapter.notifyDataSetChanged();
             }
 
             @Override

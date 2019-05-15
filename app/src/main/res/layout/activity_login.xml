@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:textSize="20sp"
+            android:textColor="@color/exersior_dark"
             android:textStyle="bold"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:id="@+id/btn_login"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/exersior_dark_blue"
             android:layout_marginTop="10dp"
             android:textColor="#fff"/>
 
@@ -61,7 +62,7 @@
             android:layout_gravity="end"
             android:textStyle="bold"
             android:id="@+id/forgot_password"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/exersior_red"/>
 
 
     </LinearLayout>

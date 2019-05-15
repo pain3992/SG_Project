@@ -14,7 +14,7 @@
             android:id="@+id/groupRegister_toolbar"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/blue_grey_900"
+            android:background="@color/exersior_dark"
             android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
             app:popupTheme="@style/MenuStyle">
 
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:textColor="@color/blue_grey_500"
+                android:textColor="@android:color/white"
                 android:text="완료"
                 android:textStyle="bold"/>
 
@@ -57,7 +57,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/blue_grey_800"
+            android:background="@color/exersior_dark_blue"
             tools:context=".GroupRegistActivity">
 
             <android.support.v7.widget.CardView
@@ -179,7 +179,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="모집 인원"
-                    android:textColor="@color/blue_grey_900" />
+                    android:textColor="@color/exersior_dark" />
 
                 <TextView
                     android:id="@+id/group_invite_user_count"
@@ -189,7 +189,7 @@
                     android:text="2명"
                     android:textStyle="bold"
                     android:textSize="14sp"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/exersior_dark"
                     android:layout_marginEnd="10dp"
                     android:layout_alignParentEnd="true" />
 
@@ -230,7 +230,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_tue"
@@ -244,7 +244,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_wed"
@@ -258,7 +258,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_thu"
@@ -272,7 +272,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_fri"
@@ -287,7 +287,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_sat"
@@ -301,7 +301,7 @@
                     android:layout_width="20dp"
                     android:layout_height="10dp"
                     android:text="@string/title_group"
-                    android:textColor="@color/blue_grey_800"/>
+                    android:textColor="@color/exersior_dark_blue"/>
 
                 <CheckBox
                     android:id="@+id/ckbox_sun"

@@ -59,10 +59,35 @@ public class GroupInformationInnerAdapter extends RecyclerView.Adapter<GroupInfo
         Log.d(TAG, "onBindViewHolder : called");
         final GroupUserList groupUserList = groupUserLists.get(i);
 
-        viewHolder.name.setText(groupUserList.getUsername());
-        viewHolder.registDate.setText(groupUserList.getRegistDate());
+        long regTime = groupUserList.getRegistDate();
+        long curTime = System.currentTimeMillis();
+        long diffTime = (curTime - regTime) / 1000;
 
-        viewHolder.level.setText(groupUserList.getLevel());
+        Log.d(TAG, "groupUserList's registDate : " + groupUserList.getRegistDate());
+
+        viewHolder.name.setText(groupUserList.getUsername());
+        if (diffTime < TIME_MAXIMUM.SEC) {
+            viewHolder.registDate.setText("방금 전 가입");
+        } else if ((diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN) {
+            viewHolder.registDate.setText("활동일 : " + diffTime + "분");
+        } else if ((diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR) {
+            viewHolder.registDate.setText("활동일 : " + diffTime + "시간");
+        } else if ((diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY) {
+            viewHolder.registDate.setText("활동일 : " + diffTime + "일");
+        } else if ((diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH) {
+            viewHolder.registDate.setText("활동일 : " + diffTime + "달");
+        } else {
+            viewHolder.registDate.setText("활동일 : " + diffTime + "년");
+        }
+
+
+        String level = groupUserList.getLevel();
+        if (level.equals("admin"))
+            viewHolder.level.setText("그룹장");
+        else if (level.equals("manager"))
+            viewHolder.level.setText("매니저");
+        else
+            viewHolder.level.setText("그룹원");
         if (groupUserList.getImageURL().equals("default")) {
             viewHolder.image.setImageResource(R.mipmap.ic_launcher);
         } else {
@@ -80,5 +105,13 @@ public class GroupInformationInnerAdapter extends RecyclerView.Adapter<GroupInfo
     @Override
     public int getItemCount() {
         return groupUserLists.size();
+    }
+
+    private static class TIME_MAXIMUM {
+        public static final int SEC = 60;
+        public static final int MIN = 60;
+        public static final int HOUR = 24;
+        public static final int DAY = 30;
+        public static final int MONTH = 12;
     }
 }

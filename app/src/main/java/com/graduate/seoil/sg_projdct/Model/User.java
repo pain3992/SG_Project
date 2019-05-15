@@ -1,5 +1,7 @@
 package com.graduate.seoil.sg_projdct.Model;
 
+import java.util.HashMap;
+
 public class User {
 
     private String id;
@@ -9,7 +11,7 @@ public class User {
     private String search;
     private String registDate;
     private String level;
-    private String category;
+    private HashMap<String, Object> groupList;
 
     public User() {
 
@@ -83,11 +85,11 @@ public class User {
         this.level = level;
     }
 
-    public String getCategory() {
-        return category;
+    public HashMap<String, Object> getGroupList() {
+        return groupList;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setGroupList(HashMap<String, Object> groupList) {
+        this.groupList = groupList;
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.PlanInformationActivity;
 import com.graduate.seoil.sg_projdct.Model.Goal;
@@ -34,9 +37,6 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Goal> mGoals;
-
-    private JSONArray jsonArray;
-    private JSONObject jsonObject;
 
     private Fragment HomeFragment;
 
@@ -117,7 +117,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
                     bundle.putInt("processed_time_status", goal.getProcessed_time_status());
                     intent.putExtras(bundle);
 
-                    ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().remove(HomeFragment).commit();
+
 
                     mContext.startActivity(intent);
                 } else {

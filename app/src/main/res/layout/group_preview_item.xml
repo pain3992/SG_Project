@@ -8,11 +8,11 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true">
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -22,15 +22,15 @@
                 android:src="@mipmap/ic_launcher"
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/blue_grey_900"/>
-            
+
             <TextView
                 android:id="@+id/preview_name"
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
-                android:text="Canada"
+                android:text="Canadaaaaaaaa"
                 android:layout_below="@+id/preview_url"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/blue_grey_500"
+                android:textColor="@color/exersior_dark"
                 android:autoSizeTextType="uniform"
                 android:textAlignment="center"
                 android:autoSizeMinTextSize="8sp"
@@ -41,7 +41,5 @@
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
-
 
 </RelativeLayout>

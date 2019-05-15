@@ -239,7 +239,7 @@ public class PlanInformationActivity extends AppCompatActivity {
         if (timerStatus == TimerStatus.STOPPED) {
             setProgressBarValues();
 //            iv_Reset.setVisibility(View.VISIBLE);
-            iv_StartStop.setImageResource(R.drawable.icon_stop);
+            iv_StartStop.setImageResource(R.drawable.pause_circle);
             timerStatus = TimerStatus.STARTED;
             startCountDownTimer();
         } else {
@@ -262,7 +262,7 @@ public class PlanInformationActivity extends AppCompatActivity {
 
 
             iv_Reset.setVisibility(View.GONE);
-            iv_StartStop.setImageResource(R.drawable.icon_start);
+            iv_StartStop.setImageResource(R.drawable.play_circle);
             timerStatus = TimerStatus.STOPPED;
             stopCountDownTimer();
         }
@@ -309,7 +309,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 tv_count_time.setText(hmsTimeFormatter(timeCountInMilliSeconds));
                 setProgressBarValues();
                 iv_Reset.setVisibility(View.GONE);
-                iv_StartStop.setImageResource(R.drawable.icon_start);
+                iv_StartStop.setImageResource(R.drawable.play_circle);
                 timerStatus = TimerStatus.STOPPED;
 
                 HashMap<String, Object> hashMap = new HashMap<>();

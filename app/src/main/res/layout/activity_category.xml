@@ -17,7 +17,7 @@
             android:id="@+id/category_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue_grey_900">
+            android:background="@color/exersior_dark">
 
             <ImageView
                 android:id="@+id/group_backButton"
