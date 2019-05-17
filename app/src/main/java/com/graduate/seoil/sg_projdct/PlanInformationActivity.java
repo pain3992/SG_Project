@@ -1,5 +1,7 @@
 package com.graduate.seoil.sg_projdct;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +15,9 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.github.aakira.expandablelayout.ExpandableLayout;
@@ -42,8 +48,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_1_ID;
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_4_ID;
+
 public class PlanInformationActivity extends AppCompatActivity {
 
+    public static Context mContext;
+    private NotificationManagerCompat notificationManager;
+    private MediaSessionCompat mediaSession;
     Button btn_start, btn_reset;
     CountDownTimer mCoutDown;
     FirebaseUser fuser;
@@ -77,6 +89,9 @@ public class PlanInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_information);
+        mContext = this;
+        notificationManager = NotificationManagerCompat.from(this);
+        mediaSession = new MediaSessionCompat(this,"tag");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent = getIntent();
@@ -192,6 +207,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                             .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     goalUpdate();
+                                    notificationManager.cancel(4);
                                     finish();
                                 }
                             })
@@ -220,6 +236,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 hashMap.put("time_status", 0);
                 reference.updateChildren(hashMap);
                 progressBar.setProgress(100);
+                notificationManager.cancel(4);
                 finish();
             }
         });
@@ -229,14 +246,100 @@ public class PlanInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 reference.removeValue();
+                notificationManager.cancel(4);
                 finish();
             }
         });
 
     }
+    public void sendOnChannel1(){
+        Intent intent = getIntent();
+        String no_title = intent.getStringExtra("goal_title");
+        int no_plantime = intent.getIntExtra("goal_time",0);
+        RemoteViews collapse = new RemoteViews(getPackageName(),R.layout.notification_sub);
+        RemoteViews expand = new RemoteViews(getPackageName(),R.layout.notification_planinformation);
+        Intent clickIntent = new Intent(this,NotificationReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,0,clickIntent,0);
+        expand.setTextViewText(R.id.text,tv_count_time.getText().toString());
+        expand.setTextViewText(R.id.text2,hmsTimeFormatter(no_plantime*60000));
+        expand.setOnClickPendingIntent(R.id.image2,clickPendingIntent);
+//        LayoutInflater inflater = getLayoutInflater();
+//        View myView = inflater.inflate(R.layout.notification_planinformation,null);
+//        t1 =(TextView)myView.findViewById(R.id.text);
+//        t1=tv_count_time;
+//        t2 =(TextView)myView.findViewById(R.id.text2);
+//        t2.setText(no_plantime);
+//        title2=(TextView)myView.findViewById(R.id.title);
+//        title2.setText(no_title);
+//        bt1 = (ImageButton)myView.findViewById(R.id.image1);
+//        bt1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startStop();
+//            }
+//        });
+//        bt2 = (ImageButton)myView.findViewById(R.id.image2);
+//        bt2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startStop();
+//            }
+//        });
+        Intent activityIntent = new Intent(this,PlanInformationActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Intent broadcastIntent = new Intent(this,NotificationReceiver.class);
+//        broadcastIntent.putExtra("toastMessage","message");
+//        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,broadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+//        String time_now=tv_count_time.getText().toString(),time_goal="00:00:00";
 
-    private void startStop() {
+        Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
+
+                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setContentTitle(no_title)
+//                .setContentText(time_now)
+                .setCustomContentView(collapse)
+                .setCustomBigContentView(expand)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.BLUE)
+                .setContentIntent(contentIntent)
+//                .setOnlyAlertOnce(true)
+//                .setAutoCancel(true)
+                .setOngoing(true)
+                .build();
+
+        notificationManager.notify(1,notification);
+    }
+    public void sendOnChannel4_count(){
+        Intent intent = getIntent();
+        int no_plantime = intent.getIntExtra("goal_time",0);
+        RemoteViews collapse = new RemoteViews(getPackageName(),R.layout.notification_sub);
+        RemoteViews expand = new RemoteViews(getPackageName(),R.layout.notification_planinformation);
+        Intent clickIntent = new Intent(this,NotificationReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,0,clickIntent,0);
+        expand.setTextViewText(R.id.text,tv_count_time.getText().toString());
+        expand.setTextViewText(R.id.text2,hmsTimeFormatter(no_plantime*60000));
+        expand.setOnClickPendingIntent(R.id.image2,clickPendingIntent);
+
+        Intent activityIntent = new Intent(this,PlanInformationActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this,CHANNEL_4_ID)
+
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setCustomContentView(collapse)
+                .setCustomBigContentView(expand)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
+                .build();
+
+        notificationManager.notify(4,notification);
+    }
+    public void startStop() {
         if (timerStatus == TimerStatus.STOPPED) {
+            sendOnChannel4_count();
             setProgressBarValues();
 //            iv_Reset.setVisibility(View.VISIBLE);
             iv_StartStop.setImageResource(R.drawable.pause_circle);
@@ -265,6 +368,7 @@ public class PlanInformationActivity extends AppCompatActivity {
             iv_StartStop.setImageResource(R.drawable.play_circle);
             timerStatus = TimerStatus.STOPPED;
             stopCountDownTimer();
+            notificationManager.cancel(4);
         }
     }
 
@@ -302,6 +406,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 tv_count_time.setText(hmsTimeFormatter(progress_time));
                 tv_remain_time.setText(hmsTimeFormatter(mTimeLeft));
                 progressBar.setProgress((int) (millisUntilFinished / 1000));
+                sendOnChannel4_count();
             }
 
             @Override
@@ -318,6 +423,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 hashMap.put("time_status", 0);
                 hashMap.put("grade", grade);
                 reference.updateChildren(hashMap);
+                notificationManager.cancel(4);
                 finish();
 
 
