@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/blue_grey_800">
+    <TextView
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:id="@+id/text_col"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="목표 실행중!"/>
+
+    <TextView
+        android:padding="8dp"
+        android:id="@+id/text_col2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:text="드래그 하세요"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+</LinearLayout>

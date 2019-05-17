@@ -61,8 +61,10 @@
         <activity android:name=".StartActivity" />
         <activity android:name=".WSYActivity" />
         <activity android:name=".YouMinActivity" />
-        <activity android:name=".PlanInformationActivity" />
-        <activity android:name=".TimerActivity" />
+        <activity android:name=".PlanInformationActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".TimerActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".Maincheck" />
 
         <service

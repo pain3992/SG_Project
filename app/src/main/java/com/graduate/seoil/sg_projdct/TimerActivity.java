@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ import static com.graduate.seoil.sg_projdct.App.CHANNEL_2_ID;
 
 public class TimerActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManager;
+    private MediaSessionCompat mediaSession;
     TextView timer ;
     Button start, pause, reset;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
@@ -36,6 +38,7 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         notificationManager = NotificationManagerCompat.from(this);
+        mediaSession = new MediaSessionCompat(this,"tag");
 //        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
 //            NotificationChannel channel = new NotificationChannel("My","My",NotificationManager.IMPORTANCE_DEFAULT);
 //
@@ -63,7 +66,7 @@ public class TimerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                sendOnChannel1();
+//                sendOnChannel1();
                 StartTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
 
@@ -104,42 +107,54 @@ public class TimerActivity extends AppCompatActivity {
         });
 
     }
-    public void sendOnChannel1(){
-        Intent activityIntent = new Intent(this,TimerActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,0);
-
-        Intent broadcastIntent = new Intent(this,NotificationReceiver.class);
-        broadcastIntent.putExtra("toastMessage","message");
-        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,broadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.drawable.day_fri_none);
-
-        Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Title")
-                .setContentText("message")
-                .setLargeIcon(largeIcon)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(getString(R.string.project_id))
-                        .setBigContentTitle("content Title")
-                        .setSummaryText("summaryText"))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setColor(Color.BLUE)
-                .setContentIntent(contentIntent)
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher,"Toast",actionintent)
-                .build();
-
-        notificationManager.notify(1,notification);
-
-    }
+//    public void sendOnChannel1(){
+//        Intent activityIntent = new Intent(this,TimerActivity.class);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Intent broadcastIntent = new Intent(this,NotificationReceiver.class);
+//        broadcastIntent.putExtra("toastMessage","message");
+//        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,broadcastIntent,PendingIntent.FLAG_NO_CREATE);
+//
+//        Bitmap picture = BitmapFactory.decodeResource(getResources(),R.drawable.day_fri_none);
+//
+//        Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
+//                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setContentTitle("Title")
+//                .setContentText("message")
+//                .setLargeIcon(picture)
+//                .setStyle(new NotificationCompat.BigPictureStyle()
+//                        .bigPicture(picture)
+//                        .bigLargeIcon(null))
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                .setColor(Color.BLUE)
+//                .setContentIntent(contentIntent)
+//                .setOnlyAlertOnce(true)
+////                .setAutoCancel(true)
+//                .setOngoing(true)
+//                .addAction(R.mipmap.ic_launcher,"Toast",actionintent)
+//                .build();
+//
+//        notificationManager.notify(1,notification);
+//
+//    }
     public void sendOnChannel2(){
+        Bitmap artwork = BitmapFactory.decodeResource(getResources(),R.drawable.day_fri_none);
+        notificationManager.cancel(1); //채널1 종료
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_2_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Title")
                 .setContentText("message")
+                .setLargeIcon(artwork)
+                .addAction(R.mipmap.ic_launcher_round,"dislike1",null)
+                .addAction(R.mipmap.ic_launcher,"dislike2",null)
+                .addAction(R.mipmap.ic_launcher_round,"dislike3",null)
+                .addAction(R.mipmap.ic_launcher,"dislike4",null)
+                .addAction(R.mipmap.ic_launcher_round,"dislike5",null)
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(1, 2, 3)
+                        .setMediaSession(mediaSession.getSessionToken()))
+                .setSubText("sub text")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build();
