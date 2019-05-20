@@ -1,6 +1,8 @@
 package com.graduate.seoil.sg_projdct.Model;
 
-public class Goal {
+import java.util.Comparator;
+
+public class Goal implements Comparable<Goal> {
     private String title;
 //    private long start_date;
     private String start_date;
@@ -15,7 +17,13 @@ public class Goal {
     private int percent_status;
     private long timestamp;
 
-    public Goal(String title, String start_date, String end_date, String day_cycle, String grade ,int plan_time, int notify_time, int rest_count, int time_status, int processed_time_status, int percent_status, long timestamp) {
+    @Override
+    public int compareTo(Goal o) {
+        return Integer.compare(o.percent_status, this.percent_status);
+    }
+
+
+    public Goal(String title, String start_date, String end_date, String day_cycle, String grade , int plan_time, int notify_time, int rest_count, int time_status, int processed_time_status, int percent_status, long timestamp) {
         this.title = title;
         this.start_date = start_date;
         this.end_date = end_date;

@@ -112,7 +112,6 @@ public class PlanInformationActivity extends AppCompatActivity {
         end_date = intent.getStringExtra("end_date");
         percent = intent.getIntExtra("percent", 0);
         processed_time_status = intent.getIntExtra("processed_time_status", 0);
-
         reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
 
         tv_goaltime = findViewById(R.id.pi_goalTime);
