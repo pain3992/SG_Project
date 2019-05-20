@@ -10,13 +10,14 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/icon"
+        android:label="작심성공"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:hardwareAccelerated="true">
         <activity android:name=".SimplePieActivity"></activity>
         <activity android:name=".NotificationRegister" />
         <activity android:name=".GroupNotificationInnerActivity" />

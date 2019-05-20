@@ -30,10 +30,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.aakira.expandablelayout.ExpandableLayout;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +46,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Model.Goal;
+import com.kinda.alert.KAlertDialog;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -71,8 +76,11 @@ public class PlanInformationActivity extends AppCompatActivity {
     private String start_date, end_date, title, grade;
 
     DatabaseReference reference;
+    AsyncUpdateGoal asyncUpdateGoal;
     // Timer
     private long timeCountInMilliSeconds = 1 * 60000;
+
+    private KAlertDialog pDialog;
 
     private enum TimerStatus {
         STARTED,
@@ -94,6 +102,8 @@ public class PlanInformationActivity extends AppCompatActivity {
         mediaSession = new MediaSessionCompat(this,"tag");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
+        pDialog = new KAlertDialog(this, KAlertDialog.SUCCESS_TYPE);
+
         Intent intent = getIntent();
         title = intent.getStringExtra("goal_title");
         plan_time = intent.getIntExtra("goal_time",0);
@@ -102,7 +112,6 @@ public class PlanInformationActivity extends AppCompatActivity {
         end_date = intent.getStringExtra("end_date");
         percent = intent.getIntExtra("percent", 0);
         processed_time_status = intent.getIntExtra("processed_time_status", 0);
-
         reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
 
         tv_goaltime = findViewById(R.id.pi_goalTime);
@@ -149,7 +158,6 @@ public class PlanInformationActivity extends AppCompatActivity {
                 if (percent == 100) {
                     iv_StartStop.setVisibility(View.GONE);
                     tv_early_accomplish.setVisibility(View.GONE);
-
                 }
 
                 long progress_time = 0;
@@ -229,7 +237,12 @@ public class PlanInformationActivity extends AppCompatActivity {
         // 조기 달성
         tv_early_accomplish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { //
+            public void onClick(View v) {
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.setTitleText("Loading");
+                pDialog.setCancelable(false);
+                pDialog.show();
+
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("percent_status", 100);
                 hashMap.put("processed_time_status", 0);
@@ -373,7 +386,6 @@ public class PlanInformationActivity extends AppCompatActivity {
     }
 
     private void setConcentrate(int cnt) {
-        System.out.println("cnt : " + cnt);
         switch (cnt) {
             case -1:
             case 0:
@@ -409,8 +421,20 @@ public class PlanInformationActivity extends AppCompatActivity {
                 sendOnChannel4_count();
             }
 
+
+
             @Override
             public void onFinish() {
+                pDialog.setTitleText("Good job!")
+                        .setContentText("You clicked the button!")
+                        .setConfirmClickListener(new KAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(KAlertDialog kAlertDialog) {
+                                pDialog.dismissWithAnimation();
+                                finish();
+                            }
+                        }).show();
+
                 tv_count_time.setText(hmsTimeFormatter(timeCountInMilliSeconds));
                 setProgressBarValues();
                 iv_Reset.setVisibility(View.GONE);
@@ -424,12 +448,66 @@ public class PlanInformationActivity extends AppCompatActivity {
                 hashMap.put("grade", grade);
                 reference.updateChildren(hashMap);
                 notificationManager.cancel(4);
-                finish();
-
-
+//                finish();
             }
         }.start();
         countDownTimer.start();
+    }
+
+    private class AsyncUpdateGoal extends AsyncTask<Void, Void, Void> {
+        private WeakReference<PlanInformationActivity> activityReference;
+
+        AsyncUpdateGoal(PlanInformationActivity activity) {
+            activityReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            PlanInformationActivity activity = activityReference.get();
+            if (activity == null | activity.isFinishing())
+                return;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+            PlanInformationActivity activity = activityReference.get();
+            if (activity == null | activity.isFinishing())
+                return;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            PlanInformationActivity activity = activityReference.get();
+            if (activity == null | activity.isFinishing())
+                return;
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        try {
+            if (asyncUpdateGoal.getStatus() == AsyncTask.Status.RUNNING) {
+                asyncUpdateGoal.cancel(true);
+            }
+        } catch (Exception e) {
+            Log.d("onDestory", e.toString());
+        }
     }
 
     private void stopCountDownTimer() {

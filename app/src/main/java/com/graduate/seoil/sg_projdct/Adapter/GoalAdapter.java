@@ -104,25 +104,24 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getTime.equals(goal.getStart_date())) {
-                    Intent intent = new Intent(mContext, PlanInformationActivity.class);
-                    Bundle bundle = new Bundle();
+                Intent intent = new Intent(mContext, PlanInformationActivity.class);
+                Bundle bundle = new Bundle();
 
-                    bundle.putString("goal_title", goal.getTitle());
-                    bundle.putInt("goal_time", goal.getPlan_time());
-                    bundle.putString("start_date", goal.getStart_date());
-                    bundle.putString("end_date",goal.getEnd_date());
-                    bundle.putInt("time_status",goal.getTime_status());
-                    bundle.putInt("percent", goal.getPercent_status());
-                    bundle.putInt("processed_time_status", goal.getProcessed_time_status());
-                    intent.putExtras(bundle);
+                bundle.putString("goal_title", goal.getTitle());
+                bundle.putInt("goal_time", goal.getPlan_time());
+                bundle.putString("start_date", goal.getStart_date());
+                bundle.putString("end_date",goal.getEnd_date());
+                bundle.putInt("time_status",goal.getTime_status());
+                bundle.putInt("percent", goal.getPercent_status());
+                bundle.putInt("processed_time_status", goal.getProcessed_time_status());
+                intent.putExtras(bundle);
 
+                mContext.startActivity(intent);
 
-
-                    mContext.startActivity(intent);
-                } else {
-                    Toast.makeText(mContext, "오늘 목표만 측정 가능합니다.", Toast.LENGTH_SHORT).show();
-                }
+//                if (getTime.equals(goal.getStart_date())) {
+//                } else {
+//                    Toast.makeText(mContext, "오늘 목표만 측정 가능합니다.", Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });

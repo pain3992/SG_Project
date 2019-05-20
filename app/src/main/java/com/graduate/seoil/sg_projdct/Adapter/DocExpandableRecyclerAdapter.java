@@ -50,7 +50,6 @@ public class DocExpandableRecyclerAdapter extends ExpandableRecyclerViewAdapter<
         holder.listChild.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("titlechild --> " + childItem.getTitle());
                 Intent intent = new Intent();
                 intent.putExtra(CategoryActivity.RESULT_DATA, childItem.getTitle());
                 mActivity.setResult(Activity.RESULT_OK, intent);
@@ -68,7 +67,6 @@ public class DocExpandableRecyclerAdapter extends ExpandableRecyclerViewAdapter<
             holder.listGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("group.toString()--> " + group.toString());
                 }
             });
         }

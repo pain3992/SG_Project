@@ -44,14 +44,12 @@ public class CategoryAdapter extends ExpandableRecyclerViewAdapter<CategoryAdapt
 
     @Override
     public void onBindChildViewHolder(GenreChildViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
-        System.out.println("onBindChildViewHolder --> " + group);
         final CategoryChild categoryChild = ((Category) group).getItems().get(childIndex);
         holder.setArtistName(categoryChild.getName());
     }
 
     @Override
     public void onBindGroupViewHolder(CategoryViewHolder holder, int flatPosition, ExpandableGroup group) {
-        System.out.println("onBindGroupViewHOlder --> " + group);
         holder.setGenreTitle(group);
     }
 

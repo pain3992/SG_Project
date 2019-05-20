@@ -21,11 +21,9 @@ public class GStartActivity extends AppCompatActivity {
         super.onStart();
 //        FirebaseAuth.getInstance().signOut();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("fuser : " + firebaseUser);
 
         // Check if user is null
         if (firebaseUser != null) {
-            System.out.println("==========================");
             Intent intent = new Intent(GStartActivity.this, IndexActivity.class);
             startActivity(intent);
             finish();
