@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import durdinapps.rxfirebase2.RxFirebaseQuery;
 
 public class IndexActivity extends AppCompatActivity {
 
@@ -55,6 +57,8 @@ public class IndexActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    RxFirebaseDatabase rxFirebaseDatabase;
+    RxFirebaseQuery rxFirebaseQuery;
 
     public static String str_userName;
     public static String str_userImageURL;
@@ -141,8 +145,6 @@ public class IndexActivity extends AppCompatActivity {
                 SettingFragment = null;
                 HomeFragment = null;
 
-                System.out.println("여기 거침?");
-
                 BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
                 if (result.equals("GroupListFragment")) {
                     navigation.setSelectedItemId(R.id.navigation_group);
@@ -212,24 +214,24 @@ public class IndexActivity extends AppCompatActivity {
         }
     };
 
-    private void status(String status) {
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-
-        reference.updateChildren(hashMap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        status("online");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        status("offline");
-    }
+//    private void status(String status) {
+//        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+//
+//        HashMap<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("status", status);
+//
+//        reference.updateChildren(hashMap);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        status("online");
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        status("offline");
+//    }
 }

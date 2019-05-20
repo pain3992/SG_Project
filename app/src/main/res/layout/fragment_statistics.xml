@@ -29,6 +29,18 @@
                 android:textStyle="bold"
                 android:text="주간 통계"/>
 
+            <TextView
+                android:id="@+id/fragment_statistics_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="월간 통계"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat" />
 
         </android.support.v7.widget.Toolbar>
 

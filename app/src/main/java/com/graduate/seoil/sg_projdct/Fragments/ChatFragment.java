@@ -71,8 +71,6 @@ public class ChatFragment extends Fragment {
             str_userImageURL = getArguments().getString("userImageURL");
         }
 
-        System.out.println("str_userImageURL --> " + str_userImageURL);
-
         tv_userName.setText(str_userName);
         if (str_userImageURL == null) {
             civ_userImageURL.setImageResource(R.mipmap.ic_launcher);
@@ -132,7 +130,6 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     for (GroupUserList userlist : mUserList) {
-                        System.out.println("user.getID, userList.getID --> " + user.getId() + ", " + userlist.getId());
                         if (user.getId().equals(userlist.getId())) {
                             mUsers.add(user);
                         }

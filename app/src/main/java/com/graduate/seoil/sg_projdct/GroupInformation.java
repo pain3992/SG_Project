@@ -109,8 +109,6 @@ public class    GroupInformation extends AppCompatActivity {
                     userList_under.put("registDate", System.currentTimeMillis());
                     userList.put(fuser.getUid(), userList_under);
 
-                    System.out.println("userList : " + userList);
-
                     reference.updateChildren(userList);
 
                     reference = FirebaseDatabase.getInstance().getReference("Group").child(str_title).child("current_user");

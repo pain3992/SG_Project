@@ -1,6 +1,7 @@
 package com.graduate.seoil.sg_projdct.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,11 +42,13 @@ import com.google.firebase.database.snapshot.Index;
 import com.graduate.seoil.sg_projdct.Adapter.GoalAdapter;
 import com.graduate.seoil.sg_projdct.IndexActivity;
 import com.graduate.seoil.sg_projdct.Model.EventDay;
+import com.graduate.seoil.sg_projdct.PlanInformationActivity;
 import com.graduate.seoil.sg_projdct.TimerActivity;
 import com.graduate.seoil.sg_projdct.GoalMaking;
 import com.graduate.seoil.sg_projdct.Model.Goal;
 import com.graduate.seoil.sg_projdct.R;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,6 +67,7 @@ import in.co.ashclan.ashclanzcalendar.data.Event;
 import in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar;
 
 import com.google.android.gms.tasks.Tasks;
+import io.reactivex.Single;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -81,17 +85,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String goalname, goaltext, str_year, str_month, str_day;
     long timestamp_start, timestamp_end, itemCnt;
 
+    private int eventCnt;
     private TextView hint, dayHint;
 
     ProgressDialog dialog;
-    TaskCompletionSource<List<Goal>> tcs;
+
+    FirebaseUser fuser;
 
     DatabaseReference reference;
     public Query query;
     public ValueEventListener listener;
 
+    Semaphore semaphore;
 
-    public in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
+
+    public static in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
 
     @Nullable
     @Override
@@ -102,7 +110,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             str_userName = getArguments().getString("str_Username");
             str_userImageURL = getArguments().getString("str_userImageURL");
         }
-
+        semaphore = new Semaphore(0);
         //로딩중 다이아로그 띄움
         dialog = new ProgressDialog(getContext());
 
@@ -110,6 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         dialog.setMessage("잠시만 기다려주세요");
         dialog.show();
 
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
         collapsibleCalendar = view.findViewById(R.id.collapseCalendar);
         hint = view.findViewById(R.id.textHint);
         dayHint = view.findViewById(R.id.textHintTwo);
@@ -178,7 +187,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         itemCnt = dataSnapshot.getChildrenCount();
-                        System.out.println("itemCnt : " + itemCnt);
                         listItems.clear();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Goal goal = snapshot.getValue(Goal.class);
@@ -212,6 +220,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onMonthChange() {
                 getIntervalTimeStamp(collapsibleCalendar.getYear(), collapsibleCalendar.getMonth() + 1);
+//                new AsyncEventTag(timestamp_start, timestamp_end).execute();
                 fetchGoalList(timestamp_start, timestamp_end);
                 recyclerView.setVisibility(View.INVISIBLE);
                 hint.setVisibility(View.VISIBLE);
@@ -230,45 +239,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         System.out.println("onResume");
         getIntervalTimeStamp(collapsibleCalendar.getYear(), collapsibleCalendar.getMonth() + 1);
+        System.out.println("onResume's fetchGoalList");
         fetchGoalList(timestamp_start, timestamp_end);
+//        new AsyncEventTag(timestamp_start, timestamp_end).executeOnExecutor(Executors.newSingleThreadExecutor());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        query.removeEventListener(listener);
+        reference.removeEventListener(listener);
         System.out.println("onPaused");
     }
 
     private void fetchGoalList(final long start_timestamp, final long ended_timestamp) {
-        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("start_timestamp : " + start_timestamp + ", ended_timestamp : " + ended_timestamp);
-        query = FirebaseDatabase.getInstance().getReference("Goal")
-                .child(fuser.getUid())
-                .orderByChild("timestamp");
+        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
 
-//        reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-        listener = query.addValueEventListener(new ValueEventListener() {
+        listener = reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    final String date = snapshot.getKey();
-
-                    final DatabaseReference goals = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(date);
-                    Query goal_query = goals.orderByChild("timestamp").startAt(start_timestamp).endAt(ended_timestamp);
-
+                    DatabaseReference goals = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(snapshot.getKey());
+                    Query goal_query = goals.orderByChild("timestamp").startAt(timestamp_start).endAt(timestamp_end);
                     goal_query.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String child_date = dataSnapshot.getKey();
+
                             for (DataSnapshot child_snapshot : dataSnapshot.getChildren()) {
                                 int index_one = child_date.indexOf("-", 1);
                                 int index_two = child_date.indexOf("-", index_one + 1);
                                 final int year = Integer.parseInt(child_date.substring(0, index_one));
                                 final int month = Integer.parseInt(child_date.substring(index_one + 1, index_two));
                                 final int day = Integer.parseInt(child_date.substring(index_two + 1));
-                                collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#1039D7"));
+                                String yyyyMMdd = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+                                new AsyncEventTag().execute(yyyyMMdd);
+//                                getActivity().runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#D81B60"));
+//                                    }
+//                                });
 
                                 if (child_date.equals(str_year + "-" + str_month + "-" + str_day)) {
                                     Goal goal = child_snapshot.getValue(Goal.class);
@@ -278,149 +289,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             adapter = new GoalAdapter(getContext(), listItems);
                             recyclerView.setAdapter(adapter);
                             dialog.dismiss();
-
                         }
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
                 }
                 adapter.notifyDataSetChanged();
                 if (dialog.isShowing())
                     dialog.dismiss();
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
-    //    private class addEventTag extends AsyncTask<Void, String, List<String>> {
-//        @Override
-//        protected List<String> doInBackground(Void... voids) {
-//            FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-//            reference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    listItems.clear();
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        final String date = snapshot.getKey();
-//                        int index_one = date.indexOf("-", 1);
-//                        int index_two = date.indexOf("-", index_one + 1);
-//                        final int year = Integer.parseInt(date.substring(0, index_one));
-//                        final int month = Integer.parseInt(date.substring(index_one + 1, index_two));
-//                        final int day = Integer.parseInt(date.substring(index_two + 1));
-//
-//                        onProgressUpdate(date);
-//
-//                        if (date.equals(str_year + "-" + str_month + "-" + str_day)) {
-//                            for (DataSnapshot postshot : snapshot.getChildren()) {
-//                                Goal goal = postshot.getValue(Goal.class);
-//                                listItems.add(goal);
-//                            }
-//                        }
-//                    }
-//                    adapter = new GoalAdapter(getContext(), listItems);
-//                    recyclerView.setAdapter(adapter);
-//                    dialog.dismiss();
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(String... dates) {
-////            System.out.println("dates :: " + Arrays.toString(dates));
-//            int index_one = Arrays.toString(dates).indexOf("-", 1);
-//            int index_two = Arrays.toString(dates).indexOf("-", index_one + 1);
-//            int index_three = Arrays.toString(dates).indexOf("]", 1);
-////            System.out.println("index_one : " + index_one + ", index_two : " + index_two);
-//            int year = Integer.parseInt(Arrays.toString(dates).substring(1, index_one));
-//            int month = Integer.parseInt(Arrays.toString(dates).substring(index_one+ 1, index_two));
-//            int day = Integer.parseInt(Arrays.toString(dates).substring(index_two + 1, index_three));
-////            System.out.println("year : " + year + ", month : " + month + ", day : " + day);
-//            collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<String> dates) {
-////            for (int i = 0; i < eventDayList.size(); i++) {
-////                int index_one = eventDayList.get(i).indexOf("-", 1);
-////                int index_two = eventDayList.get(i).indexOf("-", index_one + 1);
-////                int year = Integer.parseInt(eventDayList.get(i).substring(0, index_one));
-////                int month = Integer.parseInt(eventDayList.get(i).substring(index_one+ 1, index_two));
-////                int day = Integer.parseInt(eventDayList.get(i).substring(index_two + 1));
-////                collapsibleCalendar.addEventTag(year, month - 1, day, Color.parseColor("#386385"));
-////
-////            }
-//
-//        }
-//    }
-
-    public String[] weekCalendar(String yyyymmdd) throws Exception{
-
-        Calendar cal = Calendar.getInstance();
-        int toYear = 0;
-        int toMonth = 0;
-        int toDay = 0;
-        if(yyyymmdd == null || yyyymmdd.equals("")){   //파라메타값이 없을경우 오늘날짜
-            toYear = cal.get(cal.YEAR);
-            toMonth = cal.get(cal.MONTH)+1;
-            toDay = cal.get(cal.DAY_OF_MONTH);
-
-            int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
-
-            if(yoil != 1){   //해당요일이 일요일이 아닌경우
-                yoil = yoil-2;
-            }else{           //해당요일이 일요일인경우
-                yoil = 7;
-            }
-            cal.set(toYear, toMonth-1, toDay-yoil);  //해당주월요일로 세팅
-        }else{
-            int yy =Integer.parseInt(yyyymmdd.substring(0, 4));
-            int mm =Integer.parseInt(yyyymmdd.substring(4, 6))-1;
-            int dd =Integer.parseInt(yyyymmdd.substring(6, 8));
-            cal.set(yy, mm,dd);
-        }
-        String[] arrYMD = new String[7];
-
-        int inYear = cal.get(cal.YEAR);
-        int inMonth = cal.get(cal.MONTH);
-        int inDay = cal.get(cal.DAY_OF_MONTH);
-        int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
-        if(yoil != 1){   //해당요일이 일요일이 아닌경우
-            yoil = yoil-2;
-        }else{           //해당요일이 일요일인경우
-            yoil = 7;
-        }
-        inDay = inDay-yoil;
-        for(int i = 0; i < 7;i++){
-            cal.set(inYear, inMonth, inDay+i);  //
-            String y = Integer.toString(cal.get(cal.YEAR));
-            String m = Integer.toString(cal.get(cal.MONTH)+1);
-            String d = Integer.toString(cal.get(cal.DAY_OF_MONTH));
-            if(m.length() == 1) m = "0" + m;
-            if(d.length() == 1) d = "0" + d;
-
-            arrYMD[i] = y+m +d;
-
+    private class AsyncEventTag extends AsyncTask<String, Void, EventDay> {
+        @Override
+        protected EventDay doInBackground(String... strings) {
+            String yyyyMMdd = strings[0];
+            int year = Integer.parseInt(yyyyMMdd.substring(0, 4));
+            int month = Integer.parseInt(yyyyMMdd.substring(4, 5));
+            int day = Integer.parseInt(yyyyMMdd.substring(5));
+            return new EventDay(year, month, day);
         }
 
-        return arrYMD;
+        @Override
+        protected void onPostExecute(final EventDay eventDay) {
+            System.out.println("eventDay : " + eventDay.getYear() + "," + eventDay.getMonth() + "," + eventDay.getDay());
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    collapsibleCalendar.addEventTag(eventDay.getYear(), eventDay.getMonth() - 1, eventDay.getDay(), Color.parseColor("#D81B60"));
+                }
+            });
+
+
+        }
     }
-
-
 
     public void onClick(View v) {
         int id = v.getId();
@@ -442,40 +347,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void getIntervalTimeStamp() {
-        DecimalFormat df = new DecimalFormat("00");
-        Calendar currentCalendar = Calendar.getInstance();
-        String year = df.format(currentCalendar.get(Calendar.YEAR));
-        String month  = df.format(currentCalendar.get(Calendar.MONTH) + 1);
-        String lastDay =  df.format(currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH ));
-
-        String str_date = month + "-01-" + year;
-        String end_date = month + "-" + lastDay + "-" + year;
-
-        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-        Date start_date = null;
-        Date ended_date = null;
-        try {
-            start_date = formatter.parse(str_date);
-            ended_date = formatter.parse(end_date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long output_start = start_date.getTime() / 1000L;
-        long output_end = ended_date.getTime() / 1000L;
-        String str_start = Long.toString(output_start);
-        String str_end = Long.toString(output_end);
-
-        timestamp_start = Long.parseLong(str_start) * 1000;
-        timestamp_end = Long.parseLong(str_end) * 1000;
-    }
-
     private void getIntervalTimeStamp(int y, int m) {
         DecimalFormat df = new DecimalFormat("00");
         Calendar currentCalendar = Calendar.getInstance();
-        currentCalendar.set(y, m, 1);
+        currentCalendar.set(y, m - 1, 1);
 
-        String lastDay =  df.format(currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH ));
+        String lastDay =  df.format(currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         String str_date = m + "-01-" + y;
         String end_date = m + "-" + lastDay + "-" + y;
@@ -494,12 +371,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         String str_start = Long.toString(output_start);
         String str_end = Long.toString(output_end);
 
+
         timestamp_start = Long.parseLong(str_start) * 1000;
         timestamp_end = Long.parseLong(str_end) * 1000;
     }
 
     public void anim() {
-
         if (isFabOpen) {
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);

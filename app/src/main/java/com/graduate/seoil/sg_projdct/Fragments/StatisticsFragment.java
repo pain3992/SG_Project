@@ -56,16 +56,17 @@ import java.util.TimeZone;
  * Created by baejanghun on 28/03/2019.
  */
 public class StatisticsFragment extends Fragment {
-    TextView tv_week, average_success, total_timeStatus;
+    TextView tv_week, average_success, total_timeStatus, month_change, title;
     ImageView prev_week, next_week;
     String nowTime, getTime, str_date, end_date, str_start, str_end;
     String[] this_week;
+    String[] this_month;
     int from_idx_first, from_idx_second, from_year, from_month, from_day;
     int to_idx_first, to_idx_second, to_year, to_month, to_day;
     long output_start, output_end, timestamp_start, timestamp_end;
-    Date start_date, ended_date;
 
-    ProgressDialog dialog;
+    Boolean is_week = true;
+    Date start_date, ended_date;
 
     List<Goal> mGoals;
     PieChart pieChart;
@@ -95,6 +96,7 @@ public class StatisticsFragment extends Fragment {
 
         asyncFetchGoal = new AsyncFetchGoal();
         tv_week = view.findViewById(R.id.statistics_week);
+        title = view.findViewById(R.id.fragment_statistics_title);
         prev_week = view.findViewById(R.id.prev_week);
         next_week = view.findViewById(R.id.next_week);
         average_success = view.findViewById(R.id.tv_average_success_val);
@@ -102,6 +104,7 @@ public class StatisticsFragment extends Fragment {
 
         pieChart = view.findViewById(R.id.pieChart);
         pieChart2 = view.findViewById(R.id.pieChart2);
+        month_change = view.findViewById(R.id.fragment_statistics_month);
 
         pieChart.setUsePercentValues(true);  // true : 퍼센테이지로 보임
         pieChart.getDescription().setEnabled(false);
@@ -123,9 +126,24 @@ public class StatisticsFragment extends Fragment {
         mGoals = new ArrayList<>();
 
         this_week = new String[7];
-        try { this_week = weekCalendar(getTime); } catch (Exception e) { e.printStackTrace(); }
-        tv_week.setText(this_week[0] + " ~ " + this_week[6]);
-        setTimeStamp(this_week[0], this_week[6]);
+        this_month = new String[2];
+        try {
+            System.out.println("getTime : " + getTime);
+            this_week = weekCalendar(getTime);
+            this_month = monthCalendar(getTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (is_week) {
+            tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+            setTimeStamp(this_week[0], this_week[6]);
+        } else {
+            tv_week.setText(this_month[0] + " ~ " + this_month[1]);
+            setTimeStamp(this_month[0], this_month[1]);
+        }
+
+
         fetchStatistics(timestamp_start, timestamp_end);
 
         // 저번 주
@@ -136,15 +154,35 @@ public class StatisticsFragment extends Fragment {
                 int year = Integer.parseInt(getTime.substring(0, 4));
                 int month  = Integer.parseInt(getTime.substring(4, 6));
                 int day = Integer.parseInt(getTime.substring(6, 8));  // 현재 시간을 일주일 전으로.
-                calendar.set(year, month - 1, day);
 
-                calendar.add(Calendar.DAY_OF_MONTH, - 7);
+                if (is_week) {
+                    calendar.set(year, month - 1, day);
+                    calendar.add(Calendar.DAY_OF_MONTH, - 7);
+                } else {
+                    calendar.set(year, month - 2, 1);
+                }
                 Date date = calendar.getTime();
                 getTime = sdf.format(date);
 
-                try { this_week = weekCalendar(getTime); } catch (Exception e) { e.printStackTrace(); }
-                tv_week.setText(this_week[0] + " ~ " + this_week[6]);
-                setTimeStamp(this_week[0], this_week[6]);
+                if (is_week) {
+                    try {
+                        this_week = weekCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+                    setTimeStamp(this_week[0], this_week[6]);
+
+                } else {
+                    try {
+                        this_month = monthCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tv_week.setText(this_month[0] + " ~ " + this_month[1]);
+                    setTimeStamp(this_month[0], this_month[1]);
+
+                }
 
                 fetchStatistics(timestamp_start, timestamp_end);
             }
@@ -154,22 +192,41 @@ public class StatisticsFragment extends Fragment {
         next_week.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getTime.equals(nowTime))
-                    return;
+//                if (getTime.equals(nowTime))
+//                    return;
                 java.util.Calendar calendar = java.util.Calendar.getInstance();
                 int year = Integer.parseInt(getTime.substring(0, 4));
                 int month  = Integer.parseInt(getTime.substring(4, 6));
                 int day = Integer.parseInt(getTime.substring(6, 8));  // 현재 시간을 일주일 전으로.
-                calendar.set(year, month - 1, day);
 
-                calendar.add(Calendar.DAY_OF_MONTH, + 7);
+                if (is_week) {
+                    calendar.set(year, month - 1, day);
+                    calendar.add(Calendar.DAY_OF_MONTH, + 7);
+                } else {
+                    calendar.set(year, month, 1);
+                }
+
                 Date date = calendar.getTime();
                 getTime = sdf.format(date);
 
-                try { this_week = weekCalendar(getTime); } catch (Exception e) { e.printStackTrace(); }
-                tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+                if (is_week) {
+                    try {
+                        this_week = weekCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+                    setTimeStamp(this_week[0], this_week[6]);
+                } else {
+                    try {
+                        this_month= monthCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tv_week.setText(this_month[0] + " ~ " + this_month[1]);
+                    setTimeStamp(this_month[0], this_month[1]);
+                }
 
-                setTimeStamp(this_week[0], this_week[6]);
                 fetchStatistics(timestamp_start, timestamp_end);
             }
         });
@@ -179,11 +236,9 @@ public class StatisticsFragment extends Fragment {
 
     private void fetchStatistics(final long timestamp_start, final long timestamp_end) {
         final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        Query query = FirebaseDatabase.getInstance().getReference("Goal")
-                .child(fuser.getUid())
-                .orderByChild("timestamp");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
 
-        query.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mGoals.clear();
@@ -195,6 +250,7 @@ public class StatisticsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot goalSnapshot) {
                             for (DataSnapshot goalShot : goalSnapshot.getChildren()) {
+                                System.out.println("goalShot : " + goalShot.getValue());
                                 Goal goal = goalShot.getValue(Goal.class);
                                 mGoals.add(goal);
                             }
@@ -213,6 +269,42 @@ public class StatisticsFragment extends Fragment {
 
             }
         });
+
+        month_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (is_week) {
+                    title.setText("월간 통계");
+                    month_change.setText("주간 통계");
+
+                    try {
+                        this_week = weekCalendar(getTime);
+                        this_month = monthCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tv_week.setText(this_month[0] + " ~ " + this_month[1]);
+                    setTimeStamp(this_month[0], this_month[1]);
+
+                    is_week = false;
+                } else {
+                    title.setText("주간 통계");
+                    month_change.setText("월간 통계");
+
+                    try {
+                        this_week = weekCalendar(getTime);
+                        this_month = monthCalendar(getTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    tv_week.setText(this_week[0] + " ~ " + this_week[6]);
+                    setTimeStamp(this_week[0], this_week[6]);
+                    is_week = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -228,11 +320,6 @@ public class StatisticsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            dialog = new ProgressDialog(getContext());
-//
-//            dialog.setTitle("데이터 로딩중");
-//            dialog.setMessage("잠시만 기다려주세요");
-//            dialog.show();
         }
 
         @Override
@@ -259,19 +346,6 @@ public class StatisticsFragment extends Fragment {
                     yValues.add(new PieEntry((float)mGoals.get(i).getTime_status() / 60000, goals.get(i).getTitle()));
                     xValues.add(new PieEntry((float)mGoals.get(i).getPercent_status() * 100, goals.get(i).getTitle()));
                 }
-
-//                for (int i = 0; i < goals.size() - 1; i++) {
-//                    int tmp = i;
-//                    for (int j = i + 1; j < goals.size(); j++) {
-//                        if (goals.get(tmp).getPlan_time() - goals.get(tmp).getTime_status() / 60000 >= goals.get(j).getPlan_time() - goals.get(j).getTime_status() / 60000) {
-//                            tmp = j;
-//                        }
-//                        if (tmp != i) {
-//
-//                        }
-//
-//                    }
-//                }
 
                 pieChart.animateY(1000, Easing.EaseInOutCubic);
                 pieChart2.animateY(1000, Easing.EaseInOutCubic);
@@ -336,18 +410,6 @@ public class StatisticsFragment extends Fragment {
         }
     }
 
-    private SpannableString generateCenterSpannableText() {
-
-        SpannableString s = new SpannableString("MPAndroidChart\ndeveloped by Philipp Jahoda");
-        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
-        s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
-        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
-        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
-        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
-        return s;
-    }
-
     private void setTimeStamp(String start_week, String end_week) {
         from_idx_first = start_week.indexOf("-", 1);
         from_idx_second = start_week.indexOf("-", from_idx_first + 1);
@@ -381,6 +443,59 @@ public class StatisticsFragment extends Fragment {
     }
 
     public String[] weekCalendar(String yyyymmdd) throws Exception {
+        // 20190519
+        Calendar cal = Calendar.getInstance();
+        int toYear = 0;
+        int toMonth = 0;
+        int toDay = 0;
+
+        if(yyyymmdd == null || yyyymmdd.equals("")){   //파라메타값이 없을경우 오늘날짜
+            toYear = cal.get(cal.YEAR);
+            toMonth = cal.get(cal.MONTH)+1;
+            toDay = cal.get(cal.DAY_OF_MONTH);
+
+            int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
+
+            if(yoil != 1){   //해당요일이 일요일이 아닌경우
+                yoil = yoil-2;
+            }else{           //해당요일이 일요일인경우
+                yoil = 7;
+            }
+            cal.set(toYear, toMonth-1, toDay-yoil);  //해당주월요일로 세팅
+        }else{
+            int yy = Integer.parseInt(yyyymmdd.substring(0, 4));
+            int mm = Integer.parseInt(yyyymmdd.substring(4, 6)) - 1;
+            int dd = Integer.parseInt(yyyymmdd.substring(6, 8));
+            cal.set(yy, mm, dd);
+        }
+        String[] arrYMD = new String[7];
+
+        int inYear = cal.get(cal.YEAR);
+        int inMonth = cal.get(cal.MONTH);
+        int inDay = cal.get(cal.DAY_OF_MONTH);
+        int yoil = cal.get(cal.DAY_OF_WEEK); //요일나오게하기(숫자로)
+        if(yoil != 1){   //해당요일이 일요일이 아닌경우
+            yoil = yoil-2;
+        }else{           //해당요일이 일요일인경우
+            yoil = 7;
+        }
+        System.out.println("inYear : " +  inYear + ", inMonth : " + inMonth + ", inDay : " + inDay + ", yoil : " + yoil);
+        inDay = inDay - (yoil);
+        for(int i = 0; i < 7; i++){
+            cal.set(inYear, inMonth, inDay+i);  //
+            String y = Integer.toString(cal.get(cal.YEAR));
+            String m = Integer.toString(cal.get(cal.MONTH)+1);
+            String d = Integer.toString(cal.get(cal.DAY_OF_MONTH));
+            if(m.length() == 1) m = "0" + m;
+            if(d.length() == 1) d = "0" + d;
+
+            arrYMD[i] = y + "-" + m + "-" + d;
+        }
+
+        return arrYMD;
+    }
+
+    public String[] monthCalendar(String yyyymmdd) throws Exception {
 
         Calendar cal = Calendar.getInstance();
         int toYear = 0;
@@ -406,7 +521,7 @@ public class StatisticsFragment extends Fragment {
             int dd =Integer.parseInt(yyyymmdd.substring(6, 8));
             cal.set(yy, mm,dd);
         }
-        String[] arrYMD = new String[7];
+        String[] arrYMD = new String[2];
 
         int inYear = cal.get(cal.YEAR);
         int inMonth = cal.get(cal.MONTH);
@@ -417,16 +532,22 @@ public class StatisticsFragment extends Fragment {
         }else{           //해당요일이 일요일인경우
             yoil = 7;
         }
-        inDay = inDay - (yoil + 1);
-        for(int i = 0; i < 7;i++){
-            cal.set(inYear, inMonth, inDay+i);  //
+
+        for(int i = 0; i < 2; i++){
+            if (i == 0)
+                cal.set(inYear, inMonth, inDay);
+            else
+                cal.set(inYear, inMonth, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
             String y = Integer.toString(cal.get(cal.YEAR));
             String m = Integer.toString(cal.get(cal.MONTH)+1);
             String d = Integer.toString(cal.get(cal.DAY_OF_MONTH));
             if(m.length() == 1) m = "0" + m;
             if(d.length() == 1) d = "0" + d;
 
-            arrYMD[i] = y + "-" + m + "-" + d;
+            if ( i == 0 )
+                arrYMD[i] = y + "-" + m + "-" + "01";
+            else
+                arrYMD[1] = y + "-" + m + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         }
 
         return arrYMD;

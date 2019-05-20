@@ -2,6 +2,7 @@ package com.graduate.seoil.sg_projdct.Model;
 
 public class Goal {
     private String title;
+//    private long start_date;
     private String start_date;
     private String end_date;
     private String day_cycle;
@@ -39,6 +40,14 @@ public class Goal {
     public void setTitle(String title) {
         this.title = title;
     }
+
+//    public long getStart_date() {
+//        return start_date;
+//    }
+//
+//    public void setStart_date(long start_date) {
+//        this.start_date = start_date;
+//    }
 
     public String getStart_date() {
         return start_date;

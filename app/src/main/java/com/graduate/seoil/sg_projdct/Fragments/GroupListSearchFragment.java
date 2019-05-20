@@ -79,7 +79,6 @@ public class GroupListSearchFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println("초기 값 : " + snapshot.getKey());
                     groupList.add(snapshot.getKey());
                 }
             }

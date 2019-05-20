@@ -191,6 +191,7 @@ public class AccountSetting extends AppCompatActivity {
     }
 
     private void uploadImage() {
+
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Uploading");
         pd.show();
