@@ -111,6 +111,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
+//    private void lastoheed(final String userid,)
     //check for last message
     private void lastMessage(final String userid, final TextView last_msg) {
         theLastMessage = "default";
