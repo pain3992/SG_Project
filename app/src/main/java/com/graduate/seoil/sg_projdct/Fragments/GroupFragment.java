@@ -36,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.graduate.seoil.sg_projdct.Adapter.PostAdapter;
 import com.graduate.seoil.sg_projdct.ChatActivity;
 import com.graduate.seoil.sg_projdct.GStartActivity;
@@ -46,6 +47,7 @@ import com.graduate.seoil.sg_projdct.IndexActivity;
 import com.graduate.seoil.sg_projdct.MainActivity;
 import com.graduate.seoil.sg_projdct.MessageActivity;
 import com.graduate.seoil.sg_projdct.Model.Post;
+import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.graduate.seoil.sg_projdct.PostAddActivity;
 import com.graduate.seoil.sg_projdct.R;
 
@@ -160,9 +162,15 @@ public class GroupFragment extends Fragment  {
             }
         });
 
-
-
+        updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;
+
+
+    }
+    private void updateToken(String token) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(fuser.getUid()).setValue(token1);
     }
 
     private void checkFollowing() {

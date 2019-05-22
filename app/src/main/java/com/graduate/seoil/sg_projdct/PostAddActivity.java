@@ -21,19 +21,46 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.graduate.seoil.sg_projdct.Adapter.MessageAdapter;
+import com.graduate.seoil.sg_projdct.Adapter.MessageUserListAdapter;
+import com.graduate.seoil.sg_projdct.Fragments.APIService;
+import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.Group;
+import com.graduate.seoil.sg_projdct.Model.GroupUserList;
+import com.graduate.seoil.sg_projdct.Model.Post;
+import com.graduate.seoil.sg_projdct.Model.User;
+import com.graduate.seoil.sg_projdct.Notification.Client;
+import com.graduate.seoil.sg_projdct.Notification.Data;
+import com.graduate.seoil.sg_projdct.Notification.MyResponse;
+import com.graduate.seoil.sg_projdct.Notification.Sender;
+import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostAddActivity extends AppCompatActivity {
+    MessageAdapter messageAdapter;
+    MessageUserListAdapter messageUserListAdapter;
+    List<Chat> mchat;
+    List<Post> postedd;
+    List<GroupUserList> mUserList;
+    DatabaseReference reference,reference2;
     Uri imageUri;
     String myUri = "";
     StorageTask uploadTask;
@@ -45,19 +72,25 @@ public class PostAddActivity extends AppCompatActivity {
     TextView post;
     EditText description;
 
-    String group_title, userName, userImageURL;
+    String group_title, userName, userImageURL, userid,receiver;
 
     FirebaseUser fuser;
+
+    APIService apiService;
+
+    boolean notify = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_add);
-
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         Intent intent = getIntent();
-        group_title = intent.getStringExtra("group_title");
 
-        userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
+        group_title = intent.getStringExtra("group_title");
+        userid = intent.getStringExtra("userid");
+        userImageURL = intent.getStringExtra("userImageURL");
         userName =  IndexActivity.spref.getString("str_userName", "default");
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -85,6 +118,7 @@ public class PostAddActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notify = true;
                 uploadImage();
             }
         });
@@ -92,8 +126,42 @@ public class PostAddActivity extends AppCompatActivity {
         CropImage.activity()
                 .setAspectRatio(2, 1)
                 .start(PostAddActivity.this);
+        reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    receiver = ds.child("userList").getValue(String.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        reference2.addListenerForSingleValueEvent(eventListener);
+        final String con = description.getText().toString();
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if(notify){
+                    sendNotification(receiver,user.getUsername(),con);
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
+
 
     private void openImage() {
         Intent intent = new Intent();
@@ -157,6 +225,7 @@ public class PostAddActivity extends AppCompatActivity {
 //                        intent.putExtra("userName", userName);
 //                        intent.putExtra("userImageURL", userImageURL);
 //                        startActivity(intent);
+                        notify = true;
                         finish();
                     } else {
                         Toast.makeText(PostAddActivity.this, "실패!", Toast.LENGTH_SHORT).show();
@@ -172,6 +241,44 @@ public class PostAddActivity extends AppCompatActivity {
             } else {
             Toast.makeText(this, "이미지 선택이 안됨.", Toast.LENGTH_SHORT).show();
         }
+    }
+    private  void sendNotification(String receiver, final String userName, final String con){
+
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,userName+"\n"+con,"새로운 피드",userid);
+
+                    Sender sender = new Sender(data,token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code()==200){
+                                        if(response.body().success!=1){
+                                            Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
