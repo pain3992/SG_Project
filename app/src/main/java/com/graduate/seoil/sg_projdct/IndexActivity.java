@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.Index;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.graduate.seoil.sg_projdct.Adapter.GroupAdapter;
 import com.graduate.seoil.sg_projdct.Fragments.ChatFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
@@ -81,6 +83,9 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getToken();
 
         IS_TRUN = false;
 

@@ -15,7 +15,7 @@ public class Group {
     private String content;
     private String goal;
     private String imageURL;
-    private String registDate;
+    private long registDate;
     private String adminName;
     private String dayCycle;
 
@@ -31,7 +31,7 @@ public class Group {
     public Group() {
     }
 
-    public Group(String title, String content, String goal, String imageURL, String registDate, String adminName, String dayCycle, int planTime, int current_user, int User_max_count, HashMap<String, Object> userList) {
+    public Group(String title, String content, String goal, String imageURL, long registDate, String adminName, String dayCycle, int planTime, int current_user, int User_max_count, HashMap<String, Object> userList) {
         this.title = title;
         this.content = content;
         this.goal = goal;
@@ -86,11 +86,11 @@ public class Group {
         this.User_max_count = User_max_count;
     }
 
-    public String getRegistDate() {
+    public long getRegistDate() {
         return registDate;
     }
 
-    public void setRegistDate(String registDate) {
+    public void setRegistDate(long registDate) {
         this.registDate = registDate;
     }
 

@@ -117,7 +117,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     Bundle bundle = new Bundle();
                     bundle.putString("group_id", group.getAdminName());
                     bundle.putString("group_title", group.getTitle());
-                    bundle.putString("group_registDate", group.getRegistDate());
+                    bundle.putLong("group_registDate", group.getRegistDate());
                     bundle.putString("group_currentUser", String.valueOf(group.getcurrent_user()));
                     bundle.putString("group_maxUser", String.valueOf(group.getUser_max_count()));
                     bundle.putString("group_planTime", String.valueOf(group.getPlanTime() / 60));
