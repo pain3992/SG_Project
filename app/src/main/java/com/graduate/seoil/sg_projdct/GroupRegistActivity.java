@@ -233,11 +233,11 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 userList_under.put("imageURL", userImageURL);
                 userList_under.put("level", "admin");
                 userList_under.put("username", username);
-                userList_under.put("registDate", getTime);
+                userList_under.put("registDate", System.currentTimeMillis());
                 userList.put(fuser.getUid(), userList_under);
 
 
-                Group group = new Group(title, announce, categorys, mUri, getTime, fuser.getUid(), checked_days, time, 1, maxCount, userList);
+                Group group = new Group(title, announce, categorys, mUri, System.currentTimeMillis(), username, checked_days, time, 1, maxCount, userList);
                 reference = FirebaseDatabase.getInstance().getReference("Group");
                 reference.child(title).setValue(group);
 
@@ -245,7 +245,7 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
                 HashMap<String, Object> groupList = new HashMap<>();
                 groupList.put("title", title);
-                groupList.put("registDate", getTime);
+                groupList.put("registDate", System.currentTimeMillis());
                 reference.child(title).setValue(groupList);
 
                 // 그룹 가입시 기본 포스트 하나 들어가기
@@ -258,6 +258,8 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 hashMap.put("description", "서로간에 계획실천 인증사진을 올려보세요!");
                 hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
                 hashMap.put("registDate", System.currentTimeMillis());
+
+                reference = FirebaseDatabase.getInstance().getReference("CategoryCount");
 
                 assert postid != null;
                 reference.child(title).child(postid).setValue(hashMap);

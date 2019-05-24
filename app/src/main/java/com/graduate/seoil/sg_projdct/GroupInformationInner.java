@@ -81,6 +81,8 @@ public class GroupInformationInner extends AppCompatActivity {
 
     int noty_count;
 
+    String str_userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +90,8 @@ public class GroupInformationInner extends AppCompatActivity {
 
         Intent intent = getIntent();
         group_title = intent.getStringExtra("group_title");
+
+        str_userName =  IndexActivity.spref.getString("str_userName", "default");
 
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
@@ -116,6 +120,7 @@ public class GroupInformationInner extends AppCompatActivity {
         groupInformationAdapter = new GroupInformationInnerAdapter(getApplicationContext(), mUser);
         recyclerView_userList.setAdapter(groupInformationAdapter);
 
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
         reference.addValueEventListener(new ValueEventListener() {
@@ -128,7 +133,7 @@ public class GroupInformationInner extends AppCompatActivity {
 
                 title.setText(group.getTitle());
                 usercount.setText("그룹 인원 " + String.valueOf(group.getcurrent_user()) + "명");
-                registDate.setText("|  개설일 " + group.getRegistDate());
+                registDate.setText("|  개설일 " + sdf.format(group.getRegistDate()));
                 category.setText("#" + group.getGoal());
                 time.setText("#" + String.valueOf(group.getPlanTime() / 60) + "시간");
                 days.setText("#" + group.getDayCycle());
@@ -197,7 +202,7 @@ public class GroupInformationInner extends AppCompatActivity {
         group_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fuser.getUid().equals(admin_id)) {
+                if(str_userName.equals(admin_id)) {
                     CropImage.activity()
                             .setAspectRatio(2, 1)
                             .start(GroupInformationInner.this);

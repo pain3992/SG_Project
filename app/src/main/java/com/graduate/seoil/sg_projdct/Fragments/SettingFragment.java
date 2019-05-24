@@ -25,11 +25,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SettingFragment extends Fragment {
     RelativeLayout rel_setting_account;
     RelativeLayout rel_notification;
+    RelativeLayout rel_question;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
+        rel_setting_account = view.findViewById(R.id.relative_setting_account);
         rel_setting_account = view.findViewById(R.id.relative_setting_account);
         rel_setting_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +46,16 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SimplePieActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        rel_question = view.findViewById(R.id.relative_setting_question);
+        rel_question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri =Uri.parse("https://cafe.naver.com/goingsucces");
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
                 startActivity(intent);
             }
         });
