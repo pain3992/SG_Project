@@ -27,15 +27,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.gson.Gson;
 import com.graduate.seoil.sg_projdct.Adapter.MessageAdapter;
 import com.graduate.seoil.sg_projdct.Adapter.MessageUserListAdapter;
 import com.graduate.seoil.sg_projdct.Fragments.APIService;
 import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.GroupUserList;
+import com.graduate.seoil.sg_projdct.Model.NotificationModel;
 import com.graduate.seoil.sg_projdct.Model.Post;
 import com.graduate.seoil.sg_projdct.Model.User;
 import com.graduate.seoil.sg_projdct.Notification.Client;
@@ -49,7 +52,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,12 +86,14 @@ public class PostAddActivity extends AppCompatActivity {
 
     boolean notify = false;
 
+    private Post destinationPostModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_add);
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+//        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         Intent intent = getIntent();
 
         group_title = intent.getStringExtra("group_title");
@@ -118,7 +126,7 @@ public class PostAddActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify = true;
+//                notify = true;
                 uploadImage();
             }
         });
@@ -126,6 +134,7 @@ public class PostAddActivity extends AppCompatActivity {
         CropImage.activity()
                 .setAspectRatio(2, 1)
                 .start(PostAddActivity.this);
+
         reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
@@ -159,8 +168,10 @@ public class PostAddActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
+
+
 
 
     private void openImage() {
@@ -225,7 +236,7 @@ public class PostAddActivity extends AppCompatActivity {
 //                        intent.putExtra("userName", userName);
 //                        intent.putExtra("userImageURL", userImageURL);
 //                        startActivity(intent);
-                        notify = true;
+
                         finish();
                     } else {
                         Toast.makeText(PostAddActivity.this, "실패!", Toast.LENGTH_SHORT).show();
@@ -242,45 +253,44 @@ public class PostAddActivity extends AppCompatActivity {
             Toast.makeText(this, "이미지 선택이 안됨.", Toast.LENGTH_SHORT).show();
         }
     }
-    private  void sendNotification(String receiver, final String userName, final String con){
-
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,userName+"\n"+con,"새로운 피드",userid);
-
-                    Sender sender = new Sender(data,token.getToken());
-
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if(response.code()==200){
-                                        if(response.body().success!=1){
-                                            Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
+//    private  void sendNotification(String receiver, final String userName, final String con){
+////
+////        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+////        Query query = tokens.orderByKey().equalTo(receiver);
+////        query.addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+////                    Token token = snapshot.getValue(Token.class);
+////                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,userName+": "+con,"새로운 피드",userid);
+////
+////                    Sender sender = new Sender(data,token.getToken());
+////
+////                    apiService.sendNotification(sender)
+////                            .enqueue(new Callback<MyResponse>() {
+////                                @Override
+////                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+////                                    if(response.code()==200){
+////                                        if(response.body().success!=1){
+////                                            Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+////                                        }
+////                                    }
+////                                }
+////
+////                                @Override
+////                                public void onFailure(Call<MyResponse> call, Throwable t) {
+////
+////                                }
+////                            });
+////                }
+////            }
+////
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////            }
+////        });
+////    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

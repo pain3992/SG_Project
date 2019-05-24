@@ -75,7 +75,7 @@ public class GroupFragment extends Fragment  {
     private List<String> groupUserList;
 
     FirebaseUser fuser;
-
+    DatabaseReference reference;
     @SuppressLint("CommitPrefEdits")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,16 +162,16 @@ public class GroupFragment extends Fragment  {
             }
         });
 
-        updateToken(FirebaseInstanceId.getInstance().getToken());
+//        updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;
 
 
     }
-    private void updateToken(String token) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
-        Token token1 = new Token(token);
-        reference.child(fuser.getUid()).setValue(token1);
-    }
+//    private void updateToken(String token) {
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+//        Token token1 = new Token(token);
+//        reference.child(fuser.getUid()).setValue(token1);
+//    }
 
     private void checkFollowing() {
         groupUserList = new ArrayList<>();
