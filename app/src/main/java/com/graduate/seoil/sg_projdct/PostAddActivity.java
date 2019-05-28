@@ -50,6 +50,7 @@ import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,8 @@ public class PostAddActivity extends AppCompatActivity {
     List<Chat> mchat;
     List<Post> postedd;
     List<GroupUserList> mUserList;
+
+    private List<String> mUid;
     DatabaseReference reference,reference2;
     Uri imageUri;
     String myUri = "";
@@ -112,6 +115,9 @@ public class PostAddActivity extends AppCompatActivity {
 
         storageReference = FirebaseStorage.getInstance().getReference("posts");
 
+
+        mUid = new ArrayList<>();
+
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,13 +143,12 @@ public class PostAddActivity extends AppCompatActivity {
                 .setAspectRatio(2, 1)
                 .start(PostAddActivity.this);
 
-        reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
+        reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList");
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    receivers = ds.child("userList").getValue(String.class);
-                    Log.d(receivers,"key");
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    mUid.add(childSnapshot.getKey());
                 }
             }
 
@@ -153,16 +158,20 @@ public class PostAddActivity extends AppCompatActivity {
             }
         };
         reference2.addListenerForSingleValueEvent(eventListener);
+
         receiver = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final String con = description.getText().toString();
 
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                String con = description.getText().toString();
                 if(notify){
-                    sendNotification(receiver,user.getUsername(),con);
+                    for (int i = 0; i < mUid.size(); i++) {
+                        System.out.println("mUid.get(i) : " + mUid.get(i));
+                        sendNotification(mUid.get(i),user.getUsername(),con);
+                    }
                 }
                 notify = false;
             }
@@ -257,8 +266,7 @@ public class PostAddActivity extends AppCompatActivity {
             Toast.makeText(this, "이미지 선택이 안됨.", Toast.LENGTH_SHORT).show();
         }
     }
-    private  void sendNotification(String receiver, final String userName, final String con){
-
+    private void sendNotification(String receiver, final String userName, final String content){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -266,7 +274,7 @@ public class PostAddActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,description.getText().toString(),userName+"님이 피드를 작성 했습니다.",userid);
+                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher, content,userName+"님이 피드를 작성 했습니다.",userid);
 
                     Sender sender = new Sender(data,token.getToken());
 

@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:background="@color/exersior_dark"
+    app:titleTextColor="@android:color/white"
     android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
     app:popupTheme="@style/MenuStyle">
 

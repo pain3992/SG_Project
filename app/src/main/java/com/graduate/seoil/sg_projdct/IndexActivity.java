@@ -173,6 +173,7 @@ public class IndexActivity extends AppCompatActivity {
                     }
 
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().show(GroupListFragment).commit();
+                    System.out.println("StatisFragment is null ? : " + StatisticsFragment);
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
