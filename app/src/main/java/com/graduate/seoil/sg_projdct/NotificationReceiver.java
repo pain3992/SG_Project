@@ -13,8 +13,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 //        String message = intent.getStringExtra("toastMessage");
 //        Toast.makeText(context,"goooood",Toast.LENGTH_LONG).show();
 
-        //NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        //notificationManagerCompat.cancel(1);
+//        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+//        notificationManagerCompat.cancel(1);
         ((PlanInformationActivity)PlanInformationActivity.mContext).startStop();
     }
 }

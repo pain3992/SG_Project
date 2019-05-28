@@ -17,8 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
 import com.graduate.seoil.sg_projdct.MainActivity;
 import com.graduate.seoil.sg_projdct.MessageActivity;
+import com.graduate.seoil.sg_projdct.Model.Group;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -27,6 +29,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         String sented = remoteMessage.getData().get("sented");
+        System.out.println("sented : " + sented);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -50,7 +53,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, MessageActivity.class);
+        Intent intent = new Intent(this, GroupFragment.class);
         Bundle bundle = new Bundle();
         bundle.putString("userid", user);
         intent.putExtras(bundle);
@@ -79,7 +82,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, MessageActivity.class);
+        Intent intent = new Intent(this, GroupFragment.class);
         Bundle bundle = new Bundle();
         bundle.putString("userid", user);
         intent.putExtras(bundle);

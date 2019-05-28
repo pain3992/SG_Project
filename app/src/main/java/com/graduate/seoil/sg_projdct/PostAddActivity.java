@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -27,15 +28,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.gson.Gson;
 import com.graduate.seoil.sg_projdct.Adapter.MessageAdapter;
 import com.graduate.seoil.sg_projdct.Adapter.MessageUserListAdapter;
 import com.graduate.seoil.sg_projdct.Fragments.APIService;
 import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.GroupUserList;
+import com.graduate.seoil.sg_projdct.Model.NotificationModel;
 import com.graduate.seoil.sg_projdct.Model.Post;
 import com.graduate.seoil.sg_projdct.Model.User;
 import com.graduate.seoil.sg_projdct.Notification.Client;
@@ -49,7 +53,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,13 +79,15 @@ public class PostAddActivity extends AppCompatActivity {
     TextView post;
     EditText description;
 
-    String group_title, userName, userImageURL, userid,receiver;
+    String group_title, userName, userImageURL, userid, receiver, receivers;
 
     FirebaseUser fuser;
 
     APIService apiService;
 
     boolean notify = false;
+
+    private Post destinationPostModel;
 
 
     @Override
@@ -118,20 +127,23 @@ public class PostAddActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify = true;
+
                 uploadImage();
+                notify = true;
             }
         });
 
         CropImage.activity()
                 .setAspectRatio(2, 1)
                 .start(PostAddActivity.this);
+
         reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title);
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    receiver = ds.child("userList").getValue(String.class);
+                    receivers = ds.child("userList").getValue(String.class);
+                    Log.d(receivers,"key");
                 }
             }
 
@@ -141,6 +153,7 @@ public class PostAddActivity extends AppCompatActivity {
             }
         };
         reference2.addListenerForSingleValueEvent(eventListener);
+        receiver = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String con = description.getText().toString();
 
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
@@ -149,7 +162,7 @@ public class PostAddActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if(notify){
-//                    sendNotification(receiver,user.getUsername(),con);
+                    sendNotification(receiver,user.getUsername(),con);
                 }
                 notify = false;
             }
@@ -159,8 +172,10 @@ public class PostAddActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
+
+
 
 
     private void openImage() {
@@ -225,7 +240,7 @@ public class PostAddActivity extends AppCompatActivity {
 //                        intent.putExtra("userName", userName);
 //                        intent.putExtra("userImageURL", userImageURL);
 //                        startActivity(intent);
-                        notify = true;
+
                         finish();
                     } else {
                         Toast.makeText(PostAddActivity.this, "실패!", Toast.LENGTH_SHORT).show();
@@ -251,7 +266,7 @@ public class PostAddActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,userName+"\n"+con,"새로운 피드",userid);
+                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher,description.getText().toString(),userName+"님이 피드를 작성 했습니다.",userid);
 
                     Sender sender = new Sender(data,token.getToken());
 
@@ -261,7 +276,7 @@ public class PostAddActivity extends AppCompatActivity {
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                                     if(response.code()==200){
                                         if(response.body().success!=1){
-                                            Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -280,7 +295,6 @@ public class PostAddActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

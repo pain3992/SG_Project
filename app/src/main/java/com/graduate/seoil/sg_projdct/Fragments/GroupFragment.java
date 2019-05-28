@@ -75,7 +75,7 @@ public class GroupFragment extends Fragment  {
     private List<String> groupUserList;
 
     FirebaseUser fuser;
-
+    DatabaseReference reference;
     @SuppressLint("CommitPrefEdits")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
