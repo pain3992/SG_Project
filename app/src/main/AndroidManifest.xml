@@ -45,7 +45,8 @@
             android:name=".ResetPasswordActivity"
             android:parentActivityName=".LoginActivity" />
         <activity android:name=".IndexActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"/>
         <activity android:name=".HomeActivity" />
         <activity android:name=".GoalMaking" />
         <activity android:name=".AccountSetting" />
@@ -84,6 +85,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <receiver android:name=".NotificationReceiver"/>
     </application>
 
 </manifest>

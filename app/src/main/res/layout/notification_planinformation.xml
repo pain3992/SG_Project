@@ -56,14 +56,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/blue_grey_800">
+            android:background="@color/blue_grey_800"
+            android:paddingBottom="10dp">
             <ImageButton
                 android:background="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="6dp"
                 android:src="@drawable/baseline_pause_black_18dp"
-                android:id="@+id/image2"/>
+                android:id="@+id/image2" />
+
         </LinearLayout>
 
     </LinearLayout>
