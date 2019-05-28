@@ -63,10 +63,14 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         viewHolder.goal_percentage.setText(String.valueOf(goal.getPercent_status()) + "%");
         viewHolder.goal_days.setText("#" + goal.getDay_cycle());
 
+        viewHolder.goal_complete.setVisibility(View.INVISIBLE);
+
         if (goal.getPercent_status() == 0)
             viewHolder.goal_play_time.setText("00:00");
-        else if (goal.getPercent_status() != 100)
+        else if (goal.getPercent_status() != 100) {
             viewHolder.goal_play_time.setText(hmsTimeFormatter(goal.getTime_status()));
+            System.out.println("time_status : " + goal.getTime_status());
+        }
         else {
             viewHolder.goal_play_time.setText(hmsTimeFormatter(goal.getPlan_time() * 60 * 1000));
             viewHolder.goal_complete.setBackgroundResource(R.drawable.grade_complete);

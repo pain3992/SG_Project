@@ -19,7 +19,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35"/>
+        app:layout_constraintGuide_percent="0.15"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/horizontal_guideline_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <ImageView
+        android:id="@+id/gstart_logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/logo_big"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
     <android.support.constraint.Guideline
         android:id="@+id/horizontal_guideline_2"
@@ -27,23 +48,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.7"/>
-
-    <TextView
-        android:id="@+id/gstart_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="작심성공 데모버전"
-        android:textColor="@android:color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontal_guideline" />
 
     <Button
         android:id="@+id/login"
@@ -53,7 +57,9 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded"
         android:text="login"
-        android:textColor="@color/exersior_dark"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@color/exersior_logo_text"
         app:layout_constraintBottom_toTopOf="@+id/register"
         tools:layout_editor_absoluteX="8dp" />
 
@@ -66,7 +72,9 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded"
         android:text="register"
-        android:textColor="@color/exersior_dark"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@color/exersior_logo_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/horizontal_guideline_2" />
