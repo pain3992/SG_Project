@@ -91,8 +91,6 @@ public class GroupListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGroup = new ArrayList<>();
-        groupAdapter = new GroupAdapter(getContext(), mGroup, str_userName, str_userImageURL);
-        recyclerView.setAdapter(groupAdapter);
 
         recyclerView_search = view.findViewById(R.id.rv_groupList_Search);
         recyclerView_search.setHasFixedSize(true);
@@ -201,7 +199,6 @@ public class GroupListFragment extends Fragment {
     private void readGroupList() {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Group");
-
         // 가입한 그룹 리스트만 뛰우는 로직.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -220,7 +217,8 @@ public class GroupListFragment extends Fragment {
                         }
                     }
                 }
-                groupAdapter.notifyDataSetChanged();
+                groupAdapter = new GroupAdapter(getContext(), mGroup, str_userName, str_userImageURL);
+                recyclerView.setAdapter(groupAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -229,10 +227,11 @@ public class GroupListFragment extends Fragment {
         });
     }
 
+
     private void readSearchList() {
         reference = FirebaseDatabase.getInstance().getReference("Group");
 
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 sGroup.clear();
@@ -277,6 +276,11 @@ public class GroupListFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void search_group(String s) {

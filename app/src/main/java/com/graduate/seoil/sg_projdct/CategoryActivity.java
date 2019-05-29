@@ -98,42 +98,7 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-//        category_search.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (s.length() == 0) {
-//                    DocExpandableRecyclerAdapter adapter = new DocExpandableRecyclerAdapter(parent);
-//                    recycler_view.setAdapter(adapter);
-//                } else {
-//                    search_category(s.toString().toLowerCase());
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
     }
-
-//    private void search_category(String s) {
-//        clist.clear();
-//        for (CategoryChildList list : child) {
-//            if (list.getTitle().toLowerCase().startsWith(s)) {
-//                clist.add(list);
-//                Log.e("list --> ", list.getTitle());
-//            }
-//        }
-////        parent.add(new CategoryParentList(parentKey, clist));
-////        DocExpandableRecyclerAdapter adapter = new DocExpandableRecyclerAdapter(parent);
-////        recycler_view.setAdapter(adapter);
-//    }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

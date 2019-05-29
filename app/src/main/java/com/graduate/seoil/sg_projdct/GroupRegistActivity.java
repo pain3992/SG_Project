@@ -185,7 +185,7 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 String str_time = et_planTime.getText().toString();
                 String checked_days = "";
                 String getTime = sdf.format(date);
-                String categorys = category.getText().toString();
+                final String categorys = category.getText().toString();
                 int maxCount = Integer.parseInt(str_count.substring(0, index_count));
 
                 int index = str_time.indexOf(":");
@@ -259,10 +259,34 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                 hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
                 hashMap.put("registDate", System.currentTimeMillis());
 
-                reference = FirebaseDatabase.getInstance().getReference("CategoryCount");
-
-                assert postid != null;
                 reference.child(title).child(postid).setValue(hashMap);
+
+                reference = FirebaseDatabase.getInstance().getReference("CategoryCount");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean hasCategory = false;
+                        long curVal = 0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            if (snapshot.getKey().equals(categorys)) {
+                                System.out.println("snapshot : " + snapshot.getKey() + ", " + snapshot.getValue());
+                                curVal = (long) snapshot.getValue();
+                                hasCategory = true;
+                                break;
+                            }
+                        }
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        if (!hasCategory)
+                            hashMap.put(categorys, 1);
+                        else
+                            hashMap.put(categorys, curVal + 1);
+                        reference.updateChildren(hashMap);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
                 IndexActivity.GROUP_COUNT += 1;
                 GroupListFragment.recyclerView.setVisibility(View.VISIBLE);

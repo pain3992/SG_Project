@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(final EventDay eventDay) {
-            System.out.println("eventDay : " + eventDay.getYear() + "," + eventDay.getMonth() + "," + eventDay.getDay());
+//            System.out.println("eventDay : " + eventDay.getYear() + "," + eventDay.getMonth() + "," + eventDay.getDay());
             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
