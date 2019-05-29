@@ -61,7 +61,7 @@
             android:layout_gravity="center"
             android:text="목표 제목"
             android:textColor="@android:color/white"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
 
@@ -126,7 +126,7 @@
         android:layout_marginBottom="24dp"
         android:text="00:01:00"
         android:textColor="@color/exersior_dark_blue"
-        android:textSize="30sp"
+        android:textSize="37sp"
         app:layout_constraintBottom_toTopOf="@+id/pi_count_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -141,7 +141,7 @@
         android:layout_marginBottom="8dp"
         android:text="00:01:00"
         android:textColor="@color/exersior_dark"
-        android:textSize="50dp"
+        android:textSize="60dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pi_progressbar_guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -155,9 +155,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="0회"
+        android:text="0회 휴식"
         android:textColor="@color/exersior_dark"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pi_count_time" />

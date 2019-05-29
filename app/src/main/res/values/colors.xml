@@ -30,6 +30,17 @@
 
     <color name="jaksim_blue_900">#386385</color>
 
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="off_white">#fffafafa</color>
+    <color name="main_color_gray">#7d7d7d</color>
+
+    <color name="default_bubble_color_rcv">@color/black</color>
+    <color name="default_bubble_color_send">@color/white</color>
+    <color name="default_tstamp_color_rcv">@color/off_white</color>
+    <color name="default_tstamp_color_send">@color/main_color_gray</color>
+    <color name="default_message_color_rcv">@color/white</color>
+    <color name="default_message_color_send">@color/black</color>
 
 
 </resources>

@@ -18,6 +18,8 @@ import com.graduate.seoil.sg_projdct.Model.Chat;
 import com.graduate.seoil.sg_projdct.Model.User;
 import com.graduate.seoil.sg_projdct.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
@@ -54,6 +56,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         Chat chat = mChat.get(position);
         viewHolder.show_message.setText(chat.getMessage());
+        viewHolder.sender_name.setText(chat.getSender_name());
+        viewHolder.send_date.setText(chat.getSend_date());
 
         if (chat.getSender_imageUrl().equals("default")) {
             viewHolder.profile_image.setImageResource(R.mipmap.ic_launcher);;
@@ -61,15 +65,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(mContext).load(chat.getSender_imageUrl()).into(viewHolder.profile_image);
         }
 
-        if (position == mChat.size() - 1) {
-            if (chat.isIsseen()) {
-                viewHolder.txt_seen.setText("Seen");
-            } else {
-                viewHolder.txt_seen.setText("Delivered");
-            }
-        } else {
-            viewHolder.txt_seen.setVisibility(View.GONE);
-        }
+//        if (position == mChat.size() - 1) {
+//            if (chat.isIsseen()) {
+//                viewHolder.txt_seen.setText("Seen");
+//            } else {
+//                viewHolder.txt_seen.setText("Delivered");
+//            }
+//        } else {
+//            viewHolder.txt_seen.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -80,17 +84,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView show_message;
-        public ImageView profile_image;
+        private TextView sender_name;
+        private TextView send_date;
+        private TextView show_message;
+        private ImageView profile_image;
 
-        public TextView txt_seen;
+        private TextView txt_seen;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             show_message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_image);
-            txt_seen = itemView.findViewById(R.id.txt_seen);
+            sender_name = itemView.findViewById(R.id.chat_left_name);
+            send_date = itemView.findViewById(R.id.chat_left_date);
         }
     }
 

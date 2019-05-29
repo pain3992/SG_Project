@@ -26,15 +26,15 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_back_button"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_message_userList"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/message_title"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_groupInformation_dayCycle"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal" />
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="groupName"/>
 
         </android.support.v7.widget.Toolbar>
 
