@@ -37,7 +37,9 @@ import com.graduate.seoil.sg_projdct.Notification.MyResponse;
 import com.graduate.seoil.sg_projdct.Notification.Sender;
 import com.graduate.seoil.sg_projdct.Notification.Token;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,7 +51,7 @@ import retrofit2.Response;
 public class MessageActivity extends AppCompatActivity {
 
     CircleImageView profile_image;
-    TextView username;
+    TextView username, toolbar_title;
 
     FirebaseUser fuser;
     DatabaseReference reference;
@@ -75,6 +77,8 @@ public class MessageActivity extends AppCompatActivity {
 
     boolean notify = false;
 
+    String str_userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +86,10 @@ public class MessageActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.message_toolbar);
         back_button = findViewById(R.id.message_backButton);
+        toolbar_title = findViewById(R.id.message_title);
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        str_userName =  IndexActivity.spref.getString("str_userName", "default");
 
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -102,39 +108,41 @@ public class MessageActivity extends AppCompatActivity {
         userid = intent.getStringExtra("userid");
         userImageURL = intent.getStringExtra("userImageURL");
 
+        toolbar_title.setText(group_title);
+
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
 
         // mUserList : 그룹 유저들 불러오기.
-        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (getApplicationContext() == null) return;
+//        reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (getApplicationContext() == null) return;
+//
+//                mUserList.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    GroupUserList userList = snapshot.getValue(GroupUserList.class);
+//                    if (!userList.getId().equals(fuser.getUid())) { // 자기 자신은 채팅유저에 안뜨게
+//                        mUserList.add(userList);
+//                    }
+//                }
+//                messageUserListAdapter.notifyDataSetChanged();
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-                mUserList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    GroupUserList userList = snapshot.getValue(GroupUserList.class);
-                    if (!userList.getId().equals(fuser.getUid())) { // 자기 자신은 채팅유저에 안뜨게
-                        mUserList.add(userList);
-                    }
-                }
-                messageUserListAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
-        recyclerView_userList = findViewById(R.id.rv_message_userList);
-        recyclerView_userList.setHasFixedSize(true);
+//        recyclerView_userList = findViewById(R.id.rv_message_userList);
+//        recyclerView_userList.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView_userList.setLayoutManager(linearLayoutManager);
-        mUserList = new ArrayList<>();
-        messageUserListAdapter = new MessageUserListAdapter(this, mUserList);
-        recyclerView_userList.setAdapter(messageUserListAdapter);
+//        recyclerView_userList.setLayoutManager(linearLayoutManager);
+//        mUserList = new ArrayList<>();
+//        messageUserListAdapter = new MessageUserListAdapter(this, mUserList);
+//        recyclerView_userList.setAdapter(messageUserListAdapter);
 
         // 그룹 채팅 일어오기.
         readMessage();
@@ -187,11 +195,16 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(String sender, String message) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
+        Date today = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("a hh:mm");
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("message", message);
         hashMap.put("isseen", false);
         hashMap.put("sender_imageUrl", userImageURL);
+        hashMap.put("sender_name", str_userName);
+        hashMap.put("send_date", simpleDateFormat.format(today));
 
         // 채팅 꽂아버리기
         reference.child("Chats").child(group_title).push().setValue(hashMap);

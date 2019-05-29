@@ -6,13 +6,17 @@ public class Chat {
     private String receiver;
     private String message;
     private String sender_imageUrl;
+    private String sender_name;
+    private String send_date;
     private boolean isseen;
 
-    public Chat(String sender, String receiver, String message, String sender_imageUrl, boolean isseen) {
+    public Chat(String sender, String receiver, String message, String sender_imageUrl, String sender_name, String send_date, boolean isseen) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
         this.sender_imageUrl = sender_imageUrl;
+        this.sender_name = sender_name;
+        this.send_date = send_date;
         this.isseen = isseen;
     }
 
@@ -57,5 +61,21 @@ public class Chat {
 
     public void setIsseen(boolean isseen) {
         this.isseen = isseen;
+    }
+
+    public String getSender_name() {
+        return sender_name;
+    }
+
+    public void setSender_name(String sender_name) {
+        this.sender_name = sender_name;
+    }
+
+    public String getSend_date() {
+        return send_date;
+    }
+
+    public void setSend_date(String send_date) {
+        this.send_date = send_date;
     }
 }
