@@ -345,8 +345,6 @@ public class StatisticsFragment extends Fragment {
 
         List<Goal> pGoals = new ArrayList<>();
         List<Goal> tGoals = new ArrayList<>();
-        
-        System.out.println("called?");
 
         if (goals.size() != 0) {
             yValues = new ArrayList<>();
