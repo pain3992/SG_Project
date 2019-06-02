@@ -7,14 +7,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+
+import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
+import com.graduate.seoil.sg_projdct.PlanInformationActivity;
 
 import java.lang.annotation.Target;
 
 public class OreoNotification extends ContextWrapper {
     private static final  String CHANNEL_5_ID = "channel5";
-    private static final String CHANNEL_NAME = "피드 알림";
+    private static final String CHANNEL_NAME = "그룹 알림";
 
     private NotificationManager notificationManager;
 
@@ -33,6 +37,7 @@ public class OreoNotification extends ContextWrapper {
         channel.enableLights(false);
         channel.enableVibration(true);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        channel.setDescription("피드알림 입니다.");
 
         getManager().createNotificationChannel(channel);
     }

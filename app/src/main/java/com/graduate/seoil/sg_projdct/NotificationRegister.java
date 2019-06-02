@@ -15,10 +15,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.graduate.seoil.sg_projdct.Fragments.APIService;
 import com.graduate.seoil.sg_projdct.Model.User;
+import com.graduate.seoil.sg_projdct.Notification.Client;
+import com.graduate.seoil.sg_projdct.Notification.Data;
+import com.graduate.seoil.sg_projdct.Notification.MyResponse;
+import com.graduate.seoil.sg_projdct.Notification.Sender;
+import com.graduate.seoil.sg_projdct.Notification.Token;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NotificationRegister extends AppCompatActivity {
     EditText content;
@@ -27,28 +40,59 @@ public class NotificationRegister extends AppCompatActivity {
     String group_title;
     String user_name;
     FirebaseUser fuser;
+    APIService apiService;
+    boolean notify = false;
+    DatabaseReference reference,reference2;
+    private List<String> mUid;
+    String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_register);
 
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        mUid = new ArrayList<>();
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent = getIntent();
         group_title = intent.getStringExtra("group_title");
-
+        userid = intent.getStringExtra("userid");
         add = findViewById(R.id.notification_register_add);
         backButton = findViewById(R.id.notification_register_backButton);
         content = findViewById(R.id.notification_register_content);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+        reference2 = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("userList");
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    mUid.add(childSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        reference2.addListenerForSingleValueEvent(eventListener);
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 assert user != null;
                 user_name = user.getUsername();
+                String con = content.getText().toString();
+                if(notify){
+                    for (int i = 0; i < mUid.size(); i++) {
+                        System.out.println("mUid.get(i) : " + mUid.get(i));
+                        sendNotification(mUid.get(i),user_name,con);
+                    }
+                }
+                notify = false;
             }
 
             @Override
@@ -60,7 +104,7 @@ public class NotificationRegister extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications");
+                reference = FirebaseDatabase.getInstance().getReference("Group").child(group_title).child("notifications");
 
                 String noty_id = reference.push().getKey();
                 long curtime = System.currentTimeMillis();
@@ -77,8 +121,8 @@ public class NotificationRegister extends AppCompatActivity {
                 GroupNotificationActivity.no_noty.setVisibility(View.GONE);
                 GroupNotificationActivity.noty_add.setVisibility(View.GONE);
                 GroupNotificationActivity.recyclerView.setVisibility(View.VISIBLE);
-
                 finish();
+                notify = true;
             }
         });
 
@@ -86,6 +130,43 @@ public class NotificationRegister extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+    private void sendNotification(String receiver, final String userName, final String content){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher, content,userName+"님이 공지를 작성 했습니다.",userid);
+
+                    Sender sender = new Sender(data,token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code()==200){
+                                        if(response.body().success!=1){
+                                            //Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

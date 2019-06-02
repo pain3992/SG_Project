@@ -1,8 +1,10 @@
 package com.graduate.seoil.sg_projdct;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -43,6 +45,7 @@ import com.graduate.seoil.sg_projdct.Fragments.SettingFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
 import com.graduate.seoil.sg_projdct.Fragments.UsersFragment;
 import com.graduate.seoil.sg_projdct.Model.Group;
+import com.graduate.seoil.sg_projdct.Model.NotificationModel;
 import com.graduate.seoil.sg_projdct.Model.User;
 
 import java.util.ArrayList;
@@ -51,6 +54,10 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import durdinapps.rxfirebase2.RxFirebaseQuery;
+
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_1_ID;
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_2_ID;
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_3_ID;
 
 public class IndexActivity extends AppCompatActivity {
 
@@ -83,7 +90,7 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-
+        deleteNotificationChannels();
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         FirebaseInstanceId.getInstance().getToken();
 
@@ -240,4 +247,12 @@ public class IndexActivity extends AppCompatActivity {
 //        super.onPause();
 //        status("offline");
 //    }
+    public void deleteNotificationChannels(){
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.deleteNotificationChannel(CHANNEL_1_ID);
+            manager.deleteNotificationChannel(CHANNEL_2_ID);
+            manager.deleteNotificationChannel(CHANNEL_3_ID);
+        }
+    }
 }

@@ -64,7 +64,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.graduate.seoil.sg_projdct.App.CHANNEL_1_ID;
 import static com.graduate.seoil.sg_projdct.App.CHANNEL_4_ID;
 
 public class PlanInformationActivity extends AppCompatActivity {
@@ -284,65 +283,7 @@ public class PlanInformationActivity extends AppCompatActivity {
         });
 
     }
-    public void sendOnChannel1(){
-        Intent intent = getIntent();
-        String no_title = intent.getStringExtra("goal_title");
-        int no_plantime = intent.getIntExtra("goal_time",0);
-        RemoteViews collapse = new RemoteViews(getPackageName(),R.layout.notification_sub);
-        RemoteViews expand = new RemoteViews(getPackageName(),R.layout.notification_planinformation);
-        Intent clickIntent = new Intent(this,NotificationReceiver.class);
-        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,0,clickIntent,0);
-        expand.setTextViewText(R.id.text,tv_count_time.getText().toString());
-        expand.setTextViewText(R.id.text2,hmsTimeFormatter(no_plantime*60000));
-        expand.setOnClickPendingIntent(R.id.image2,clickPendingIntent);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View myView = inflater.inflate(R.layout.notification_planinformation,null);
-//        t1 =(TextView)myView.findViewById(R.id.text);
-//        t1=tv_count_time;
-//        t2 =(TextView)myView.findViewById(R.id.text2);
-//        t2.setText(no_plantime);
-//        title2=(TextView)myView.findViewById(R.id.title);
-//        title2.setText(no_title);
-//        bt1 = (ImageButton)myView.findViewById(R.id.image1);
-//        bt1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startStop();
-//            }
-//        });
-//        bt2 = (ImageButton)myView.findViewById(R.id.image2);
-//        bt2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startStop();
-//            }
-//        });
-        Intent activityIntent = new Intent(this,PlanInformationActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        Intent broadcastIntent = new Intent(this,NotificationReceiver.class);
-//        broadcastIntent.putExtra("toastMessage","message");
-//        PendingIntent actionintent = PendingIntent.getBroadcast(this,0,broadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-//        String time_now=tv_count_time.getText().toString(),time_goal="00:00:00";
 
-        Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
-
-                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setContentTitle(no_title)
-//                .setContentText(time_now)
-                .setCustomContentView(collapse)
-                .setCustomBigContentView(expand)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setColor(Color.BLUE)
-                .setContentIntent(contentIntent)
-//                .setOnlyAlertOnce(true)
-//                .setAutoCancel(true)
-                .setOngoing(true)
-                .build();
-
-        notificationManager.notify(1,notification);
-    }
     public void sendOnChannel4_count(){
         Intent intent = getIntent();
         int no_plantime = intent.getIntExtra("goal_time",0);

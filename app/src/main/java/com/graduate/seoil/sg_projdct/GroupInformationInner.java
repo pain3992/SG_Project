@@ -51,6 +51,7 @@ import com.graduate.seoil.sg_projdct.Model.Group;
 import com.graduate.seoil.sg_projdct.Model.GroupNotification;
 import com.graduate.seoil.sg_projdct.Model.GroupUserList;
 import com.graduate.seoil.sg_projdct.Model.User;
+import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
@@ -216,6 +217,12 @@ public class GroupInformationInner extends AppCompatActivity {
                 finish();
             }
         });
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+    }
+    private void updateToken(String token) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(fuser.getUid()).setValue(token1);
     }
 
     private String getFileExtension(Uri uri) {
