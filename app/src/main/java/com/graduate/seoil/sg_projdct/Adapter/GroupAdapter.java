@@ -68,6 +68,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
 
         final HashMap<String, Object> userList = group.getUserList();
 
+
         // 그룹 정원 다 차면 참여하기 --> 마감
         if (group.getcurrent_user() == group.getUser_max_count()) {
             viewHolder.group_join.setText("마감");

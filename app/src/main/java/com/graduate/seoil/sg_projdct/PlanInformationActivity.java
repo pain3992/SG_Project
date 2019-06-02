@@ -43,15 +43,26 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.graduate.seoil.sg_projdct.Fragments.APIService;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
 import com.graduate.seoil.sg_projdct.Model.Goal;
+import com.graduate.seoil.sg_projdct.Notification.Client;
+import com.graduate.seoil.sg_projdct.Notification.Data;
+import com.graduate.seoil.sg_projdct.Notification.MyResponse;
+import com.graduate.seoil.sg_projdct.Notification.Sender;
+import com.graduate.seoil.sg_projdct.Notification.Token;
 import com.kinda.alert.KAlertDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.graduate.seoil.sg_projdct.App.CHANNEL_1_ID;
 import static com.graduate.seoil.sg_projdct.App.CHANNEL_4_ID;
@@ -82,6 +93,10 @@ public class PlanInformationActivity extends AppCompatActivity {
 
     private KAlertDialog pDialog;
 
+    private boolean onFinish_calledTime = false;
+
+    APIService apiService;
+
     private enum TimerStatus {
         STARTED,
         STOPPED
@@ -91,12 +106,16 @@ public class PlanInformationActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     private CountDownTimer countDownTimer;
+    private String str_userName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_information);
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        str_userName =  IndexActivity.spref.getString("str_userName", "default");
+
         mContext = this;
         notificationManager = NotificationManagerCompat.from(this);
         mediaSession = new MediaSessionCompat(this,"tag");
@@ -421,33 +440,48 @@ public class PlanInformationActivity extends AppCompatActivity {
                 sendOnChannel4_count();
             }
 
-
-
             @Override
             public void onFinish() {
-                pDialog.setTitleText("Good job!")
-                        .setContentText("You clicked the button!")
-                        .setConfirmClickListener(new KAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(KAlertDialog kAlertDialog) {
-                                pDialog.dismissWithAnimation();
-                                finish();
-                            }
-                        }).show();
+                if (!onFinish_calledTime) {
+                    onFinish_calledTime = true;
+                    System.out.println("onFinished called?");
+                    pDialog.setTitleText("계획을 완료했어요!")
+                            .setContentText("확인 버튼을 눌러주세요!")
+                            .setConfirmClickListener(new KAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(KAlertDialog kAlertDialog) {
+                                    pDialog.dismissWithAnimation();
+                                    finish();
+                                }
+                            }).show();
 
-                tv_count_time.setText(hmsTimeFormatter(timeCountInMilliSeconds));
-                setProgressBarValues();
-                iv_Reset.setVisibility(View.GONE);
-                iv_StartStop.setImageResource(R.drawable.play_circle);
-                timerStatus = TimerStatus.STOPPED;
+                    sendNotification(fuser.getUid(), "title", "content");
+                    reference = FirebaseDatabase.getInstance().getReference("PushNotifications");
+                    HashMap<String, Object> hashMap_push = new HashMap<>();
+                    hashMap_push.put("uid", fuser.getUid());
+                    hashMap_push.put("title", title);
+                    hashMap_push.put("content", title + "을 완료하였습니다.");
+                    hashMap_push.put("timestamp", System.currentTimeMillis());
+                    hashMap_push.put("category", "목표");
+                    reference.child(fuser.getUid()).push().updateChildren(hashMap_push);
 
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("percent_status", 100);
-                hashMap.put("processed_time_status", plan_time * 60 * 1000);
-                hashMap.put("time_status", 0);
-                hashMap.put("grade", grade);
-                reference.updateChildren(hashMap);
-                notificationManager.cancel(4);
+                    tv_count_time.setText(hmsTimeFormatter(timeCountInMilliSeconds));
+                    setProgressBarValues();
+                    iv_Reset.setVisibility(View.GONE);
+                    iv_StartStop.setImageResource(R.drawable.play_circle);
+                    timerStatus = TimerStatus.STOPPED;
+
+
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("percent_status", 100);
+                    hashMap.put("processed_time_status", plan_time * 60 * 1000);
+                    hashMap.put("time_status", 0);
+                    hashMap.put("grade", grade);
+                    reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(start_date).child(title);
+                    reference.updateChildren(hashMap);
+                    notificationManager.cancel(4);
+                }
+
 //                finish();
             }
         }.start();
@@ -496,6 +530,45 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         }
     }
+
+    private void sendNotification(String receiver, final String title, final String content){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(fuser.getUid(),R.drawable.logo, content, title, "aa");
+
+                    Sender sender = new Sender(data,token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code()==200){
+                                        if(response.body().success!=1){
+                                            //Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     @Override
     protected void onDestroy() {

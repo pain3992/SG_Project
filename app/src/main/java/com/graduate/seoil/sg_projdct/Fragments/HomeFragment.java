@@ -225,7 +225,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                new AsyncEventTag(timestamp_start, timestamp_end).execute();
                 fetchGoalList(timestamp_start, timestamp_end);
                 recyclerView.setVisibility(View.INVISIBLE);
-                hint.setVisibility(View.VISIBLE);
+//                hint.setVisibility(View.VISIBLE);
                 dayHint.setVisibility(View.INVISIBLE);
             }
 
@@ -268,8 +268,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String child_date = dataSnapshot.getKey();
-                            System.out.println("dataSnapshot count : " + dataSnapshot.getChildrenCount());
-
                             for (DataSnapshot child_snapshot : dataSnapshot.getChildren()) {
                                 int index_one = child_date.indexOf("-", 1);
                                 int index_two = child_date.indexOf("-", index_one + 1);
@@ -292,8 +290,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 }
                             }
                             if (listItems.size() == 0) {
+                                recyclerView.setVisibility(View.GONE);
                                 dayHint.setVisibility(View.VISIBLE);
                                 dayHint.setText("계획을 만들어보세요!");
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                dayHint.setVisibility(View.GONE);
                             }
                             adapter = new GoalAdapter(getContext(), listItems);
                             recyclerView.setAdapter(adapter);
