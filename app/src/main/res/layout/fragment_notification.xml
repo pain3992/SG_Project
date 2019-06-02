@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.NotificationFragment">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/index_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bar"
-        android:background="@color/blue_grey_800">
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/exersior_dark"
+        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+        app:popupTheme="@style/MenuStyle">
+
+        <TextView
+            android:id="@+id/index_toolbar_title"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/toolbar"
-            android:background="@color/blue_grey_800">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="알림 페이지"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"/>
-            </RelativeLayout>
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:text="알림 페이지"/>
 
-        </android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>
 
-
-    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/push_lists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_views"
-        android:layout_below="@id/bar">
+        android:layout_below="@id/index_toolbar">
 
     </android.support.v7.widget.RecyclerView>
 

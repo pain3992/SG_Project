@@ -40,6 +40,7 @@ import com.graduate.seoil.sg_projdct.Fragments.ChatFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
 import com.graduate.seoil.sg_projdct.Fragments.GroupListFragment;
 import com.graduate.seoil.sg_projdct.Fragments.HomeFragment;
+import com.graduate.seoil.sg_projdct.Fragments.NotificationFragment;
 import com.graduate.seoil.sg_projdct.Fragments.ProfileFragment;
 import com.graduate.seoil.sg_projdct.Fragments.SettingFragment;
 import com.graduate.seoil.sg_projdct.Fragments.StatisticsFragment;
@@ -180,9 +181,9 @@ public class IndexActivity extends AppCompatActivity {
                     }
 
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().show(GroupListFragment).commit();
-                    System.out.println("StatisFragment is null ? : " + StatisticsFragment);
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (NotificationFragment != null) getSupportFragmentManager().beginTransaction().hide(NotificationFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
                     break;
@@ -195,6 +196,7 @@ public class IndexActivity extends AppCompatActivity {
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().show(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (NotificationFragment != null) getSupportFragmentManager().beginTransaction().hide(NotificationFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
                     break;
@@ -206,6 +208,20 @@ public class IndexActivity extends AppCompatActivity {
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().show(HomeFragment).commit();
+                    if (NotificationFragment != null) getSupportFragmentManager().beginTransaction().hide(NotificationFragment).commit();
+                    if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
+
+                    break;
+                case R.id.navigation_notifications:
+                    if (NotificationFragment == null) {
+                        NotificationFragment = new NotificationFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, NotificationFragment).commit();
+                    }
+
+                    if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
+                    if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
+                    if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (NotificationFragment != null) getSupportFragmentManager().beginTransaction().show(NotificationFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().hide(SettingFragment).commit();
 
                     break;
@@ -218,6 +234,7 @@ public class IndexActivity extends AppCompatActivity {
                     if (GroupListFragment != null) getSupportFragmentManager().beginTransaction().hide(GroupListFragment).commit();
                     if (StatisticsFragment != null) getSupportFragmentManager().beginTransaction().hide(StatisticsFragment).commit();
                     if (HomeFragment != null) getSupportFragmentManager().beginTransaction().hide(HomeFragment).commit();
+                    if (NotificationFragment != null) getSupportFragmentManager().beginTransaction().hide(NotificationFragment).commit();
                     if (SettingFragment != null) getSupportFragmentManager().beginTransaction().show(SettingFragment).commit();
 
                     break;

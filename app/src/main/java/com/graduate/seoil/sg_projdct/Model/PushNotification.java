@@ -6,22 +6,21 @@ package com.graduate.seoil.sg_projdct.Model;
 public class PushNotification {
     String uid;
     String title;
-    String contentl;
+    String content;
     String category;
     String sender_name;
-    String receiver_uid;
+    String sender_url;
     long timestamp;
 
     public PushNotification() {
     }
 
-    public PushNotification(String uid, String title, String contentl, String category, String sender_name, String receiver_uid, long timestamp) {
+    public PushNotification(String uid, String title, String contentl, String category, String sender_name, long timestamp) {
         this.uid = uid;
         this.title = title;
-        this.contentl = contentl;
+        this.content = contentl;
         this.category = category;
         this.sender_name = sender_name;
-        this.receiver_uid = receiver_uid;
         this.timestamp = timestamp;
     }
 
@@ -41,12 +40,12 @@ public class PushNotification {
         this.title = title;
     }
 
-    public String getContentl() {
-        return contentl;
+    public String getContent() {
+        return content;
     }
 
-    public void setContentl(String contentl) {
-        this.contentl = contentl;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCategory() {
@@ -65,19 +64,19 @@ public class PushNotification {
         this.sender_name = sender_name;
     }
 
-    public String getReceiver_uid() {
-        return receiver_uid;
-    }
-
-    public void setReceiver_uid(String receiver_uid) {
-        this.receiver_uid = receiver_uid;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getSender_url() {
+        return sender_url;
+    }
+
+    public void setSender_url(String sender_url) {
+        this.sender_url = sender_url;
     }
 }

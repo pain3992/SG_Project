@@ -105,7 +105,7 @@ public class PlanInformationActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     private CountDownTimer countDownTimer;
-    private String str_userName;
+    private String str_userName, str_userImageURL;
 
 
     @Override
@@ -113,7 +113,9 @@ public class PlanInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_information);
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
         str_userName =  IndexActivity.spref.getString("str_userName", "default");
+        str_userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
 
         mContext = this;
         notificationManager = NotificationManagerCompat.from(this);
@@ -402,8 +404,11 @@ public class PlanInformationActivity extends AppCompatActivity {
                     hashMap_push.put("uid", fuser.getUid());
                     hashMap_push.put("title", title);
                     hashMap_push.put("content", title + "을 완료하였습니다.");
-                    hashMap_push.put("timestamp", System.currentTimeMillis());
                     hashMap_push.put("category", "목표");
+                    hashMap_push.put("sender_name", str_userName);
+                    hashMap_push.put("sender_url", str_userImageURL);
+                    hashMap_push.put("timestamp", System.currentTimeMillis());
+
                     reference.child(fuser.getUid()).push().updateChildren(hashMap_push);
 
                     tv_count_time.setText(hmsTimeFormatter(timeCountInMilliSeconds));

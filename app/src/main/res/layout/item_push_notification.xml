@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:background="@drawable/rounded"
+    android:layout_marginTop="2dp">
+
+    <RelativeLayout
+        android:id="@+id/rel1"
+        android:layout_width="45dp"
+        android:layout_height="45dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_push_url"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="centerCrop"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/exersior_dark"/>
+
+            <TextView
+                android:id="@+id/item_push_sender_name"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="Canada"
+                android:layout_below="@+id/item_push_url"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/exersior_dark"
+                android:autoSizeTextType="uniform"
+                android:textAlignment="center"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="15sp"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/item_push_title"
+        android:layout_toEndOf="@id/rel1"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/exersior_dark"
+        android:textStyle="bold"
+        android:text="title"/>
+
+    <TextView
+        android:id="@+id/item_push_content"
+        android:layout_below="@id/item_push_title"
+        android:layout_toEndOf="@id/rel1"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/exersior_dark"
+        android:text="content"/>
+
+    <TextView
+        android:id="@+id/item_push_date"
+        android:layout_below="@id/item_push_content"
+        android:layout_toEndOf="@id/rel1"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/exersior_dark"
+        android:text="date"/>
+
+
+</RelativeLayout>
