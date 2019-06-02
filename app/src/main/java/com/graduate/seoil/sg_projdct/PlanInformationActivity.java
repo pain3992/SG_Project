@@ -64,6 +64,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.graduate.seoil.sg_projdct.App.CHANNEL_11_ID;
 import static com.graduate.seoil.sg_projdct.App.CHANNEL_4_ID;
 
 public class PlanInformationActivity extends AppCompatActivity {
@@ -106,6 +107,7 @@ public class PlanInformationActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private CountDownTimer countDownTimer;
     private String str_userName, str_userImageURL;
+
 
 
     @Override
@@ -302,7 +304,7 @@ public class PlanInformationActivity extends AppCompatActivity {
 
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_4_ID)
 
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.logo)
                 .setCustomContentView(collapse)
                 .setCustomBigContentView(expand)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -311,6 +313,26 @@ public class PlanInformationActivity extends AppCompatActivity {
                 .build();
 
         notificationManager.notify(4,notification);
+    }
+
+    public void sendOnChannel11(){
+        Intent intent = getIntent();
+        String tt = intent.getStringExtra("goal_title");
+
+        Intent activityIntent = new Intent(this,IndexActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,PendingIntent.FLAG_ONE_SHOT);
+
+        Notification notification = new NotificationCompat.Builder(this,CHANNEL_11_ID)
+
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("목표가 완료 !")
+                .setContentText(tt+"의 목표가 완료 되었어요")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .build();
+
+        notificationManager.notify(11,notification);
     }
     public void startStop() {
         if (timerStatus == TimerStatus.STOPPED) {
@@ -388,6 +410,7 @@ public class PlanInformationActivity extends AppCompatActivity {
                 if (!onFinish_calledTime) {
                     onFinish_calledTime = true;
                     System.out.println("onFinished called?");
+                    sendOnChannel11();
                     pDialog.setTitleText("계획을 완료했어요!")
                             .setContentText("확인 버튼을 눌러주세요!")
                             .setConfirmClickListener(new KAlertDialog.OnSweetClickListener() {
@@ -398,7 +421,6 @@ public class PlanInformationActivity extends AppCompatActivity {
                                 }
                             }).show();
 
-                    sendNotification(fuser.getUid(), "title", "content");
                     reference = FirebaseDatabase.getInstance().getReference("PushNotifications");
                     HashMap<String, Object> hashMap_push = new HashMap<>();
                     hashMap_push.put("uid", fuser.getUid());
@@ -477,43 +499,6 @@ public class PlanInformationActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(String receiver, final String title, final String content){
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.drawable.logo, content, title, "aa");
-
-                    Sender sender = new Sender(data,token.getToken());
-
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if(response.code()==200){
-                                        if(response.body().success!=1){
-                                            //Toast.makeText(PostAddActivity.this,"Failed",Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 
     @Override

@@ -173,6 +173,16 @@ public class PostAddActivity extends AppCompatActivity {
                     for (int i = 0; i < mUid.size(); i++) {
                         System.out.println("mUid.get(i) : " + mUid.get(i));
                         sendNotification(mUid.get(i),user.getUsername(),con);
+                        reference = FirebaseDatabase.getInstance().getReference("PushNotifications");
+                        HashMap<String, Object> hashMap_push = new HashMap<>();
+                        hashMap_push.put("uid",mUid.get(i));
+                        hashMap_push.put("title", userName + " 님이 피드를 작성하였습니다.");
+                        hashMap_push.put("content", description.getText().toString());
+                        hashMap_push.put("timestamp", System.currentTimeMillis());
+                        hashMap_push.put("sender_name", userName);
+                        hashMap_push.put("sender_url", userImageURL);
+                        hashMap_push.put("category", "피드");
+                        reference.child(mUid.get(i)).push().updateChildren(hashMap_push);
                     }
                 }
                 notify = false;
@@ -183,6 +193,8 @@ public class PostAddActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
 
@@ -276,7 +288,7 @@ public class PostAddActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher, content,userName+"님이 피드를 작성 했습니다.",userid);
+                    Data data = new Data(fuser.getUid(),R.drawable.logo, content,userName+"님이 피드를 작성 했습니다.",userid);
 
                     Sender sender = new Sender(data,token.getToken());
 
