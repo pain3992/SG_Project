@@ -45,6 +45,7 @@ public class NotificationRegister extends AppCompatActivity {
     DatabaseReference reference,reference2;
     private List<String> mUid;
     String userid;
+    private String str_userImageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class NotificationRegister extends AppCompatActivity {
         setContentView(R.layout.activity_notification_register);
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        str_userImageURL = IndexActivity.spref.getString("str_userImageURL", "default");
         mUid = new ArrayList<>();
         fuser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -90,6 +92,16 @@ public class NotificationRegister extends AppCompatActivity {
                     for (int i = 0; i < mUid.size(); i++) {
                         System.out.println("mUid.get(i) : " + mUid.get(i));
                         sendNotification(mUid.get(i),user_name,con);
+                        reference = FirebaseDatabase.getInstance().getReference("PushNotifications");
+                        HashMap<String, Object> hashMap_push = new HashMap<>();
+                        hashMap_push.put("uid",mUid.get(i));
+                        hashMap_push.put("title", user_name + " 님이 공지를 작성하였습니다.");
+                        hashMap_push.put("content", con);
+                        hashMap_push.put("timestamp", System.currentTimeMillis());
+                        hashMap_push.put("sender_name", user_name);
+                        hashMap_push.put("sender_url", str_userImageURL);
+                        hashMap_push.put("category", "공지");
+                        reference.child(mUid.get(i)).push().updateChildren(hashMap_push);
                     }
                 }
                 notify = false;
@@ -141,7 +153,7 @@ public class NotificationRegister extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(fuser.getUid(),R.mipmap.ic_launcher, content,userName+"님이 공지를 작성 했습니다.",userid);
+                    Data data = new Data(fuser.getUid(),R.drawable.logo, content,userName+"님이 공지를 작성 했습니다.",userid);
 
                     Sender sender = new Sender(data,token.getToken());
 

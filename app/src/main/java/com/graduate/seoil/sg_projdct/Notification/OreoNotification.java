@@ -13,6 +13,7 @@ import android.os.Build;
 
 import com.graduate.seoil.sg_projdct.Fragments.GroupFragment;
 import com.graduate.seoil.sg_projdct.PlanInformationActivity;
+import com.graduate.seoil.sg_projdct.R;
 
 import java.lang.annotation.Target;
 
@@ -52,7 +53,7 @@ public class OreoNotification extends ContextWrapper {
     public Notification.Builder getOreoNotification(String title, String body,
                                                     PendingIntent pendingIntent, Uri soundUri,String icon){
         return new Notification.Builder(getApplicationContext(),CHANNEL_5_ID)
-                .setSmallIcon(Integer.parseInt(icon))
+                .setSmallIcon(R.drawable.logo)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
