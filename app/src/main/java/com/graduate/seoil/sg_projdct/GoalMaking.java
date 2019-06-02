@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.graduate.seoil.sg_projdct.Fragments.DatePickerFragment;
@@ -47,10 +50,12 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import androidx.annotation.RequiresApi;
 
 public class GoalMaking extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+    public final int GOAL_MAKING_ACTIVITY = 0;
     FirebaseUser fuser;
 
     private Button plan_make, plan_cancel;
@@ -73,6 +78,11 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
     HashMap<String, Object> jMonth;
     HashMap<String, Object> jYear;
 
+    private TextView categorys;
+    private RelativeLayout category_rel;
+
+    int categoryCountTotal;
+
     CheckBox[] chkBoxs;
     Integer[] chkBoxIds = {R.id.ckbox_monday, R.id.ckbox_tuesday, R.id.ckbox_wednesday, R.id.ckbox_thursday, R.id.ckbox_friday, R.id.ckbox_saturday, R.id.ckbox_sunday};
 
@@ -85,7 +95,7 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
 
         etTitle = findViewById(R.id.et_plan_title);
         tv_plan_hour = findViewById(R.id.tv_plan_hour);
-        tv_start_hour = findViewById(R.id.tv_start_hour);
+//        tv_start_hour = findViewById(R.id.tv_start_hour);
         tv_start_date = findViewById(R.id.tv_calendar_start);
         tv_end_date = findViewById(R.id.tv_calendar_end);
         chkBoxs = new CheckBox[chkBoxIds.length];
@@ -99,11 +109,26 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         calendar_before = findViewById(R.id.iv_calendar_before);
         calendar_after = findViewById(R.id.iv_calendar_after);
 
+        category_rel = findViewById(R.id.group_category);
+        categorys = findViewById(R.id.et_category);
         jData = new HashMap<>();
         jTitle = new HashMap<>();
         jDays = new HashMap<>();
         jMonth = new HashMap<>();
         jYear = new HashMap<>();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryCounttt");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                categoryCountTotal = (int)dataSnapshot.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         calendar_before.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +142,14 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
             @Override
             public void onClick(View v) {
                 showDateDialog(tv_calender_end, endDate);
+            }
+        });
+
+        category_rel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GoalMaking.this, CategoryActivity.class);
+                startActivityForResult(intent, GOAL_MAKING_ACTIVITY);
             }
         });
 
@@ -136,9 +169,10 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                String category = categorys.getText().toString();
                 String title = etTitle.getText().toString();
                 String str_time = tv_plan_hour.getText().toString();
-                String start_hour = tv_start_hour.getText().toString();
+//                String start_hour = tv_start_hour.getText().toString();
                 String start_date = tv_start_date.getText().toString();
                 String end_date = tv_end_date.getText().toString();
                 String checked_days = "";
@@ -216,6 +250,8 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
                     else if (checked_days.substring(i, i + 1).equals("토"))
                         int_checkDays[i] = "7";
                 }
+
+                cntSetting(category);
 
 
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
@@ -448,6 +484,21 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GOAL_MAKING_ACTIVITY) {
+            if (resultCode != RESULT_OK) {
+                categorys.setText("카테고리를 선택해주세요!");
+            }
+            if (resultCode == RESULT_OK) {
+                String result = data.getExtras().getString(CategoryActivity.RESULT_DATA);
+                categorys.setText(result);
+            }
+        }
+    }
+
     private void updateDisplay(TextView dateDisplay, Calendar date) {
         dateDisplay.setText(
                 new StringBuilder()
@@ -523,5 +574,45 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
         long timestamp = Long.parseLong(str) * 1000; // timestamp
 
         return timestamp;
+    }
+
+    private void cntSetting(final String category) {
+        Query query = FirebaseDatabase.getInstance().getReference("CategoryCounttt").orderByChild("name").startAt(category).endAt(category + "\uf8ff");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryCounttt");
+                final HashMap<String, Object> hashMap = new HashMap<>();
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    hashMap.put("name", category);
+                    hashMap.put("value", 1);
+                    reference.child(String.valueOf(categoryCountTotal)).setValue(hashMap);
+                } else {
+                    System.out.println("dataSnapshot.key : " + dataSnapshot.getValue());
+                    for (final DataSnapshot postShot : dataSnapshot.getChildren()) {
+                        final String key = postShot.getKey();
+                        DatabaseReference referenceVal = FirebaseDatabase.getInstance().getReference("CategoryCounttt").child(key).child("value");
+                        referenceVal.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                long val = (long)dataSnapshot.getValue() + 1;
+                                hashMap.put("name", category);
+                                hashMap.put("value", val);
+                                reference.child(Objects.requireNonNull(key)).updateChildren(hashMap);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

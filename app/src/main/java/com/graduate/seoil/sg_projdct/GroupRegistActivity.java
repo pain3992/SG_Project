@@ -68,7 +68,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class GroupRegistActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, NumberPicker.OnValueChangeListener {
@@ -96,6 +96,8 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
 
     private String mUri;
 
+    int categoryCountTotal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +124,19 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
         back_button = findViewById(R.id.groupRegister_backButton);
 
         chkBoxs = new CheckBox[chkBoxIds.length];
+
+        reference = FirebaseDatabase.getInstance().getReference("CategoryCountt");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                categoryCountTotal = (int)dataSnapshot.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         username = IndexActivity.spref.getString("str_userName", "default");
@@ -221,6 +236,7 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
                         }
                     }
                 }
+                cntSetting(categorys);
 
 
                 // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
@@ -261,32 +277,35 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
 
                 reference.child(title).child(postid).setValue(hashMap);
 
-                reference = FirebaseDatabase.getInstance().getReference("CategoryCount");
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        boolean hasCategory = false;
-                        long curVal = 0;
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.getKey().equals(categorys)) {
-                                System.out.println("snapshot : " + snapshot.getKey() + ", " + snapshot.getValue());
-                                curVal = (long) snapshot.getValue();
-                                hasCategory = true;
-                                break;
-                            }
-                        }
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        if (!hasCategory)
-                            hashMap.put(categorys, 1);
-                        else
-                            hashMap.put(categorys, curVal + 1);
-                        reference.updateChildren(hashMap);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+
+
+//                reference = FirebaseDatabase.getInstance().getReference("CategoryCount");
+//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        boolean hasCategory = false;
+//                        long curVal = 0;
+//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                            if (snapshot.getKey().equals(categorys)) {
+//                                System.out.println("snapshot : " + snapshot.getKey() + ", " + snapshot.getValue());
+//                                curVal = (long) snapshot.getValue();
+//                                hasCategory = true;
+//                                break;
+//                            }
+//                        }
+//                        HashMap<String, Object> hashMap = new HashMap<>();
+//                        if (!hasCategory)
+//                            hashMap.put(categorys, 1);
+//                        else
+//                            hashMap.put(categorys, curVal + 1);
+//                        reference.updateChildren(hashMap);
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
                 IndexActivity.GROUP_COUNT += 1;
                 GroupListFragment.recyclerView.setVisibility(View.VISIBLE);
@@ -441,5 +460,45 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
+    }
+
+    private void cntSetting(final String category) {
+        Query query = FirebaseDatabase.getInstance().getReference("CategoryCountt").orderByChild("name").startAt(category).endAt(category + "\uf8ff");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                reference = FirebaseDatabase.getInstance().getReference("CategoryCountt");
+                final HashMap<String, Object> hashMap = new HashMap<>();
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    hashMap.put("name", category);
+                    hashMap.put("value", 1);
+                    reference.child(String.valueOf(categoryCountTotal)).setValue(hashMap);
+                } else {
+                    System.out.println("dataSnapshot.key : " + dataSnapshot.getValue());
+                    for (final DataSnapshot postShot : dataSnapshot.getChildren()) {
+                        final String key = postShot.getKey();
+                        DatabaseReference referenceVal = FirebaseDatabase.getInstance().getReference("CategoryCountt").child(key).child("value");
+                        referenceVal.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                long val = (long)dataSnapshot.getValue() + 1;
+                                hashMap.put("name", category);
+                                hashMap.put("value", val);
+                                reference.child(Objects.requireNonNull(key)).updateChildren(hashMap);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -98,6 +98,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Semaphore semaphore;
 
+    int todayCount;
+
 
     public static in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
 
@@ -223,7 +225,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //                new AsyncEventTag(timestamp_start, timestamp_end).execute();
                 fetchGoalList(timestamp_start, timestamp_end);
                 recyclerView.setVisibility(View.INVISIBLE);
-                hint.setVisibility(View.VISIBLE);
+//                hint.setVisibility(View.VISIBLE);
                 dayHint.setVisibility(View.INVISIBLE);
             }
 
@@ -259,13 +261,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listItems.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
                     DatabaseReference goals = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid()).child(snapshot.getKey());
                     Query goal_query = goals.orderByChild("timestamp").startAt(timestamp_start).endAt(timestamp_end);
                     goal_query.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String child_date = dataSnapshot.getKey();
-
                             for (DataSnapshot child_snapshot : dataSnapshot.getChildren()) {
                                 int index_one = child_date.indexOf("-", 1);
                                 int index_two = child_date.indexOf("-", index_one + 1);
@@ -284,7 +286,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 if (child_date.equals(str_year + "-" + str_month + "-" + str_day)) {
                                     Goal goal = child_snapshot.getValue(Goal.class);
                                     listItems.add(goal);
+                                    todayCount += 1;
                                 }
+                            }
+                            if (listItems.size() == 0) {
+                                recyclerView.setVisibility(View.GONE);
+                                dayHint.setVisibility(View.VISIBLE);
+                                dayHint.setText("계획을 만들어보세요!");
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                dayHint.setVisibility(View.GONE);
                             }
                             adapter = new GoalAdapter(getContext(), listItems);
                             recyclerView.setAdapter(adapter);

@@ -63,7 +63,7 @@ import java.util.concurrent.Semaphore;
  */
 public class StatisticsFragment extends Fragment {
     TextView tv_week, average_success, total_timeStatus, month_change, title;
-    TextView no_data_1, no_data_2, no_chart_1, no_chart_2;
+    TextView no_data_1, no_data_2, no_chart_1, no_chart_2, tv_no_statistics;
     ImageView prev_week, next_week;
     String nowTime, getTime, str_date, end_date, str_start, str_end;
     String[] this_week;
@@ -77,7 +77,8 @@ public class StatisticsFragment extends Fragment {
 
     StatisticsAdapter statisticsAdapter_p, statisticsAdapter_t;
 
-    int dataSnapshot_size;
+    int dataSnapshot_size, total_planTime;
+    boolean not_started;
 
     Boolean is_week = true;
     Date start_date, ended_date;
@@ -130,6 +131,7 @@ public class StatisticsFragment extends Fragment {
         no_chart_2 = view.findViewById(R.id.no_pieChart2);
         no_data_1 = view.findViewById(R.id.no_plantime_top);
         no_data_2 = view.findViewById(R.id.no_percent_top);
+        tv_no_statistics = view.findViewById(R.id.tv_no_statistics);
 
         pieChart.setUsePercentValues(true);  // true : 퍼센테이지로 보임
         pieChart.getDescription().setEnabled(false);
@@ -278,6 +280,7 @@ public class StatisticsFragment extends Fragment {
                                 Goal goal = goalShot.getValue(Goal.class);
                                 mGoals.add(goal);
                             }
+                            System.out.println("total_planTime : " + total_planTime);
                             drawChart(mGoals);
                         }
                         @Override
@@ -362,12 +365,6 @@ public class StatisticsFragment extends Fragment {
             }
 
             Collections.sort(goals);
-            if (goals.size() == 4) {
-                for (int i = 0; i < goals.size(); i++) {
-                    System.out.println("goal : " + goals.get(i).getTitle());
-                }
-            }
-            System.out.println("goals's size : " + goals.size());
             if (goals.size() < 3) {
                 yValues.clear();
                 xValues.clear();
@@ -452,14 +449,15 @@ public class StatisticsFragment extends Fragment {
             pGoals.clear();
             tGoals.clear();
 
+            tv_no_statistics.setVisibility(View.VISIBLE);
             pieChart.setVisibility(View.INVISIBLE);
             pieChart2.setVisibility(View.INVISIBLE);
-            no_chart_1.setVisibility(View.VISIBLE);
-            no_chart_2.setVisibility(View.VISIBLE);
+//            no_chart_1.setVisibility(View.VISIBLE);
+//            no_chart_2.setVisibility(View.VISIBLE);
+//            no_data_1.setVisibility(View.VISIBLE);
+//            no_data_2.setVisibility(View.VISIBLE);
             recyclerView_percent.setVisibility(View.INVISIBLE);
             recyclerView_plantime.setVisibility(View.INVISIBLE);
-            no_data_1.setVisibility(View.VISIBLE);
-            no_data_2.setVisibility(View.VISIBLE);
 
 
             pieChart.animateY(1000, Easing.EaseInOutCubic);
@@ -499,14 +497,16 @@ public class StatisticsFragment extends Fragment {
             recyclerView_plantime.setVisibility(View.VISIBLE);
         if (recyclerView_percent.getVisibility() == View.INVISIBLE)
             recyclerView_percent.setVisibility(View.VISIBLE);
-        if (no_chart_1.getVisibility() == View.VISIBLE)
-            no_chart_1.setVisibility(View.INVISIBLE);
-        if (no_chart_2.getVisibility() == View.VISIBLE)
-            no_chart_2.setVisibility(View.INVISIBLE);
-        if (no_data_1.getVisibility() == View.VISIBLE)
-            no_data_1.setVisibility(View.INVISIBLE);
-        if (no_data_2.getVisibility() == View.VISIBLE)
-            no_data_2.setVisibility(View.INVISIBLE);
+//        if (no_chart_1.getVisibility() == View.VISIBLE)
+//            no_chart_1.setVisibility(View.INVISIBLE);
+//        if (no_chart_2.getVisibility() == View.VISIBLE)
+//            no_chart_2.setVisibility(View.INVISIBLE);
+//        if (no_data_1.getVisibility() == View.VISIBLE)
+//            no_data_1.setVisibility(View.INVISIBLE);
+//        if (no_data_2.getVisibility() == View.VISIBLE)
+//            no_data_2.setVisibility(View.INVISIBLE);
+        if (tv_no_statistics.getVisibility() == View.VISIBLE)
+            tv_no_statistics.setVisibility(View.INVISIBLE);
 
     }
 

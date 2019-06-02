@@ -93,68 +93,61 @@
         android:text="00:00"/>
 
     <TextView
-        android:id="@+id/tv_start_hour_before"
+        android:id="@+id/tv_accel"
+        android:layout_below="@+id/tv_plan_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_plan_hour"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="시작 시간"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:text="카테고리"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:textColor="@color/exersior_dark"
-        android:textStyle="bold"/>
-
-    <CheckBox
-        android:id="@+id/ckb_start_hour"
-        android:layout_below="@id/tv_plan_hour"
-        android:layout_toStartOf="@id/tv_start_hour_after"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="-8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tv_start_hour_after"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_plan_hour"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="사용"
-        android:textSize="10sp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textColor="@color/exersior_dark"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <RelativeLayout
-        android:id="@+id/rel2"
-        android:layout_below="@id/tv_start_hour_before"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/group_category"
+        android:layout_below="@id/tv_accel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
-        android:layout_width="125dp"
-        android:layout_height="45dp"
-        android:background="@drawable/rounded_rv_inner">
+        android:background="@drawable/rounded"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/et_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:hint="카테고리를 선택해주세요!"
+            android:textColor="@color/blue_grey_900"
+            android:background="@android:color/transparent"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_right_arrow"
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_start_hour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_start_hour_before"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:textColor="#757575"
-        android:text="00:00"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tv_start_hour"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/group_category"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:textSize="30sp"-->
+        <!--android:textColor="#757575"-->
+        <!--android:text="00:00"/>-->
 
     <TextView
         android:id="@+id/tv_select_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_start_hour"
+        android:layout_below="@id/group_category"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="기간 선택"

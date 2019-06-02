@@ -88,6 +88,7 @@ public class PostAddActivity extends AppCompatActivity {
 
     APIService apiService;
 
+
     boolean notify = false;
 
     private Post destinationPostModel;
@@ -101,6 +102,7 @@ public class PostAddActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         group_title = intent.getStringExtra("group_title");
+        System.out.println("userid : " + userid);
         userid = intent.getStringExtra("userid");
         userImageURL = intent.getStringExtra("userImageURL");
         userName =  IndexActivity.spref.getString("str_userName", "default");
