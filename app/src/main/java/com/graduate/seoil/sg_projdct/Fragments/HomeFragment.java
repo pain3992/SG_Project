@@ -100,6 +100,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     int todayCount;
 
+    ArrayList<Long> timestampList;
 
     public static in.co.ashclan.ashclanzcalendar.widget.CollapsibleCalendar collapsibleCalendar;
 
@@ -115,6 +116,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         semaphore = new Semaphore(0);
         //로딩중 다이아로그 띄움
         dialog = new ProgressDialog(getContext());
+        timestampList = new ArrayList<>();
 
         dialog.setTitle("데이터 로딩중");
         dialog.setMessage("잠시만 기다려주세요");
@@ -221,9 +223,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onMonthChange() {
+                timestampList.add(timestamp_start);
                 getIntervalTimeStamp(collapsibleCalendar.getYear(), collapsibleCalendar.getMonth() + 1);
 //                new AsyncEventTag(timestamp_start, timestamp_end).execute();
-                fetchGoalList(timestamp_start, timestamp_end);
+//                for (int i = 0; i < timestampList.size(); i++) {
+//                    if (timestampList.get(i) != timestamp_start)
+//                        fetchGoalList(timestamp_start, timestamp_end);
+//                }
                 recyclerView.setVisibility(View.INVISIBLE);
 //                hint.setVisibility(View.VISIBLE);
                 dayHint.setVisibility(View.INVISIBLE);
@@ -299,7 +305,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             }
                             adapter = new GoalAdapter(getContext(), listItems);
                             recyclerView.setAdapter(adapter);
-                            dialog.dismiss();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -333,8 +338,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     collapsibleCalendar.addEventTag(eventDay.getYear(), eventDay.getMonth() - 1, eventDay.getDay(), Color.parseColor("#D81B60"));
                 }
             });
-
-
+            dialog.dismiss();
         }
     }
 

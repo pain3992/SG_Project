@@ -93,49 +93,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relative_setting_normalnotification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:padding="10dp"
-        android:background="@drawable/rounded">
-
-        <ImageView
-            android:id="@+id/img_setting_normalnotification"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_settings_black_24dp" />
-
-        <TextView
-            android:id="@+id/tv_setting_normalnotification"
-            android:layout_toEndOf="@+id/img_setting_normalnotification"
-            android:layout_marginStart="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="일반 설정"
-            android:textSize="20sp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/exersior_dark"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/tv_setting_normalnotification_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_setting_normalnotification"
-            android:layout_marginStart="15dp"
-            android:layout_toRightOf="@+id/img_setting_normalnotification"
-            android:text="기본설정 확인 및 수정이 가능합니다."
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@color/exersior_dark_blue"
-            android:textStyle="normal" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/relative_setting_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -189,93 +189,96 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
         group_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str_count = group_invite_user_count.getText().toString();
-                int index_count = str_count.indexOf("명");
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (et_title.getText().equals("") || category.getText().toString().equals("") || et_planTime.getText().toString().equals("") || et_announce.getText().toString().equals("")) {
+                    Toast.makeText(GroupRegistActivity.this, "항목을 모두 입력해주세요!", Toast.LENGTH_SHORT).show();
+                } else {
+                    String str_count = group_invite_user_count.getText().toString();
+                    int index_count = str_count.indexOf("명");
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-                String title = et_title.getText().toString();
-                String announce = et_announce.getText().toString();
-                String str_time = et_planTime.getText().toString();
-                String checked_days = "";
-                String getTime = sdf.format(date);
-                final String categorys = category.getText().toString();
-                int maxCount = Integer.parseInt(str_count.substring(0, index_count));
+                    String title = et_title.getText().toString();
+                    String announce = et_announce.getText().toString();
+                    String str_time = et_planTime.getText().toString();
+                    String checked_days = "";
+                    String getTime = sdf.format(date);
+                    final String categorys = category.getText().toString();
+                    int maxCount = Integer.parseInt(str_count.substring(0, index_count));
 
-                int index = str_time.indexOf(":");
-                int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
-                int minute = Integer.parseInt(str_time.substring(index + 1));
-                int time = hour + minute;
+                    int index = str_time.indexOf(":");
+                    int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
+                    int minute = Integer.parseInt(str_time.substring(index + 1));
+                    int time = hour + minute;
 
-                for (int i = 0; i < chkBoxIds.length; i++) {
-                    chkBoxs[i] = findViewById(chkBoxIds[i]);
-                    if (chkBoxs[i].isChecked()) {
-                        switch (i) {
-                            case 0:
-                                checked_days = "월";
-                                break;
-                            case 1:
-                                checked_days += "화";
-                                break;
-                            case 2:
-                                checked_days += "수";
-                                break;
-                            case 3:
-                                checked_days += "목";
-                                break;
-                            case 4:
-                                checked_days += "금";
-                                break;
-                            case 5:
-                                checked_days += "토";
-                                break;
-                            case 6:
-                                checked_days += "일";
-                                break;
+                    for (int i = 0; i < chkBoxIds.length; i++) {
+                        chkBoxs[i] = findViewById(chkBoxIds[i]);
+                        if (chkBoxs[i].isChecked()) {
+                            switch (i) {
+                                case 0:
+                                    checked_days = "월";
+                                    break;
+                                case 1:
+                                    checked_days += "화";
+                                    break;
+                                case 2:
+                                    checked_days += "수";
+                                    break;
+                                case 3:
+                                    checked_days += "목";
+                                    break;
+                                case 4:
+                                    checked_days += "금";
+                                    break;
+                                case 5:
+                                    checked_days += "토";
+                                    break;
+                                case 6:
+                                    checked_days += "일";
+                                    break;
+                            }
                         }
                     }
-                }
-                cntSetting(categorys);
+                    cntSetting(categorys);
 
 
-                // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
-                // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
-                // TODO : [3월 30일] 프로필 사진 변경시, 그룹의 유저리스트의 imageURL도 변경되어야 함.
+                    // TODO : [3월 29일] 승연이가 그룹목표 넣으면 "default"를 바꿔줘야함.
+                    // TODO : [3월 29일] 그룹은 하나 이상 못만들게 해야함.
+                    // TODO : [3월 30일] 프로필 사진 변경시, 그룹의 유저리스트의 imageURL도 변경되어야 함.
 
-                HashMap<String, Object> userList = new HashMap<String, Object>();
-                HashMap<String, Object> userList_under = new HashMap<String, Object>();
-                userList_under.put("id", fuser.getUid());
-                userList_under.put("imageURL", userImageURL);
-                userList_under.put("level", "admin");
-                userList_under.put("username", username);
-                userList_under.put("registDate", System.currentTimeMillis());
-                userList.put(fuser.getUid(), userList_under);
+                    HashMap<String, Object> userList = new HashMap<String, Object>();
+                    HashMap<String, Object> userList_under = new HashMap<String, Object>();
+                    userList_under.put("id", fuser.getUid());
+                    userList_under.put("imageURL", userImageURL);
+                    userList_under.put("level", "admin");
+                    userList_under.put("username", username);
+                    userList_under.put("registDate", System.currentTimeMillis());
+                    userList.put(fuser.getUid(), userList_under);
 
 
-                Group group = new Group(title, announce, categorys, mUri, System.currentTimeMillis(), username, checked_days, time, 1, maxCount, userList);
-                reference = FirebaseDatabase.getInstance().getReference("Group");
-                reference.child(title).setValue(group);
+                    Group group = new Group(title, announce, categorys, mUri, System.currentTimeMillis(), username, checked_days, time, 1, maxCount, userList);
+                    reference = FirebaseDatabase.getInstance().getReference("Group");
+                    reference.child(title).setValue(group);
 
-                // User테이블에 가입한 그룹 추가하기.
-                reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
-                HashMap<String, Object> groupList = new HashMap<>();
-                groupList.put("title", title);
-                groupList.put("registDate", System.currentTimeMillis());
-                reference.child(title).setValue(groupList);
+                    // User테이블에 가입한 그룹 추가하기.
+                    reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("groupList");
+                    HashMap<String, Object> groupList = new HashMap<>();
+                    groupList.put("title", title);
+                    groupList.put("registDate", System.currentTimeMillis());
+                    reference.child(title).setValue(groupList);
 
-                // 그룹 가입시 기본 포스트 하나 들어가기
-                reference = FirebaseDatabase.getInstance().getReference("Posts");
-                String postid = reference.push().getKey();
+                    // 그룹 가입시 기본 포스트 하나 들어가기
+                    reference = FirebaseDatabase.getInstance().getReference("Posts");
+                    String postid = reference.push().getKey();
 
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("postid", postid);
-                hashMap.put("postimage", "https://firebasestorage.googleapis.com/v0/b/sg-project-chat.appspot.com/o/posts%2F1555002256229.null?alt=media&token=dd479c7b-4d73-402e-8cb6-00b36660ed34");
-                hashMap.put("description", "서로간에 계획실천 인증사진을 올려보세요!");
-                hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
-                hashMap.put("registDate", System.currentTimeMillis());
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("postid", postid);
+                    hashMap.put("postimage", "https://firebasestorage.googleapis.com/v0/b/sg-project-chat.appspot.com/o/posts%2F1555002256229.null?alt=media&token=dd479c7b-4d73-402e-8cb6-00b36660ed34");
+                    hashMap.put("description", "서로간에 계획실천 인증사진을 올려보세요!");
+                    hashMap.put("publisher", "JiQeRTHwbpSRSl7OVIc4hGx531l2");
+                    hashMap.put("registDate", System.currentTimeMillis());
 
-                reference.child(title).child(postid).setValue(hashMap);
+                    reference.child(title).child(postid).setValue(hashMap);
 
 
 
@@ -307,16 +310,17 @@ public class GroupRegistActivity extends AppCompatActivity implements TimePicker
 //                    }
 //                });
 
-                IndexActivity.GROUP_COUNT += 1;
-                GroupListFragment.recyclerView.setVisibility(View.VISIBLE);
-                GroupListFragment.outsider_view.setVisibility(View.GONE);
+                    IndexActivity.GROUP_COUNT += 1;
+                    GroupListFragment.recyclerView.setVisibility(View.VISIBLE);
+                    GroupListFragment.outsider_view.setVisibility(View.GONE);
 
-                Intent intent = new Intent(GroupRegistActivity.this, GroupActivity.class);
-                intent.putExtra("group_title", title);
-                intent.putExtra("userName", username);
-                intent.putExtra("userImageURL", userImageURL);
-                finish();
-                startActivity(intent);
+                    Intent intent = new Intent(GroupRegistActivity.this, GroupActivity.class);
+                    intent.putExtra("group_title", title);
+                    intent.putExtra("userName", username);
+                    intent.putExtra("userImageURL", userImageURL);
+                    finish();
+                    startActivity(intent);
+                }
             }
         });
 

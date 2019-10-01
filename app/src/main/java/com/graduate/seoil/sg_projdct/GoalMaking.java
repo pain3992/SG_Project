@@ -72,6 +72,8 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
     private String date;
     private long stamp;
 
+    // 10/01 작업했음.
+
     HashMap<String, Object> jData;
     HashMap<String, Object> jTitle;
     HashMap<String, Object> jDays;
@@ -169,224 +171,227 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String category = categorys.getText().toString();
-                String title = etTitle.getText().toString();
-                String str_time = tv_plan_hour.getText().toString();
+                if (etTitle.getText().toString().equals("") || tv_plan_hour.getText().toString().equals("00:00") || categorys.getText().toString().equals("")) {
+                    Toast.makeText(GoalMaking.this, "항목을 모두 입력해주세요!", Toast.LENGTH_SHORT).show();
+                } else {
+                    String category = categorys.getText().toString();
+                    String title = etTitle.getText().toString();
+                    String str_time = tv_plan_hour.getText().toString();
 //                String start_hour = tv_start_hour.getText().toString();
-                String start_date = tv_start_date.getText().toString();
-                String end_date = tv_end_date.getText().toString();
-                String checked_days = "";
+                    String start_date = tv_start_date.getText().toString();
+                    String end_date = tv_end_date.getText().toString();
+                    String checked_days = "";
 
-                int from_idx_first = start_date.indexOf("-", 1);
-                int from_idx_second = start_date.indexOf("-", from_idx_first + 1);
-                int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
-                int from_month = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
-                int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
-                int to_idx_first = end_date.indexOf("-", 1);
-                int to_idx_second = end_date.indexOf("-", to_idx_first + 1);
-                int to_year = Integer.parseInt(end_date.substring(0, to_idx_first));
-                int to_month = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
-                int to_day = Integer.parseInt(end_date.substring(to_idx_second + 1));
+                    int from_idx_first = start_date.indexOf("-", 1);
+                    int from_idx_second = start_date.indexOf("-", from_idx_first + 1);
+                    int from_year = Integer.parseInt(start_date.substring(0, from_idx_first));
+                    int from_month = Integer.parseInt(start_date.substring(from_idx_first + 1, from_idx_second));
+                    int from_day = Integer.parseInt(start_date.substring(from_idx_second + 1));
+                    int to_idx_first = end_date.indexOf("-", 1);
+                    int to_idx_second = end_date.indexOf("-", to_idx_first + 1);
+                    int to_year = Integer.parseInt(end_date.substring(0, to_idx_first));
+                    int to_month = Integer.parseInt(end_date.substring(to_idx_first + 1, to_idx_second));
+                    int to_day = Integer.parseInt(end_date.substring(to_idx_second + 1));
 
-                String str_date = 6 + "-" + 3 + "-" + 2019;
-                DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-                Date dateun = null;
-                try {
-                    dateun = (Date) formatter.parse(str_date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                long output = dateun.getTime() / 1000L;
-                String str = Long.toString(output);
-                long timestamp = Long.parseLong(str) * 1000;
+                    String str_date = 6 + "-" + 3 + "-" + 2019;
+                    DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+                    Date dateun = null;
+                    try {
+                        dateun = (Date) formatter.parse(str_date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    long output = dateun.getTime() / 1000L;
+                    String str = Long.toString(output);
+                    long timestamp = Long.parseLong(str) * 1000;
 
-                int index = str_time.indexOf(":");
-                int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
-                int minute = Integer.parseInt(str_time.substring(index + 1));
-                int time = hour + minute;
+                    int index = str_time.indexOf(":");
+                    int hour = Integer.parseInt(str_time.substring(0, index)) * 60;
+                    int minute = Integer.parseInt(str_time.substring(index + 1));
+                    int time = hour + minute;
 
-                for (int i = 0; i < chkBoxIds.length; i++) {
-                    chkBoxs[i] = findViewById(chkBoxIds[i]);
-                    if (chkBoxs[i].isChecked()) {
-                        switch (i) {
-                            case 0:
-                                checked_days = "월";
-                                break;
-                            case 1:
-                                checked_days += "화";
-                                break;
-                            case 2:
-                                checked_days += "수";
-                                break;
-                            case 3:
-                                checked_days += "목";
-                                break;
-                            case 4:
-                                checked_days += "금";
-                                break;
-                            case 5:
-                                checked_days += "토";
-                                break;
-                            case 6:
-                                checked_days += "일";
-                                break;
+                    for (int i = 0; i < chkBoxIds.length; i++) {
+                        chkBoxs[i] = findViewById(chkBoxIds[i]);
+                        if (chkBoxs[i].isChecked()) {
+                            switch (i) {
+                                case 0:
+                                    checked_days = "월";
+                                    break;
+                                case 1:
+                                    checked_days += "화";
+                                    break;
+                                case 2:
+                                    checked_days += "수";
+                                    break;
+                                case 3:
+                                    checked_days += "목";
+                                    break;
+                                case 4:
+                                    checked_days += "금";
+                                    break;
+                                case 5:
+                                    checked_days += "토";
+                                    break;
+                                case 6:
+                                    checked_days += "일";
+                                    break;
+                            }
                         }
                     }
-                }
-                String[] int_checkDays = new String[checked_days.length()];
-                for (int i = 0; i < checked_days.length(); i++) {
-                    if (checked_days.substring(i, i + 1).equals("일"))
-                        int_checkDays[i] = "1";
-                    else if (checked_days.substring(i, i + 1).equals("월"))
-                        int_checkDays[i] = "2";
-                    else if (checked_days.substring(i, i + 1).equals("화"))
-                        int_checkDays[i] = "3";
-                    else if (checked_days.substring(i, i + 1).equals("수"))
-                        int_checkDays[i] = "4";
-                    else if (checked_days.substring(i, i + 1).equals("목"))
-                        int_checkDays[i] = "5";
-                    else if (checked_days.substring(i, i + 1).equals("금"))
-                        int_checkDays[i] = "6";
-                    else if (checked_days.substring(i, i + 1).equals("토"))
-                        int_checkDays[i] = "7";
-                }
+                    String[] int_checkDays = new String[checked_days.length()];
+                    for (int i = 0; i < checked_days.length(); i++) {
+                        if (checked_days.substring(i, i + 1).equals("일"))
+                            int_checkDays[i] = "1";
+                        else if (checked_days.substring(i, i + 1).equals("월"))
+                            int_checkDays[i] = "2";
+                        else if (checked_days.substring(i, i + 1).equals("화"))
+                            int_checkDays[i] = "3";
+                        else if (checked_days.substring(i, i + 1).equals("수"))
+                            int_checkDays[i] = "4";
+                        else if (checked_days.substring(i, i + 1).equals("목"))
+                            int_checkDays[i] = "5";
+                        else if (checked_days.substring(i, i + 1).equals("금"))
+                            int_checkDays[i] = "6";
+                        else if (checked_days.substring(i, i + 1).equals("토"))
+                            int_checkDays[i] = "7";
+                    }
 
-                cntSetting(category);
+                    cntSetting(category);
 
 
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
-                cal = Calendar.getInstance();
-                cal.set(from_year, from_month - 1, from_day); // 시작 요일 Calendar에 세팅
-                if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
-                    if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
-                        for (int d = from_day; d <= to_day; d++) {
-                            cal.set(from_year, from_month - 1, d);
-                            int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-                            for (String int_checkDay : int_checkDays) {
-                                if (dayNum == Integer.parseInt(int_checkDay)) {
-                                    if (from_month < 10) {
-                                        if (d < 10) {
-                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-0" + String.valueOf(d);
-                                            stamp = getTimeStamp("0" + from_month, "0" + d, String.valueOf(from_year));
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Goal").child(fuser.getUid());
+                    cal = Calendar.getInstance();
+                    cal.set(from_year, from_month - 1, from_day); // 시작 요일 Calendar에 세팅
+                    if (to_year == from_year) {       // 같은 년도 (2019 ~ 2019)
+                        if (to_month == from_month) { // 같은 년도 같은 월 (2019/4/14 ~ 2019/4/30)
+                            for (int d = from_day; d <= to_day; d++) {
+                                cal.set(from_year, from_month - 1, d);
+                                int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                for (String int_checkDay : int_checkDays) {
+                                    if (dayNum == Integer.parseInt(int_checkDay)) {
+                                        if (from_month < 10) {
+                                            if (d < 10) {
+                                                date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                                stamp = getTimeStamp("0" + from_month, "0" + d, String.valueOf(from_year));
+                                            } else {
+                                                date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-" + String.valueOf(d);
+                                                stamp = getTimeStamp("0" + from_month, String.valueOf(d), String.valueOf(from_year));
+                                            }
                                         } else {
-                                            date = String.valueOf(from_year) + "-0" + String.valueOf(from_month) + "-" + String.valueOf(d);
-                                            stamp = getTimeStamp("0" + from_month, String.valueOf(d), String.valueOf(from_year));
+                                            if (d < 10)
+                                                date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-0" + String.valueOf(d);
+                                            else
+                                                date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
                                         }
-                                    } else {
-                                        if (d < 10)
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-0" + String.valueOf(d);
-                                        else
-                                            date = String.valueOf(from_year) + "-" + String.valueOf(from_month) + "-" + String.valueOf(d);
-                                    }
 
-                                    if (to_month < 10) {
-                                        if (to_day < 10)
-                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                        else
-                                            end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                    } else {
-                                        if (to_day < 10)
-                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                        else
-                                            end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                    }
+                                        if (to_month < 10) {
+                                            if (to_day < 10)
+                                                end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                            else
+                                                end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                        } else {
+                                            if (to_day < 10)
+                                                end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                            else
+                                                end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                        }
 
-                                    str_date = to_month + "-" + d + "-" + from_year;
-                                    formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                    dateun = null;
-                                    try {
-                                        dateun = (Date) formatter.parse(str_date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    output = dateun.getTime() / 1000L;
-                                    str = Long.toString(output);
-                                    timestamp = Long.parseLong(str) * 1000; // timestamp
+                                        str_date = to_month + "-" + d + "-" + from_year;
+                                        formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                        dateun = null;
+                                        try {
+                                            dateun = (Date) formatter.parse(str_date);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        output = dateun.getTime() / 1000L;
+                                        str = Long.toString(output);
+                                        timestamp = Long.parseLong(str) * 1000; // timestamp
 
 
-                                    String goal_id = reference.child(date).push().getKey();
-                                    Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
-                                    assert goal_id != null;
-                                    reference.child(date).child(title).setValue(goal);
+                                        String goal_id = reference.child(date).push().getKey();
+                                        Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
+                                        assert goal_id != null;
+                                        reference.child(date).child(title).setValue(goal);
 //                                    reference.child(String.valueOf(timestamp)).child(title).setValue(goal);
+                                    }
                                 }
                             }
-                        }
-                    } else {                      // 같은 년도 다른 월 (2019/4/14 ~ 2019/7/29)
-                        for (int m = from_month; m <= to_month; m++) {
-                            if (m == from_month) {   // 4/14 ~ 9/28 인경우 4월 처리
-                                for (int d = from_day; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    cal.set(from_year, m - 1, d);
-                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-                                    for (String int_checkDay : int_checkDays) {
-                                        if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            if (from_month < 10) {
-                                                if (d < 10)
-                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                else
-                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
-                                            } else {
-                                                if (d < 10)
-                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                else
-                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                            }
+                        } else {                      // 같은 년도 다른 월 (2019/4/14 ~ 2019/7/29)
+                            for (int m = from_month; m <= to_month; m++) {
+                                if (m == from_month) {   // 4/14 ~ 9/28 인경우 4월 처리
+                                    for (int d = from_day; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
+                                        cal.set(from_year, m - 1, d);
+                                        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                        for (String int_checkDay : int_checkDays) {
+                                            if (dayNum == Integer.parseInt(int_checkDay)) {
+                                                if (from_month < 10) {
+                                                    if (d < 10)
+                                                        date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                    else
+                                                        date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                } else {
+                                                    if (d < 10)
+                                                        date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                    else
+                                                        date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                }
 
-                                            if (to_month < 10) {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            } else {
-                                                if (to_day < 10)
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
-                                                else
-                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
-                                            }
+                                                if (to_month < 10) {
+                                                    if (to_day < 10)
+                                                        end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                    else
+                                                        end_date = String.valueOf(to_year) + "-0" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                                } else {
+                                                    if (to_day < 10)
+                                                        end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-0" + String.valueOf(to_day);
+                                                    else
+                                                        end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
+                                                }
 
-                                            str_date = m + "-" + d + "-" + from_year;
-                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                            dateun = null;
-                                            try {
-                                                dateun = (Date) formatter.parse(str_date);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            output = dateun.getTime() / 1000L;
-                                            str = Long.toString(output);
-                                            timestamp = Long.parseLong(str) * 1000; // timestamp
-                                            String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
-                                            assert goal_id != null;
-                                            reference.child(date).child(title).setValue(goal);
+                                                str_date = m + "-" + d + "-" + from_year;
+                                                formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                                dateun = null;
+                                                try {
+                                                    dateun = (Date) formatter.parse(str_date);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                output = dateun.getTime() / 1000L;
+                                                str = Long.toString(output);
+                                                timestamp = Long.parseLong(str) * 1000; // timestamp
+                                                String goal_id = reference.child(date).push().getKey();
+                                                Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
+                                                assert goal_id != null;
+                                                reference.child(date).child(title).setValue(goal);
 //                                            reference.child(String.valueOf(timestamp)).child(title).setValue(goal); // TODO : 목ㅍ제목에 ., #, $, [ , ] 들어 가면 안됌.
+                                            }
                                         }
                                     }
-                                }
-                            } else if (m < to_month) { // 4/14 ~ 9/28 인경우 5,6,7,8월 처리
-                                cal.set(from_year, m - 1, 1); // Calendar 2019/5/1 세팅
-                                for (int d = 1; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
-                                    cal.set(from_year, m - 1, d);
-                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-                                    for (String int_checkDay : int_checkDays) {
-                                        if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            if (m < 10) {
-                                                if (d < 10) {
-                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                    stamp = getTimeStamp("0" + m, "0" + d, String.valueOf(from_year));
+                                } else if (m < to_month) { // 4/14 ~ 9/28 인경우 5,6,7,8월 처리
+                                    cal.set(from_year, m - 1, 1); // Calendar 2019/5/1 세팅
+                                    for (int d = 1; d <= cal.getActualMaximum(Calendar.DAY_OF_MONTH); d++) {
+                                        cal.set(from_year, m - 1, d);
+                                        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                        for (String int_checkDay : int_checkDays) {
+                                            if (dayNum == Integer.parseInt(int_checkDay)) {
+                                                if (m < 10) {
+                                                    if (d < 10) {
+                                                        date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                        stamp = getTimeStamp("0" + m, "0" + d, String.valueOf(from_year));
+                                                    } else {
+                                                        date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                        stamp = getTimeStamp("0" + m, String.valueOf(d), String.valueOf(from_year));
+                                                    }
                                                 } else {
-                                                    date = String.valueOf(from_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
-                                                    stamp = getTimeStamp("0" + m, String.valueOf(d), String.valueOf(from_year));
+                                                    if (d < 10) {
+                                                        date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                        stamp = getTimeStamp(String.valueOf(m), "0" + d, String.valueOf(from_year));
+                                                    } else {
+                                                        date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                        stamp = getTimeStamp(String.valueOf(m), String.valueOf(d), String.valueOf(from_year));
+                                                    }
                                                 }
-                                            } else {
-                                                if (d < 10) {
-                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                    stamp = getTimeStamp(String.valueOf(m), "0" + d, String.valueOf(from_year));
-                                                } else {
-                                                    date = String.valueOf(from_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                                    stamp = getTimeStamp(String.valueOf(m), String.valueOf(d), String.valueOf(from_year));
-                                                }
-                                            }
 
 //                                            if (to_month < 10) {
 //                                                if (to_day < 10)
@@ -400,42 +405,42 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
 //                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
 //                                            }
 
-                                            str_date = m + "-" + d + "-" + from_year;
-                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                            dateun = null;
-                                            try {
-                                                dateun = (Date) formatter.parse(str_date);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            output = dateun.getTime() / 1000L;
-                                            str = Long.toString(output);
-                                            timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
-                                            String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
-                                            assert goal_id != null;
-                                            reference.child(date).child(title).setValue(goal);
+                                                str_date = m + "-" + d + "-" + from_year;
+                                                formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                                dateun = null;
+                                                try {
+                                                    dateun = (Date) formatter.parse(str_date);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                output = dateun.getTime() / 1000L;
+                                                str = Long.toString(output);
+                                                timestamp = Long.parseLong(str) * 1000; // timestamp // timestamp
+                                                String goal_id = reference.child(date).push().getKey();
+                                                Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
+                                                assert goal_id != null;
+                                                reference.child(date).child(title).setValue(goal);
 //                                            reference.child(String.valueOf(timestamp)).child(title).setValue(goal);
+                                            }
                                         }
                                     }
-                                }
-                            } else { // 4/14 ~ 9/28 인경우 9월 처리
-                                for (int d = 1; d <= to_day; d++) {
-                                    cal.set(from_year, m - 1, d);
-                                    int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-                                    for (String int_checkDay : int_checkDays) {
-                                        if (dayNum == Integer.parseInt(int_checkDay)) {
-                                            if (m < 10) {
-                                                if (d < 10)
-                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                else
-                                                    date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
-                                            } else {
-                                                if (d < 10)
-                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
-                                                else
-                                                    date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-                                            }
+                                } else { // 4/14 ~ 9/28 인경우 9월 처리
+                                    for (int d = 1; d <= to_day; d++) {
+                                        cal.set(from_year, m - 1, d);
+                                        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+                                        for (String int_checkDay : int_checkDays) {
+                                            if (dayNum == Integer.parseInt(int_checkDay)) {
+                                                if (m < 10) {
+                                                    if (d < 10)
+                                                        date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                    else
+                                                        date = String.valueOf(to_year) + "-0" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                } else {
+                                                    if (d < 10)
+                                                        date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-0" + String.valueOf(d);
+                                                    else
+                                                        date = String.valueOf(to_year) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+                                                }
 
 //                                            if (to_month < 10) {
 //                                                if (to_day < 10)
@@ -449,30 +454,33 @@ public class GoalMaking extends AppCompatActivity implements TimePickerDialog.On
 //                                                    end_date = String.valueOf(to_year) + "-" + String.valueOf(to_month) + "-" + String.valueOf(to_day);
 //                                            }
 
-                                            str_date = m + "-" + d + "-" + from_year;
-                                            formatter = new SimpleDateFormat("MM-dd-yyyy");
-                                            dateun = null;
-                                            try {
-                                                dateun = (Date) formatter.parse(str_date);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            output = dateun.getTime() / 1000L;
-                                            str = Long.toString(output);
-                                            timestamp = Long.parseLong(str) * 1000; // timestamp
-                                            String goal_id = reference.child(date).push().getKey();
-                                            Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
-                                            assert goal_id != null;
-                                            reference.child(date).child(title).setValue(goal);
+                                                str_date = m + "-" + d + "-" + from_year;
+                                                formatter = new SimpleDateFormat("MM-dd-yyyy");
+                                                dateun = null;
+                                                try {
+                                                    dateun = (Date) formatter.parse(str_date);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                output = dateun.getTime() / 1000L;
+                                                str = Long.toString(output);
+                                                timestamp = Long.parseLong(str) * 1000; // timestamp
+                                                String goal_id = reference.child(date).push().getKey();
+                                                Goal goal = new Goal(title, date, end_date, checked_days, "?", time, 0, 0, time * 60000, time * 60000, 0, timestamp);
+                                                assert goal_id != null;
+                                                reference.child(date).child(title).setValue(goal);
 //                                            reference.child(String.valueOf(timestamp)).child(title).setValue(goal);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    finish();
                 }
-                finish();
+
+
             }
         });
 

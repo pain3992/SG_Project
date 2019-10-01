@@ -65,7 +65,12 @@ public class    GroupInformation extends AppCompatActivity {
         str_title = intent.getStringExtra("group_title");
         user_count = Integer.parseInt(intent.getStringExtra("group_currentUser")); // 그룹 현재 인원수
         title.setText(intent.getStringExtra("group_title"));
-        registDate.setText(String.valueOf(intent.getLongExtra("group_registDate", 0)));
+
+        Date dates = new Date(intent.getLongExtra("group_registDate", 0));
+        SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd");
+        final String getTimes = sdfs.format(dates);
+
+        registDate.setText(getTimes);
         currentUser.setText(intent.getStringExtra("group_currentUser") + "명");
         currentUser2.setText(intent.getStringExtra("group_currentUser"));
         maxUser.setText(intent.getStringExtra("group_maxUser") + "명");

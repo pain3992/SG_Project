@@ -424,8 +424,8 @@ public class PlanInformationActivity extends AppCompatActivity {
                     reference = FirebaseDatabase.getInstance().getReference("PushNotifications");
                     HashMap<String, Object> hashMap_push = new HashMap<>();
                     hashMap_push.put("uid", fuser.getUid());
-                    hashMap_push.put("title", title);
-                    hashMap_push.put("content", title + "을 완료하였습니다.");
+                    hashMap_push.put("title", "'" + title + "' 실천!");
+                    hashMap_push.put("content", "집중도 : '" + grade + "'");
                     hashMap_push.put("category", "목표");
                     hashMap_push.put("sender_name", str_userName);
                     hashMap_push.put("sender_url", str_userImageURL);

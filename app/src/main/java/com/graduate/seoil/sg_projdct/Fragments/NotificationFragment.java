@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,11 +34,16 @@ public class NotificationFragment extends Fragment {
 
     DatabaseReference reference;
 
+    private TextView push_delete, push_no_item;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+        push_delete = view.findViewById(R.id.push_delete);
+        push_no_item = view.findViewById(R.id.push_no_item);
 
         mPush = new ArrayList<>();
         recyclerView = view.findViewById(R.id.push_lists);
@@ -57,6 +63,14 @@ public class NotificationFragment extends Fragment {
                 }
                 Collections.reverse(mPush);
                 pushNotificationAdapter.notifyDataSetChanged();
+
+                if(dataSnapshot.getChildrenCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    push_no_item.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    push_no_item.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -66,6 +80,13 @@ public class NotificationFragment extends Fragment {
         });
 
 
+        push_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reference = FirebaseDatabase.getInstance().getReference("PushNotifications").child(fuser.getUid());
+                reference.removeValue();
+            }
+        });
 
         return view;
     }

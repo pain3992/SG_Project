@@ -23,6 +23,20 @@
             android:textStyle="bold"
             android:text="알림 페이지"/>
 
+        <TextView
+            android:id="@+id/push_delete"
+            android:clickable="true"
+            android:layout_gravity="end"
+            android:layout_width="100dp"
+            android:textAlignment="textEnd"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:textColor="@android:color/white"
+            android:text="알림 삭제"
+            android:textSize="15sp"
+            tools:ignore="RtlCompat"
+            android:focusable="true" />
+
     </android.support.v7.widget.Toolbar>
 
 
@@ -33,5 +47,14 @@
         android:layout_below="@id/index_toolbar">
 
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/push_no_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:text="알림이 없습니다!"/>
 
 </RelativeLayout>

@@ -50,6 +50,7 @@
         android:layout_marginEnd="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:textColor="@color/exersior_dark"
         android:textStyle="bold"
         android:text="title"/>
@@ -59,6 +60,7 @@
         android:layout_below="@id/item_push_title"
         android:layout_toEndOf="@id/rel1"
         android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/exersior_dark"
@@ -69,6 +71,7 @@
         android:layout_below="@id/item_push_content"
         android:layout_toEndOf="@id/rel1"
         android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/exersior_dark"
